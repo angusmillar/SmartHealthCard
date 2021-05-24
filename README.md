@@ -2,7 +2,7 @@
 
 This is an open-source library for encoding/decoding/validating FHIR SMART Health Card JWS tokens and generating their QR Codes
 
->See the official SMART Health Card specification page here: [SMART Health Cards Framework](https://smarthealth.cards/)
+>See the official SMART Health Card specification page : [SMART Health Cards Framework](https://smarthealth.cards/)
 
 
 ## Example of Encoding a SMART Health Card JWS token and generating its QR Code images 
@@ -121,6 +121,10 @@ namespace SHC.Demo
 }
 
 ```
+
+## How to create a ECC Private/Public keys with OpenSSL ##
+>Great example from Scott Brady : [Creating Elliptical Curve Keys using OpenSSL](https://www.scottbrady91.com/OpenSSL/Creating-Elliptical-Curve-Keys-using-OpenSSL)
+
 
 ## Repo owner ##
 
