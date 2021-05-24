@@ -3,6 +3,7 @@ using SmartHealthCard.Test.Model;
 using SmartHealthCard.Test.Serializers;
 using SmartHealthCard.Test.Support;
 using SmartHealthCard.Token;
+using SmartHealthCard.Token.Exceptions;
 using SmartHealthCard.Token.Model.Shc;
 using System;
 using System.Collections.Generic;
@@ -52,6 +53,8 @@ namespace SmartHealthCard.Test
       //### Act ##########################################################
 
       //Get the Smart Health Card Jws Token 
+      
+      //string SmartHealthCardJwsToken = Assert.Throws<SmartHealthCardException>(() => SmartHealthCardEncoder.GetToken(Certificate, SmartHealthCardToEncode));
       string SmartHealthCardJwsToken = SmartHealthCardEncoder.GetToken(Certificate, SmartHealthCardToEncode);
 
       //### Assert #######################################################

@@ -2,7 +2,7 @@
 
 namespace SmartHealthCard.Token.Exceptions
 {
-  public class SmartHealthCardPayloadException : Exception
+  public class SmartHealthCardPayloadException : SmartHealthCardException
   {
     public SmartHealthCardPayloadException(string Message) 
       : base(Message){ }

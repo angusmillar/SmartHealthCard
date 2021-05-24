@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SmartHealthCard.Token.Exceptions
 {
-  class DeserializationException : SmartHealthCardException
+  public abstract class SmartHealthCardException : SmartHealthCardException
   {
-    public DeserializationException(string Message)
+    public SmartHealthCardException(string Message)
         : base(Message)
     {
     }
