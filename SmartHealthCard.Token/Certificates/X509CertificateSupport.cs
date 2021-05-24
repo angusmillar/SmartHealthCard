@@ -1,5 +1,11 @@
-﻿using System;
+﻿using SmartHealthCard.Token.Encoders;
+using SmartHealthCard.Token.Model.Jwks;
+using SmartHealthCard.Token.Algorithms;
+using System;
+using System.Linq;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using SmartHealthCard.Token.Exceptions;
 
 namespace SmartHealthCard.Token.Certificates
 {
@@ -19,7 +25,6 @@ namespace SmartHealthCard.Token.Certificates
       }
       return foundCerts[0];
     }
-    
-    }
   }
+}
 

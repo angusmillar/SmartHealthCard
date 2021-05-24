@@ -15,8 +15,4 @@ namespace SmartHealthCard.Token
     }
 
   }
-
-
-
-
 }

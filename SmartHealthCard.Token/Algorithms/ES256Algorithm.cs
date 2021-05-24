@@ -1,6 +1,9 @@
 ﻿using SmartHealthCard.Token.Encoders;
+using SmartHealthCard.Token.Exceptions;
 using SmartHealthCard.Token.Hashers;
+using SmartHealthCard.Token.Model.Jwks;
 using System;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
@@ -8,9 +11,9 @@ namespace SmartHealthCard.Token.Algorithms
 {
   public sealed class ES256Algorithm : IAlgorithm 
   {
-    private readonly X509Certificate2 Certificate;
-    private readonly ECDsa PublicKey;
-    private readonly ECDsa PrivateKey;
+    private readonly X509Certificate2? Certificate;
+    private readonly ECDsa? PublicKey;
+    private readonly ECDsa? PrivateKey;
 
     public ES256Algorithm(X509Certificate2 Certificate)
     {
@@ -34,7 +37,12 @@ namespace SmartHealthCard.Token.Algorithms
       {
         this.PublicKey = PublicKey;                
       }
+    }
 
+    public ES256Algorithm(ECDsa? PublicKey, ECDsa? PrivateKey)
+    {                 
+       this.PublicKey = PublicKey;
+       this.PrivateKey = PrivateKey;
     }
 
     public string Name => "ES256";
@@ -45,10 +53,16 @@ namespace SmartHealthCard.Token.Algorithms
 
     public byte[] Sign(byte[] bytesToSign)
     {
+      if (this.PrivateKey is null)
+        throw new SignatureSigningException("Unable to sign as no private key has been provided.");
+
       return this.PrivateKey.SignData(bytesToSign, this.HashAlgorithmName);
     }
     public bool Verify(byte[] bytesToSign, byte[] signature)
     {
+      if (this.PublicKey is null)
+        throw new SignatureSigningException("Unable to verify signature as no public key has been provided.");
+
       return this.PublicKey.VerifyData(bytesToSign, signature, this.HashAlgorithmName);
     }
     public string GetKid()
@@ -57,6 +71,9 @@ namespace SmartHealthCard.Token.Algorithms
     }
     public string GetPointCoordinateX()
     {
+      if (this.PublicKey is null)
+        throw new SignatureSigningException("Unable to obtain Point Coordinate X from public key as no public key has been provided.");
+
       ECParameters ECParameters = this.PublicKey.ExportExplicitParameters(false);
       if (ECParameters.Q.X is null)
         throw new NullReferenceException(nameof(ECParameters.Q.X));
@@ -65,6 +82,9 @@ namespace SmartHealthCard.Token.Algorithms
     }
     public string GetPointCoordinateY()
     {
+      if (this.PublicKey is null)
+        throw new SignatureSigningException("Unable to obtain Point Coordinate Y from public key as no public key has been provided.");
+
       ECParameters ECParameters = this.PublicKey.ExportExplicitParameters(false);
       if (ECParameters.Q.Y is null)
         throw new NullReferenceException(nameof(ECParameters.Q.Y));
@@ -87,5 +107,30 @@ namespace SmartHealthCard.Token.Algorithms
 
       return cert.GetECDsaPublicKey();
     }
+
+    public static ES256Algorithm FromJWKS(string Kid, JsonWebKeySet JsonWebKeySet)
+    {
+      JsonWebKey? Key = JsonWebKeySet.Keys.SingleOrDefault(x => x.Kid.Equals(Kid, StringComparison.CurrentCultureIgnoreCase));
+      if (Key is null)
+        throw new JsonWebKeySetException($"Unable to loacate the required key for kid value of {Kid}");
+
+      ECDsa PublicKey = ECDsa.Create(new ECParameters
+      {
+        Curve = ECCurve.NamedCurves.nistP256,
+        Q = new ECPoint
+        {
+          X = Base64UrlEncoder.Decode(Key.X),
+          Y = Base64UrlEncoder.Decode(Key.Y)
+        }
+      });
+
+      return new ES256Algorithm(PublicKey, null);
+    }
+
+
+
+
+
+
   }
 }

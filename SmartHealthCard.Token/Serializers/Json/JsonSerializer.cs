@@ -19,21 +19,33 @@ namespace SmartHealthCard.Token.Serializers.Json
     
     public byte[] Serialize<T>(T Obj)
     {
-      var sb = new StringBuilder();
-      using var stringWriter = new StringWriter(sb);
-      using var jsonWriter = new JsonTextWriter(stringWriter);
-      Serializer.Serialize(jsonWriter, Obj);
-      return GetBytes(sb.ToString());
+      return GetBytes(this.ToJson(Obj));     
     }
     
     public T Deserialize<T>(byte[] bytes)
     {
-      string json = Utf8EncodingSupport.GetString(bytes);
-      using var stringReader = new StringReader(json);
+      T? Item = this.FromJson<T>(Utf8EncodingSupport.GetString(bytes));
+      if (Item is null)
+        throw new DeserializationException($"Unable to deserialize the JWS Header to type {typeof(T).Name}");
+      return Item;      
+    }
+
+    public string ToJson<T>(T Obj)
+    {
+      var sb = new StringBuilder();
+      using var stringWriter = new StringWriter(sb);
+      using var jsonWriter = new JsonTextWriter(stringWriter);
+      Serializer.Serialize(jsonWriter, Obj);
+      return sb.ToString();
+    }
+
+    public T FromJson<T>(string Json)
+    {      
+      using var stringReader = new StringReader(Json);
       using var jsonReader = new JsonTextReader(stringReader);
       T? Item = Serializer.Deserialize<T>(jsonReader);
-      if (Item is null)             
-          throw new DeserializationException($"Unable to deserialize the JWS Header to type {typeof(T).Name}");
+      if (Item is null)
+        throw new DeserializationException($"Unable to deserialize the JWS Header to type {typeof(T).Name}");
       return Item;
     }
   }

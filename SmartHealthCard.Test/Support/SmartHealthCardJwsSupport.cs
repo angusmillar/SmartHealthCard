@@ -1,32 +1,21 @@
 ﻿using Hl7.Fhir.Model;
 using SmartHealthCard.Test.Model;
 using SmartHealthCard.Test.Serializers;
-using SmartHealthCard.Test.Support;
 using SmartHealthCard.Token;
 using SmartHealthCard.Token.Model.Shc;
-using SmartHealthCard.QRCode;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
-using Xunit;
-using System.Drawing;
-using System.Drawing.Imaging;
 
-namespace SmartHealthCard.Test
+namespace SmartHealthCard.Test.Support
 {
-  public class SmartHealthCardQRCodeFactoryTest
+  public static class SmartHealthCardJwsSupport
   {
-    [Fact]
-    public void Create_QRCode()
+    public static string GetJWSCovidExampleOne(X509Certificate2 Certificate)
     {
-      //### Prepare ######################################################
-
-      //Get the ECC certificate from the Windows Certificate Store by Thumbprint      
-      X509Certificate2 Certificate = CertificateSupport.GetCertificate(Thumbprint: "72c78a3460fb27b9ef2ccfae2538675b75363fee");
-
       //The Version of FHIR in use
       string FhirVersion = "4.0.1";
 
@@ -52,28 +41,9 @@ namespace SmartHealthCard.Test
       //Instantiate the SmartHealthCard Encoder
       SmartHealthCardEncoder SmartHealthCardEncoder = new SmartHealthCardEncoder();
 
-      //### Act ##########################################################
-
       //Get the Smart Health Card Jws Token 
-      string SmartHealthCardJwsToken = SmartHealthCardEncoder.GetToken(Certificate, SmartHealthCardToEncode);
-
-      //Create list of QR Codes
-      SmartHealthCardQRCodeFactory SmartHealthCardQRCodeFactory = new SmartHealthCardQRCodeFactory();
-      Bitmap[] QRCodeImageList = SmartHealthCardQRCodeFactory.CreateQRCode(SmartHealthCardJwsToken);
-
-      //Write out QR Code to file
-      //for (int i = 0; i < QRCodeImageList.Length; i++)
-      //{
-      //  QRCodeImageList[i].Save(@$"C:\Temp\SMARTHealthCard\QRCode-{i}.png", ImageFormat.Png);
-      //}
-
-      //### Assert #######################################################
-
-      Assert.True(!string.IsNullOrWhiteSpace(SmartHealthCardJwsToken));
-      Assert.NotNull(QRCodeImageList);
-      Assert.Single(QRCodeImageList);
+      return SmartHealthCardEncoder.GetToken(Certificate, SmartHealthCardToEncode);
 
     }
-
   }
 }

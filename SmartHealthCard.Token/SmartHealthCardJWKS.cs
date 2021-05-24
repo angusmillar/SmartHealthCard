@@ -5,9 +5,9 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace SmartHealthCard.Token
 {
-  public class SmartHealthCardJWKS
+  public static class SmartHealthCardJWKS
   {
-    public string Get(X509Certificate2[] CertificateList, bool Minified = true)
+    public static string Get(X509Certificate2[] CertificateList, bool Minified = true)
     {
       List<JsonWebKey> JsonWebKeySetModelList = new List<JsonWebKey>();
       foreach (X509Certificate2 Certificate in CertificateList)
@@ -20,7 +20,7 @@ namespace SmartHealthCard.Token
           Alg: Algorithm.Name,
           Crv: Algorithm.CurveName,
           X: Algorithm.GetPointCoordinateX(),
-          Y: Algorithm.GetPointCoordinateX());
+          Y: Algorithm.GetPointCoordinateY());
 
         JsonWebKeySetModelList.Add(JsonWebKeySetModel);
       }

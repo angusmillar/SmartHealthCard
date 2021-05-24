@@ -59,7 +59,7 @@ namespace SmartHealthCard.Test
       Assert.True(!string.IsNullOrWhiteSpace(SmartHealthCardJwsToken));
 
 
-      SmartHealthCardModel DecodedSmartHealthCardModle = Decoder.DecodeToSmartHealthCardModel(Certificate, SmartHealthCardJwsToken, Verify: true);
+      SmartHealthCardModel DecodedSmartHealthCardModle = Decoder.VerifyAndDecode(SmartHealthCardJwsToken, Certificate);
 
       //Check the IssuanceDate as the same to seconds precision
       DateTimeOffset ActualIssuanceDate = DecodedSmartHealthCardModle.GetIssuanceDate();
