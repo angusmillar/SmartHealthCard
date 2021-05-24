@@ -3,11 +3,9 @@ using SmartHealthCard.Test.Model;
 using SmartHealthCard.Test.Serializers;
 using SmartHealthCard.Test.Support;
 using SmartHealthCard.Token;
-using SmartHealthCard.Token.Certificates;
 using SmartHealthCard.Token.Model.Shc;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using Xunit;
 
