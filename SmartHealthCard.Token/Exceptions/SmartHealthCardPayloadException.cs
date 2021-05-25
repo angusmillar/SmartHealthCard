@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SmartHealthCard.Token.Exceptions
+﻿namespace SmartHealthCard.Token.Exceptions
 {
   public class SmartHealthCardPayloadException : SmartHealthCardException
   {

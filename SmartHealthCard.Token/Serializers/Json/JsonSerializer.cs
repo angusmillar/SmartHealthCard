@@ -12,11 +12,13 @@ namespace SmartHealthCard.Token.Serializers.Json
   {
     private readonly Newtonsoft.Json.JsonSerializer Serializer;
 
-    public JsonSerializer()
+    public JsonSerializer(bool Minified = true)
     {
-      this.Serializer = Newtonsoft.Json.JsonSerializer.CreateDefault();      
+      this.Serializer = Newtonsoft.Json.JsonSerializer.CreateDefault();
+      if (!Minified)       
+        Serializer.Formatting = Formatting.Indented;
     }
-    
+
     public byte[] Serialize<T>(T Obj)
     {
       return GetBytes(this.ToJson(Obj));     

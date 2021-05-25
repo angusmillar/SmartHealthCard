@@ -1,11 +1,8 @@
-﻿using System;
-
-namespace SmartHealthCard.Token.Exceptions
+﻿namespace SmartHealthCard.Token.Exceptions
 {
-    public class JsonWebKeySetException : SmartHealthCardException
-  {        
-        public JsonWebKeySetException(string message)
-            : base(message){ }
-
-    }
+  public class JsonWebKeySetException : SmartHealthCardException
+  {
+    public JsonWebKeySetException(string Message)
+        : base(Message) { }
+  }
 }

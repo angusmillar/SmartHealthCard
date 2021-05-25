@@ -3,6 +3,5 @@
   public interface IJwsPayloadValidator
   {
     void Validate<T>(T Obj);
-
   }
 }

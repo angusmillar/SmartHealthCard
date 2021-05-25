@@ -12,13 +12,13 @@ namespace SmartHealthCard.Token.Model.Shc
       this.Kid = Kid;
     }
 
-    [JsonProperty("alg")]
+    [JsonProperty("alg", Required = Required.Always)]
     public string Alg { get; set; }
 
-    [JsonProperty("zip")]
+    [JsonProperty("zip", Required = Required.Always)]
     public string Zip { get; set; }
 
-    [JsonProperty("kid")]
+    [JsonProperty("kid", Required = Required.Always)]
     public string Kid { get; set; }
 
     internal void Validate()

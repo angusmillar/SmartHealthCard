@@ -13,7 +13,6 @@ namespace SmartHealthCard.Token.JwsToken
     {
       this.Algorithm = Algorithm;
     }
-
     public void Validate(string Token)
     {
       if (string.IsNullOrEmpty(Token))
@@ -28,7 +27,5 @@ namespace SmartHealthCard.Token.JwsToken
         throw new SignatureVerificationException("The JWS signature is invalid.");
       }     
     }
-
-
   }
 }

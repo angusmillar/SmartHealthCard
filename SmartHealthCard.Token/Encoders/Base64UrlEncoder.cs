@@ -12,7 +12,7 @@ namespace SmartHealthCard.Token.Encoders
         throw new ArgumentOutOfRangeException(nameof(input));
 
       var output = Convert.ToBase64String(input);
-      output = output.FirstSegment('='); // Remove trailing '='s
+      output = output.FirstSegment('='); // Remove any trailing '='
       output = output.Replace('+', '-'); // 62nd char 
       output = output.Replace('/', '_'); // 63rd char 
       return output;

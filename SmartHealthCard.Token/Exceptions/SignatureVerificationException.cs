@@ -1,11 +1,8 @@
-﻿using System;
-
-namespace SmartHealthCard.Token.Exceptions
+﻿namespace SmartHealthCard.Token.Exceptions
 {
-    public class SignatureVerificationException : SmartHealthCardException
-  {        
-        public SignatureVerificationException(string message)
-            : base(message){ }
-
-    }
+  public class SignatureVerificationException : SmartHealthCardException
+  {
+    public SignatureVerificationException(string message)
+        : base(message) { }
+  }
 }

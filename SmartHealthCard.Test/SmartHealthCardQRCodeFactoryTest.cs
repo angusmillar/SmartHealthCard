@@ -41,8 +41,8 @@ namespace SmartHealthCard.Test
       DateTimeOffset IssuanceDateTimeOffset = DateTimeOffset.Now.AddMinutes(-1);
 
       //The Uri for the type of VerifiableCredentials
-      Uri VerifiableCredentialType = new Uri("https://smarthealth.cards#covid19");
-      List<Uri> VerifiableCredentialTypeList = new List<Uri>() { VerifiableCredentialType };
+     // Uri VerifiableCredentialType = new Uri("https://smarthealth.cards#covid19");
+      List<VerifiableCredentialType> VerifiableCredentialTypeList = new List<VerifiableCredentialType>() { VerifiableCredentialType.Covid19 };
 
       //Create the SmartHealthCardModel
       SmartHealthCardModel SmartHealthCardToEncode = new SmartHealthCardModel(Issuer, IssuanceDateTimeOffset,
@@ -51,7 +51,8 @@ namespace SmartHealthCard.Test
 
       //Instantiate the SmartHealthCard Encoder
       SmartHealthCardEncoder SmartHealthCardEncoder = new SmartHealthCardEncoder();
-
+      X509Certificate2[] CertArray = new X509Certificate2[] { Certificate };
+      
       //### Act ##########################################################
 
       //Get the Smart Health Card Jws Token 
@@ -61,12 +62,13 @@ namespace SmartHealthCard.Test
       SmartHealthCardQRCodeFactory SmartHealthCardQRCodeFactory = new SmartHealthCardQRCodeFactory();
       Bitmap[] QRCodeImageList = SmartHealthCardQRCodeFactory.CreateQRCode(SmartHealthCardJwsToken);
 
+      
       //Write out QR Code to file
       //for (int i = 0; i < QRCodeImageList.Length; i++)
       //{
       //  QRCodeImageList[i].Save(@$"C:\Temp\SMARTHealthCard\QRCode-{i}.png", ImageFormat.Png);
       //}
-
+     
       //### Assert #######################################################
 
       Assert.True(!string.IsNullOrWhiteSpace(SmartHealthCardJwsToken));

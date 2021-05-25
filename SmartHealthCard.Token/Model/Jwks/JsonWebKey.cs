@@ -23,7 +23,7 @@ namespace SmartHealthCard.Token.Model.Jwks
     public string Use { get; set; }
     [JsonProperty("alg")]
     public string Alg { get; set; }
-    [JsonProperty("cry")]
+    [JsonProperty("crv")]
     public string Crv { get; set; }
     [JsonProperty("x")]
     public string X { get; set; }

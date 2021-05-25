@@ -30,8 +30,9 @@ namespace SmartHealthCard.Test.Support
       DateTimeOffset IssuanceDateTimeOffset = DateTimeOffset.Now.AddMinutes(-1);
 
       //The Uri for the type of VerifiableCredentials
-      Uri VerifiableCredentialType = new Uri("https://smarthealth.cards#covid19");
-      List<Uri> VerifiableCredentialTypeList = new List<Uri>() { VerifiableCredentialType };
+      //Uri VerifiableCredentialType = new Uri("https://smarthealth.cards#covid19");
+      //List<Uri> VerifiableCredentialTypeList = new List<Uri>() { VerifiableCredentialType };
+      List<VerifiableCredentialType> VerifiableCredentialTypeList = new List<VerifiableCredentialType>() { VerifiableCredentialType.Covid19 };
 
       //Create the SmartHealthCardModel
       SmartHealthCardModel SmartHealthCardToEncode = new SmartHealthCardModel(Issuer, IssuanceDateTimeOffset,

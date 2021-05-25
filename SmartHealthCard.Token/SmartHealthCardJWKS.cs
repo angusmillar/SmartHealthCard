@@ -12,7 +12,8 @@ namespace SmartHealthCard.Token
       List<JsonWebKey> JsonWebKeySetModelList = new List<JsonWebKey>();
       foreach (X509Certificate2 Certificate in CertificateList)
       {        
-        ES256Algorithm Algorithm = new ES256Algorithm(Certificate);        
+        ES256Algorithm Algorithm = new ES256Algorithm(Certificate);
+        
         JsonWebKey JsonWebKeySetModel = new JsonWebKey(
           Kty: Algorithm.KeyTypeName,
           Kid: Algorithm.GetKid(),

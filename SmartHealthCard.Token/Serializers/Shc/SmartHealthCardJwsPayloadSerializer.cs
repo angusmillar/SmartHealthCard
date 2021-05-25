@@ -1,17 +1,10 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.IO;
-using System.Text;
-using SmartHealthCard.Token.Compression;
-using Newtonsoft.Json.Linq;
-using System.Linq;
-using System.Collections.Generic;
+﻿using SmartHealthCard.Token.Compression;
 using SmartHealthCard.Token.Model.Shc;
-using SmartHealthCard.Token.Serializers;
 using SmartHealthCard.Token.Serializers.Jws;
+using System;
 
 namespace SmartHealthCard.Token.Serializers.Shc
-{ 
+{
   public sealed class SmartHealthCardJwsPayloadSerializer : IJwsPayloadSerializer
   {
     private readonly Newtonsoft.Json.JsonSerializer Serializer;
@@ -35,11 +28,9 @@ namespace SmartHealthCard.Token.Serializers.Shc
 
     public T Deserialize<T>(byte[] bytes)
     {
-      string MinifiedSmartHealthCardJson = DeflateCompression.Uncompress(bytes);
-      JObject SmartHealthCardJObject = JObject.Parse(MinifiedSmartHealthCardJson);
-      SmartHealthCardModel SmartHealthCardModel = SmartHealthCardModelJsonSerializer.FromJson(SmartHealthCardJObject.ToString());
+      string MinifiedSmartHealthCardJson = DeflateCompression.Uncompress(bytes);      
+      SmartHealthCardModel SmartHealthCardModel = SmartHealthCardModelJsonSerializer.FromJson(MinifiedSmartHealthCardJson);
       return (T)(object)SmartHealthCardModel;
-    }
-   
+    }   
   }
 }

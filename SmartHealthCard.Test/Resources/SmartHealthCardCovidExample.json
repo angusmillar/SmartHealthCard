@@ -1,0 +1,83 @@
+{
+  "iss": "https://smarthealth.cards/examples/issuer",
+  "nbf": 1621444043.769,
+  "vc": {
+    "type": [
+      "https://smarthealth.cards#covid19"
+    ],
+    "credentialSubject": {
+      "fhirVersion": "4.0.1",
+      "fhirBundle": {
+        "resourceType": "Bundle",
+        "type": "collection",
+        "entry": [
+          {
+            "fullUrl": "resource:0",
+            "resource": {
+              "id": "resource:0",
+              "resourceType": "Patient",
+              "name": [
+                {
+                  "family": "TestFamily",
+                  "given": [
+                    "TestGiven"
+                  ]
+                }
+              ],
+              "birthDate": "1973-09-30"
+            }
+          },
+          {
+            "fullUrl": "resource:1",
+            "resource": {
+              "resourceType": "Observation",
+              "meta": {
+                "security": [
+                  {
+                    "code": "IAL1"
+                  }
+                ]
+              },
+              "status": "final",
+              "category": [
+                {
+                  "coding": [
+                    {
+                      "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                      "code": "laboratory"
+                    }
+                  ]
+                }
+              ],
+              "code": {
+                "coding": [
+                  {
+                    "system": "http://loinc.org",
+                    "code": "94558-4"
+                  }
+                ]
+              },
+              "subject": {
+                "reference": "resource:0"
+              },
+              "effectiveDateTime": "2021-02-17",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "260373001"
+                  }
+                ]
+              },
+              "performer": [
+                {
+                  "display": "ACME Healthcare"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

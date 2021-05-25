@@ -5,7 +5,6 @@ using System;
 
 namespace SmartHealthCard.Token.JwsToken
 {
-
   public sealed class JwsDecoder
   {
     private readonly IJwsHeaderSerializer HeaderSerializer;
@@ -55,7 +54,8 @@ namespace SmartHealthCard.Token.JwsToken
 
       if (Verity)
       {
-#pragma warning disable CS8602 // Dereference of a possibly null reference as already checked a method begining.
+        //Can Dereference the null warning here as the  null is performed at the beginging of this method.
+#pragma warning disable CS8602 // Dereference of a possibly null reference 
         this.JwsSignatureValidator.Validate(Token);
         this.JwsPayloadValidator.Validate(PayloadDeserialized);
 #pragma warning restore CS8602 // Dereference of a possibly null reference.

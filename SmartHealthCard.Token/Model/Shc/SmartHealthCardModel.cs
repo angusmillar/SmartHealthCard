@@ -16,6 +16,7 @@ namespace SmartHealthCard.Token.Model.Shc
       this.VerifiableCredential = VerifiableCredential;
     }
 
+    [JsonConstructor]
     public SmartHealthCardModel(Uri Issuer, string IssuanceDate, VerifiableCredential VerifiableCredential)
     {
       this.Issuer = Issuer;
@@ -23,11 +24,11 @@ namespace SmartHealthCard.Token.Model.Shc
       this.VerifiableCredential = VerifiableCredential;
     }
 
-    [JsonProperty("iss")]
+    [JsonProperty("iss", Required = Required.Always)]
     public Uri Issuer { get; set; }
-    [JsonProperty("nbf")]
+    [JsonProperty("nbf", Required = Required.Always)]
     public string IssuanceDate { get; set; }
-    [JsonProperty("vc")]
+    [JsonProperty("vc", Required = Required.Always)]
     public VerifiableCredential VerifiableCredential { get; set; }
 
     public DateTimeOffset GetIssuanceDate()
@@ -45,37 +46,10 @@ namespace SmartHealthCard.Token.Model.Shc
     }
 
     internal void Validate()
-    {
-      this.ValidateVerifiableCredentialTypes();
+    {     
       this.ValidateIssuanceDate();      
     }
-
-    private void ValidateVerifiableCredentialTypes()
-    {
-      var VerifiableCredentialTypesDic = new Dictionary<VerifiableCredentialTypes, string>()
-      {
-        { VerifiableCredentialTypes.Covid19, "https://smarthealth.cards#covid19" },
-        { VerifiableCredentialTypes.HealthCard, "https://smarthealth.cards#health-card" },
-        { VerifiableCredentialTypes.Immunization, "https://smarthealth.cards#immunization" },
-        { VerifiableCredentialTypes.Laboratory, "https://smarthealth.cards#laboratory" }
-      };
-      if (VerifiableCredential.VerifiableCredentialTypeList is null)
-      {
-        throw new SmartHealthCardPayloadException("Verifiable Credential Type List was found to be null.");
-      }
-      if (VerifiableCredential.VerifiableCredentialTypeList.Count() == 0)
-      {
-        throw new SmartHealthCardPayloadException("Verifiable Credential Type List was found to be empty.");
-      }
-      foreach (Uri uri in VerifiableCredential.VerifiableCredentialTypeList)
-      {
-        if (!VerifiableCredentialTypesDic.ContainsValue(uri.OriginalString.Trim().ToLower()))
-        {
-          throw new SmartHealthCardPayloadException($"Invalid Verifiable Credential Types of : {uri.OriginalString}.");
-        }
-      }      
-    }
-
+    
     private void ValidateIssuanceDate()
     {
       var EpochNow = UnixEpoch.GetSecondsSince(DateTimeOffset.UtcNow);

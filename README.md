@@ -21,10 +21,7 @@ namespace SHC.Demo
   class Program
   {
     static void Main(string[] args)
-    {
-      Console.WriteLine("Hello World!");
-      //### Prepare ######################################################
-
+    {      
       //Get the ECC certificate from the Windows Certificate Store by Thumbprint
       string CertificateThumbprint = "72c78a3460fb27b9ef2ccfae2538675b75363fee";
       X509Certificate2 Certificate = X509CertificateSupport.GetFirstMatchingCertificate(
@@ -58,8 +55,6 @@ namespace SHC.Demo
 
       //Instantiate the SmartHealthCard Encoder
       SmartHealthCardEncoder SmartHealthCardEncoder = new SmartHealthCardEncoder();
-
-      //### Act ##########################################################
 
       //Get the Smart Health Card Jws Token 
       string SmartHealthCardJwsToken = SmartHealthCardEncoder.GetToken(Certificate, SmartHealthCardToEncode);

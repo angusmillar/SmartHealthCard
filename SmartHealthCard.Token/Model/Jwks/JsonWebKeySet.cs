@@ -11,7 +11,6 @@ namespace SmartHealthCard.Token.Model.Jwks
     }
 
     [JsonProperty("keys")]
-    public List<JsonWebKey> Keys { get; set; }
-    
+    public List<JsonWebKey> Keys { get; set; }    
   }
 }

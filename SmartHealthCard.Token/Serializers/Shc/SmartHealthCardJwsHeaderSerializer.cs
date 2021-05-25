@@ -10,10 +10,8 @@ using static SmartHealthCard.Token.Encoders.Utf8EncodingSupport;
 namespace SmartHealthCard.Token.Serializers.Shc
 {
   public class SmartHealthCardJwsHeaderSerializer : IJwsHeaderSerializer
-  {
-    
+  {    
     private readonly Newtonsoft.Json.JsonSerializer Serializer;
-
     public SmartHealthCardJwsHeaderSerializer()
     {
       this.Serializer = Newtonsoft.Json.JsonSerializer.CreateDefault();

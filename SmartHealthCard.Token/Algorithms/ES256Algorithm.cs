@@ -1,6 +1,5 @@
 ﻿using SmartHealthCard.Token.Encoders;
 using SmartHealthCard.Token.Exceptions;
-using SmartHealthCard.Token.Hashers;
 using SmartHealthCard.Token.Model.Jwks;
 using System;
 using System.Linq;
@@ -65,10 +64,7 @@ namespace SmartHealthCard.Token.Algorithms
 
       return this.PublicKey.VerifyData(bytesToSign, signature, this.HashAlgorithmName);
     }
-    public string GetKid()
-    {
-      return Base64UrlEncoder.Encode(this.Certificate.Thumbprint.GetSHA256Hash());
-    }
+    
     public string GetPointCoordinateX()
     {
       if (this.PublicKey is null)
@@ -127,10 +123,21 @@ namespace SmartHealthCard.Token.Algorithms
       return new ES256Algorithm(PublicKey, null);
     }
 
+    public string GetKid()
+    {
+      if (this.Certificate is null)
+        throw new NullReferenceException("Unable to get certificate thumbprint as no certificate provided.");
 
+      var Intermediate = new JWKThumbprintComputationIntermediate(
+       this.CurveName,
+       this.KeyTypeName,
+       this.GetPointCoordinateX(),
+       this.GetPointCoordinateY());
 
-
-
-
+      var JsonSerializer = new Serializers.Json.JsonSerializer(Minified: true);
+      string Json = JsonSerializer.ToJson(Intermediate);
+      byte[] Bytes = Hashers.SHA256Hasher.GetSHA256Hash(Json);
+      return Encoders.Base64UrlEncoder.Encode(Bytes);
+    }
   }
 }

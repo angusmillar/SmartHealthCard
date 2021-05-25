@@ -1,11 +1,10 @@
-﻿using SmartHealthCard.Token.Model.Jwks;
-using SmartHealthCard.Token.Algorithms;
+﻿using SmartHealthCard.Token.Algorithms;
 using SmartHealthCard.Token.JwsToken;
+using SmartHealthCard.Token.Model.Jwks;
 using SmartHealthCard.Token.Model.Shc;
 using SmartHealthCard.Token.Serializers.Json;
 using SmartHealthCard.Token.Serializers.Jws;
 using SmartHealthCard.Token.Serializers.Shc;
-using System.IO;
 using System.Security.Cryptography.X509Certificates;
 
 namespace SmartHealthCard.Token
