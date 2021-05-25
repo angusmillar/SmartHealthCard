@@ -36,7 +36,7 @@ namespace SmartHealthCard.QRCode
       this.SmartHealthCardJwsChunker = SmartHealthCardJwsChunker;
     }
 
-    public Bitmap[] CreateQRCode(string SmartHealthCardJWSToken)
+    public List<Bitmap> GetQRCodeList(string SmartHealthCardJWSToken)
     {
       List<Bitmap> BitmapList = new List<Bitmap>();      
       Chunk[] ChunkArray = this.SmartHealthCardJwsChunker.Chunk(SmartHealthCardJWSToken);
@@ -50,10 +50,10 @@ namespace SmartHealthCard.QRCode
         QrCode QrCode = QrCode.EncodeSegments(SegmentList, QrCode.Ecc.Low, 22, 22);
         BitmapList.Add(QrCode.ToBitmap(2, 5, Color.Black, Color.White));
       }
-      return BitmapList.ToArray();
+      return BitmapList;
     }
 
-    public string[] CreateQRCodeRawData(string SmartHealthCardJWSToken)
+    public List<string> GetQRCodeRawDataList(string SmartHealthCardJWSToken)
     {
       List<string> QRCodeData = new List<string>();
       Chunk[] ChunkArray = this.SmartHealthCardJwsChunker.Chunk(SmartHealthCardJWSToken);
@@ -62,7 +62,7 @@ namespace SmartHealthCard.QRCode
         string Data = $"{Chunk.ByteSegment}{Chunk.NumericSegment}";       
         QRCodeData.Add(Data);
       }
-      return QRCodeData.ToArray();
+      return QRCodeData;
     }
   }
 }

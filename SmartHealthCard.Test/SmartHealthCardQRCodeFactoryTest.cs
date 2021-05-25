@@ -60,7 +60,7 @@ namespace SmartHealthCard.Test
 
       //Create list of QR Codes
       SmartHealthCardQRCodeFactory SmartHealthCardQRCodeFactory = new SmartHealthCardQRCodeFactory();
-      Bitmap[] QRCodeImageList = SmartHealthCardQRCodeFactory.CreateQRCode(SmartHealthCardJwsToken);
+      List<Bitmap> QRCodeImageList = SmartHealthCardQRCodeFactory.GetQRCodeList(SmartHealthCardJwsToken);
 
       
       //Write out QR Code to file

@@ -38,6 +38,7 @@ namespace SmartHealthCard.Test
       
     }
 
+    [Fact]
     public void Decode_Token_Verify_with_Certificate()
     {
       //### Prepare ######################################################
