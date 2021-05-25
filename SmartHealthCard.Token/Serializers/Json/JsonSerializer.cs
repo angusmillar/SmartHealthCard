@@ -26,7 +26,7 @@ namespace SmartHealthCard.Token.Serializers.Json
     
     public T Deserialize<T>(byte[] bytes)
     {
-      T? Item = this.FromJson<T>(Utf8EncodingSupport.GetString(bytes));
+      T? Item = this.FromJson<T>(GetString(bytes));
       if (Item is null)
         throw new DeserializationException($"Unable to deserialize the JWS Header to type {typeof(T).Name}");
       return Item;      
@@ -34,18 +34,18 @@ namespace SmartHealthCard.Token.Serializers.Json
 
     public string ToJson<T>(T Obj)
     {
-      var sb = new StringBuilder();
-      using var stringWriter = new StringWriter(sb);
-      using var jsonWriter = new JsonTextWriter(stringWriter);
-      Serializer.Serialize(jsonWriter, Obj);
-      return sb.ToString();
+      var Builder = new StringBuilder();
+      using var StringWriter = new StringWriter(Builder);
+      using var JsonWriter = new  JsonTextWriter(StringWriter);
+      Serializer.Serialize(JsonWriter, Obj);
+      return Builder.ToString();
     }
 
     public T FromJson<T>(string Json)
     {      
-      using var stringReader = new StringReader(Json);
-      using var jsonReader = new JsonTextReader(stringReader);
-      T? Item = Serializer.Deserialize<T>(jsonReader);
+      using var StringReader = new StringReader(Json);
+      using var JsonReader = new JsonTextReader(StringReader);
+      T? Item = Serializer.Deserialize<T>(JsonReader);
       if (Item is null)
         throw new DeserializationException($"Unable to deserialize the JWS Header to type {typeof(T).Name}");
       return Item;
