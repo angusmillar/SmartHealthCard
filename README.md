@@ -4,6 +4,7 @@ This is an open-source library for encoding/decoding/validating FHIR SMART Healt
 
 >See the official SMART Health Card specification page : [SMART Health Cards Framework](https://smarthealth.cards/)
 
+>This Liabary passes all test of this: [Smart Health Card implementation verifier site](https://demo-portals.smarthealth.cards/VerifierPortal.html)
 
 ## Example of Encoding a SMART Health Card JWS token and generating its QR Code images 
 ```C#
