@@ -4,7 +4,7 @@ This is an open-source library for encoding/decoding/validating FHIR SMART Healt
 
 >See the official SMART Health Card specification page : [SMART Health Cards Framework](https://smarthealth.cards/)
 
->This Liabary passes all test of this: [Smart Health Card implementation verifier site](https://demo-portals.smarthealth.cards/VerifierPortal.html)
+>This implementation passes all test found here: [Smart Health Card verifier site](https://demo-portals.smarthealth.cards/VerifierPortal.html)
 
 ## Example of Encoding a SMART Health Card JWS token and generating its QR Code images 
 ```C#
@@ -36,7 +36,8 @@ namespace SHC.Demo
       //The Version of FHIR in use
       string FhirVersion = "4.0.1";
 
-      //Get a FHIR Bundle, see FHIR profile site: http://build.fhir.org/ig/dvci/vaccine-credential-ig/branches/main/index.html      
+      //Get a FHIR Bundle, see FHIR profile site: http://build.fhir.org/ig/dvci/vaccine-credential-ig/branches/main/index.html   
+      //Strongly suggest you use the [FIRELY .NET SDK](https://docs.fire.ly/projects/Firely-NET-SDK/index.html) to build your FHIR Bundle and resources
       string FhirBundleJson = "[Smart Health Card FHIR Bundle in Json format]";
 
       //The base of the Url where a validator will retrieve the public keys from (e.g : [Issuer]/.well-known/jwks.json) 
