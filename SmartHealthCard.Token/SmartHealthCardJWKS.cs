@@ -1,19 +1,31 @@
 ﻿using SmartHealthCard.Token.Algorithms;
 using SmartHealthCard.Token.Model.Jwks;
+using SmartHealthCard.Token.Serializers.Json;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 
 namespace SmartHealthCard.Token
 {
-  public static class SmartHealthCardJWKS
+  public class SmartHealthCardJwks
   {
-    public static string Get(X509Certificate2[] CertificateList, bool Minified = true)
+    private readonly IJsonSerializer JsonSerializer;
+    public SmartHealthCardJwks()
+    {
+      this.JsonSerializer = new JsonSerializer();
+    }
+
+    public SmartHealthCardJwks(IJsonSerializer JsonSerializer)
+    {
+      this.JsonSerializer = JsonSerializer;
+    }
+
+    public JsonWebKeySet GetJsonWebKeySet(IEnumerable<X509Certificate2> CertificateList, bool Minified = true)
     {
       List<JsonWebKey> JsonWebKeySetModelList = new List<JsonWebKey>();
       foreach (X509Certificate2 Certificate in CertificateList)
-      {        
-        ES256Algorithm Algorithm = new ES256Algorithm(Certificate);
-        
+      {
+        ES256Algorithm Algorithm = new ES256Algorithm(Certificate, JsonSerializer);
+
         JsonWebKey JsonWebKeySetModel = new JsonWebKey(
           Kty: Algorithm.KeyTypeName,
           Kid: Algorithm.GetKid(),
@@ -25,13 +37,14 @@ namespace SmartHealthCard.Token
 
         JsonWebKeySetModelList.Add(JsonWebKeySetModel);
       }
-      JsonWebKeySet JsonWebKeySet = new JsonWebKeySet(JsonWebKeySetModelList);
+      return  new JsonWebKeySet(JsonWebKeySetModelList);
+    }
 
-      Newtonsoft.Json.Formatting Formatting = Newtonsoft.Json.Formatting.None;
-      if (!Minified)
-        Formatting = Newtonsoft.Json.Formatting.Indented;
-
-      return Newtonsoft.Json.JsonConvert.SerializeObject(JsonWebKeySet, Formatting);
+    public string Get(IEnumerable<X509Certificate2> CertificateList, bool Minified = true)
+    {
+      JsonWebKeySet JsonWebKeySet = GetJsonWebKeySet(CertificateList, Minified);
+      IJsonSerializer JsonSerializer = new JsonSerializer();
+      return JsonSerializer.ToJson(JsonWebKeySet, Minified);
     }
   }
 }

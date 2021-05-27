@@ -1,4 +1,9 @@
-﻿namespace SmartHealthCard.Token.Serializers.Jws
+﻿using SmartHealthCard.Token.Model.Jws;
+
+namespace SmartHealthCard.Token.Serializers.Jws
 {
-  public interface IJwsPayloadSerializer : IJwsSerializer { }  
+  public interface IJwsPayloadSerializer : IJwsSerializer 
+  {
+   
+  }  
 }

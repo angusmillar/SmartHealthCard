@@ -59,7 +59,7 @@ namespace SmartHealthCard.Test
       string SmartHealthCardJwsToken = SmartHealthCardEncoder.GetToken(Certificate, SmartHealthCardToEncode);
 
       //Create list of QR Codes
-      SmartHealthCardQRCodeFactory SmartHealthCardQRCodeFactory = new SmartHealthCardQRCodeFactory();
+      SmartHealthCardQRCodeEncoder SmartHealthCardQRCodeFactory = new SmartHealthCardQRCodeEncoder();
       List<Bitmap> QRCodeImageList = SmartHealthCardQRCodeFactory.GetQRCodeList(SmartHealthCardJwsToken);
 
       

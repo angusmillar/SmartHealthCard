@@ -16,7 +16,7 @@ namespace SmartHealthCard.Token.Model.Jws
 
       var parts = token.Split('.');
       if (parts.Length != 3)
-        throw new InvalidTokenPartsException($"{nameof(Token)}: A JWS Token must have three parts seperated by dots (e.g Header.Payload.Signature).");
+        throw new InvalidTokenException($"{nameof(Token)}: A JWS Token must have three parts seperated by dots (e.g Header.Payload.Signature).");
 
       this.Parts = parts;
     }
@@ -26,7 +26,7 @@ namespace SmartHealthCard.Token.Model.Jws
       if (Parts is null)
         throw new ArgumentNullException(nameof(Parts));
       if (Parts.Length != 3)
-        throw new InvalidTokenPartsException($"{nameof(Parts)}: A JWS Token must have three parts seperated by dots (e.g Header.Payload.Signature).");
+        throw new InvalidTokenException($"{nameof(Parts)}: A JWS Token must have three parts seperated by dots (e.g Header.Payload.Signature).");
 
       this.Parts = Parts;
     }

@@ -1,6 +1,7 @@
 ﻿using SmartHealthCard.Token.Encoders;
 using SmartHealthCard.Token.Exceptions;
 using SmartHealthCard.Token.Model.Jwks;
+using SmartHealthCard.Token.Serializers.Json;
 using System;
 using System.Linq;
 using System.Security.Cryptography;
@@ -13,9 +14,11 @@ namespace SmartHealthCard.Token.Algorithms
     private readonly X509Certificate2? Certificate;
     private readonly ECDsa? PublicKey;
     private readonly ECDsa? PrivateKey;
+    private readonly IJsonSerializer JsonSerializer;
 
-    public ES256Algorithm(X509Certificate2 Certificate)
+    public ES256Algorithm(X509Certificate2 Certificate, IJsonSerializer JsonSerializer)
     {
+      this.JsonSerializer = JsonSerializer;
       this.Certificate = Certificate;
       ECDsa? PrivateKey = GetPrivateKey(this.Certificate);
       if (PrivateKey == null)
@@ -38,10 +41,11 @@ namespace SmartHealthCard.Token.Algorithms
       }
     }
 
-    public ES256Algorithm(ECDsa? PublicKey, ECDsa? PrivateKey)
+    public ES256Algorithm(ECDsa? PublicKey, ECDsa? PrivateKey, IJsonSerializer JsonSerializer)
     {                 
        this.PublicKey = PublicKey;
        this.PrivateKey = PrivateKey;
+      this.JsonSerializer = JsonSerializer;
     }
 
     public string Name => "ES256";
@@ -104,11 +108,11 @@ namespace SmartHealthCard.Token.Algorithms
       return cert.GetECDsaPublicKey();
     }
 
-    public static ES256Algorithm FromJWKS(string Kid, JsonWebKeySet JsonWebKeySet)
+    public static ES256Algorithm FromJWKS(string Kid, JsonWebKeySet JsonWebKeySet, IJsonSerializer JsonSerializer)
     {
-      JsonWebKey? Key = JsonWebKeySet.Keys.SingleOrDefault(x => x.Kid.Equals(Kid, StringComparison.CurrentCultureIgnoreCase));
+      JsonWebKey? Key = JsonWebKeySet.Keys.SingleOrDefault(x => x.Kid.Equals(Kid, StringComparison.CurrentCulture));
       if (Key is null)
-        throw new JsonWebKeySetException($"Unable to loacate the required key for kid value of {Kid}");
+        throw new JsonWebKeySetException($"No key matching the token's header kid value of {Kid} found in the sourced JWKS file.");
 
       ECDsa PublicKey = ECDsa.Create(new ECParameters
       {
@@ -120,7 +124,7 @@ namespace SmartHealthCard.Token.Algorithms
         }
       });
 
-      return new ES256Algorithm(PublicKey, null);
+      return new ES256Algorithm(PublicKey: PublicKey, PrivateKey: null, JsonSerializer: JsonSerializer);
     }
 
     public string GetKid()
@@ -133,9 +137,8 @@ namespace SmartHealthCard.Token.Algorithms
        this.KeyTypeName,
        this.GetPointCoordinateX(),
        this.GetPointCoordinateY());
-
-      var JsonSerializer = new Serializers.Json.JsonSerializer(Minified: true);
-      string Json = JsonSerializer.ToJson(Intermediate);
+      
+      string Json = JsonSerializer.ToJson(Intermediate, Minified: true);
       byte[] Bytes = Hashers.SHA256Hasher.GetSHA256Hash(Json);
       return Encoders.Base64UrlEncoder.Encode(Bytes);
     }

@@ -14,7 +14,7 @@ namespace SmartHealthCard.Test.Support
 {
   public static class SmartHealthCardJwsSupport
   {
-    public static string GetJWSCovidExampleOne(X509Certificate2 Certificate)
+    public static string GetJWSCovidExampleOne(X509Certificate2 Certificate, Uri Issuer)
     {
       //The Version of FHIR in use
       string FhirVersion = "4.0.1";
@@ -22,9 +22,6 @@ namespace SmartHealthCard.Test.Support
       //Get Fhir bundle
       Bundle FhirBundleResource = FhirDataSupport.GetCovid19FhirBundleExample1();
       string FhirBundleJson = FhirSerializer.SerializeToJson(FhirBundleResource);
-
-      //The base of the Url where a validator will retive the public keys from (e.g : [Issuer]/.well-known/jwks.json) 
-      Uri Issuer = new Uri("https://sonichealthcare.com/something");
 
       //When the Smart Health Card became valid, the from date.
       DateTimeOffset IssuanceDateTimeOffset = DateTimeOffset.Now.AddMinutes(-1);

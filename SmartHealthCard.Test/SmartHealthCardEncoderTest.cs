@@ -1,10 +1,13 @@
 using Hl7.Fhir.Model;
+using Moq;
 using SmartHealthCard.Test.Model;
 using SmartHealthCard.Test.Serializers;
 using SmartHealthCard.Test.Support;
 using SmartHealthCard.Token;
 using SmartHealthCard.Token.Exceptions;
+using SmartHealthCard.Token.Model.Jwks;
 using SmartHealthCard.Token.Model.Shc;
+using SmartHealthCard.Token.Providers;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
@@ -30,7 +33,7 @@ namespace SmartHealthCard.Test
       string FhirBundleJson = FhirSerializer.SerializeToJson(FhirBundleResource);
       
       //The base of the Url where a validator will retive the public keys from (e.g : [Issuer]/.well-known/jwks.json) 
-      Uri Issuer = new Uri("https://sonichealthcare.com/something");
+      Uri Issuer = new Uri("https://sonichealthcare.com/something");      
 
       //When the Smart Health Card became valid, the from date.
       DateTimeOffset IssuanceDateTimeOffset = DateTimeOffset.Now.AddMinutes(-1);      
@@ -47,8 +50,12 @@ namespace SmartHealthCard.Test
       //Instantiate the SmartHealthCard Encoder
       SmartHealthCardEncoder SmartHealthCardEncoder = new SmartHealthCardEncoder();
 
+      //This testing JwksSupport class provides us wiht a mocked IJwksProvider that will inject the JWKS file
+      //rather thnan make the HTTP call to go get it from a public endpoint.
+      IJwksProvider MockedIJwksProvider = JwksSupport.GetMockedIJwksProvider(Certificate, Issuer);
+
       //Instantiate the SmartHealthCard Decoder
-      SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder();
+      SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder(MockedIJwksProvider);
 
       //### Act ##########################################################
 
@@ -62,7 +69,7 @@ namespace SmartHealthCard.Test
       Assert.True(!string.IsNullOrWhiteSpace(SmartHealthCardJwsToken));
 
 
-      SmartHealthCardModel DecodedSmartHealthCardModle = Decoder.VerifyAndDecode(SmartHealthCardJwsToken, Certificate);
+      SmartHealthCardModel DecodedSmartHealthCardModle = Decoder.VerifyAndDecode(SmartHealthCardJwsToken);
 
       //Check the IssuanceDate as the same to seconds precision
       DateTimeOffset ActualIssuanceDate = DecodedSmartHealthCardModle.GetIssuanceDate();

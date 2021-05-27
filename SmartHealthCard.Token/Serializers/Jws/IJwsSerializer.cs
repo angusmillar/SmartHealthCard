@@ -1,14 +1,16 @@
-﻿namespace SmartHealthCard.Token.Serializers.Jws
+﻿using SmartHealthCard.Token.Serializers.Json;
+
+namespace SmartHealthCard.Token.Serializers.Jws
 {
-  public interface IJwsSerializer 
+  public interface IJwsSerializer //: IJsonSerializer
   {
     /// <summary>
-    /// Serialize an object a byte[]
+    /// Serialize an object to a JSON string byte[]
     /// </summary>
-    byte[] Serialize<T>(T Obj);
+    byte[] Serialize<T>(T Obj, bool Minified = true);
 
     /// <summary>
-    /// Deserialize a string to typed object.
+    /// Deserialize a JSON string to typed object.
     /// </summary>
     T Deserialize<T>(byte[] bytes);
   }

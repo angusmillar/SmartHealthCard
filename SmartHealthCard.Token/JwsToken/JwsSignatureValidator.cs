@@ -7,22 +7,16 @@ using System;
 namespace SmartHealthCard.Token.JwsToken
 {
   public sealed class JwsSignatureValidator : IJwsSignatureValidator
-  {
-    private readonly IAlgorithm Algorithm;
-    public JwsSignatureValidator(IAlgorithm Algorithm)
+  {    
+    public void Validate(IAlgorithm Algorithm, string Token)
     {
-      this.Algorithm = Algorithm;
-    }
-    public void Validate(string Token)
-    {
-      if (string.IsNullOrEmpty(Token))
-      {
-        throw new ArgumentException(nameof(Token));
-      }
+      if (string.IsNullOrEmpty(Token))      
+        throw new ArgumentException($"The provided {nameof(Token)} was found to be empty.");
+      
       JwsParts JwtParts = new JwsParts(Token);
       byte[] BytesToSign = Utf8EncodingSupport.GetBytes(JwtParts.Header, (byte)'.', JwtParts.Payload);
       byte[] Signature = Base64UrlEncoder.Decode(JwtParts.Signature);
-      if (!this.Algorithm.Verify(BytesToSign, Signature))
+      if (!Algorithm.Verify(BytesToSign, Signature))
       {
         throw new SignatureVerificationException("The JWS signature is invalid.");
       }     

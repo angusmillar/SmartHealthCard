@@ -2,6 +2,7 @@
 using SmartHealthCard.Token.JwsToken;
 using SmartHealthCard.Token.Model.Jwks;
 using SmartHealthCard.Token.Model.Shc;
+using SmartHealthCard.Token.Providers;
 using SmartHealthCard.Token.Serializers.Json;
 using SmartHealthCard.Token.Serializers.Jws;
 using SmartHealthCard.Token.Serializers.Shc;
@@ -11,17 +12,27 @@ namespace SmartHealthCard.Token
 {
   public class SmartHealthCardDecoder
   {
-    private IAlgorithm? Algorithm;
+    private readonly IJsonSerializer JsonSerializer;
     private readonly IJwsHeaderSerializer HeaderSerializer;
     private readonly IJwsPayloadSerializer PayloadSerializer;
+    private IJwksProvider? JwksProvider;
     private IJwsSignatureValidator? JwsSignatureValidator;
     private IJwsPayloadValidator? JwsPayloadValidator;
     private IJwsHeaderValidator? JwsHeaderValidator;
 
     public SmartHealthCardDecoder()
     {
-      this.HeaderSerializer = new SmartHealthCardJwsHeaderSerializer();
-      this.PayloadSerializer = new SmartHealthCardJwsPayloadSerializer();
+      this.JsonSerializer = new JsonSerializer();      
+      this.HeaderSerializer = new SmartHealthCardJwsHeaderSerializer(JsonSerializer);
+      this.PayloadSerializer = new SmartHealthCardJwsPayloadSerializer(JsonSerializer);
+    }
+
+    public SmartHealthCardDecoder(IJwksProvider JwksProvider)
+    {
+      this.JwksProvider = JwksProvider;
+      this.JsonSerializer = new JsonSerializer();
+      this.HeaderSerializer = new SmartHealthCardJwsHeaderSerializer(JsonSerializer);
+      this.PayloadSerializer = new SmartHealthCardJwsPayloadSerializer(JsonSerializer);
     }
 
     public SmartHealthCardDecoder(IJwsHeaderSerializer HeaderSerializer)
@@ -30,7 +41,9 @@ namespace SmartHealthCard.Token
         throw new System.NullReferenceException(nameof(HeaderSerializer));
 
       this.HeaderSerializer = HeaderSerializer;
-      this.PayloadSerializer = new SmartHealthCardJwsPayloadSerializer();
+
+      this.JsonSerializer = new JsonSerializer();
+      this.PayloadSerializer = new SmartHealthCardJwsPayloadSerializer(JsonSerializer);
     }
 
     public SmartHealthCardDecoder(IJwsPayloadSerializer PayloadSerializer)
@@ -38,7 +51,8 @@ namespace SmartHealthCard.Token
       if (PayloadSerializer is null)
         throw new System.NullReferenceException(nameof(PayloadSerializer));
 
-      this.HeaderSerializer = new SmartHealthCardJwsHeaderSerializer();
+      this.JsonSerializer = new JsonSerializer();
+      this.HeaderSerializer = new SmartHealthCardJwsHeaderSerializer(JsonSerializer);
       this.PayloadSerializer = PayloadSerializer;
     }
 
@@ -49,6 +63,7 @@ namespace SmartHealthCard.Token
       if (PayloadSerializer is null)
         throw new System.NullReferenceException(nameof(PayloadSerializer));
 
+      this.JsonSerializer = new JsonSerializer();
       this.HeaderSerializer = HeaderSerializer;
       this.PayloadSerializer = PayloadSerializer;
     }
@@ -61,7 +76,7 @@ namespace SmartHealthCard.Token
     /// <returns>SmartHealthCardModel</returns>
     public SmartHealthCardModel Decode(string Token)
     {
-      JwsDecoder JwsDecoder = new JwsDecoder(this.HeaderSerializer, this.PayloadSerializer, this.JwsSignatureValidator, this.JwsHeaderValidator, this.JwsPayloadValidator);
+      JwsDecoder JwsDecoder = new JwsDecoder(this.HeaderSerializer, this.PayloadSerializer);
       SmartHealthCardModel SmartHealthCardModel = JwsDecoder.DecodePayload<SmartHealthCareJWSHeaderModel, SmartHealthCardModel>(Token);
       return SmartHealthCardModel;
     }
@@ -76,37 +91,28 @@ namespace SmartHealthCard.Token
     {
       JwsDecoder JwsDecoder = new JwsDecoder(this.HeaderSerializer, this.PayloadSerializer);
       SmartHealthCardModel SmartHealthCardModel = JwsDecoder.DecodePayload<SmartHealthCareJWSHeaderModel, SmartHealthCardModel>(Token);
-      return SmartHealthCardModelJsonSerializer.ToJson(SmartHealthCardModel, Minified: false);
+      JsonSerializer JsonSerializer = new JsonSerializer();
+      return JsonSerializer.ToJson(SmartHealthCardModel, Minified: false);      
     }
 
     /// <summary>
-    /// Takes a Smart Health Card JWS token and a Certificate,  Verifies the token signature and contents before decoding it to a SmartHealthCardModel object model 
-    /// </summary>
-    /// <param name="Token"></param>
-    /// <param name="Certificate"></param>
-    /// <returns></returns>
-    public SmartHealthCardModel VerifyAndDecode(string Token, X509Certificate2 Certificate)
-    {
-      this.Algorithm = new ES256Algorithm(Certificate);
-      InstantiationForVerifying(this.Algorithm);
-      JwsDecoder JwsDecoder = new JwsDecoder(this.HeaderSerializer, this.PayloadSerializer, this.JwsSignatureValidator, this.JwsHeaderValidator, this.JwsPayloadValidator);
-      SmartHealthCardModel SmartHealthCardModel = JwsDecoder.DecodePayload<SmartHealthCareJWSHeaderModel, SmartHealthCardModel>(Token: Token, Verity: true);
-      return SmartHealthCardModel;
-    }
-
-    /// <summary>
-    /// Takes a Smart Health Card JWS token and a JsonWebKeySet (JWKS),  Verifies the token signature and contents before decoding it to a SmartHealthCardModel object model 
+    /// Takes a Smart Health Card JWS token, Verifies the token signature and contents before decoding it to a SmartHealthCardModel object model 
     /// </summary>
     /// <param name="Token"></param>
     /// <param name="JsonWebKeySet"></param>
     /// <returns></returns>
-    public SmartHealthCardModel VerifyAndDecode(string Token, string JsonWebKeySet)
-    {
-      JsonSerializer JsonSerializer = new JsonSerializer();
-      JsonWebKeySet JsonWebKeySetModel = JsonSerializer.FromJson<JsonWebKeySet>(JsonWebKeySet);
-      this.Algorithm = ES256Algorithm.FromJWKS(JsonWebKeySetModel.Keys[0].Kid, JsonWebKeySetModel);
-      InstantiationForVerifying(this.Algorithm);
-      JwsDecoder JwsDecoder = new JwsDecoder(this.HeaderSerializer, this.PayloadSerializer, this.JwsSignatureValidator, this.JwsHeaderValidator, this.JwsPayloadValidator);
+    public SmartHealthCardModel VerifyAndDecode(string Token)
+    {     
+      InstantiationForVerifying();
+      JwsDecoder JwsDecoder = new JwsDecoder(
+        this.JsonSerializer, 
+        this.HeaderSerializer, 
+        this.PayloadSerializer, 
+        this.JwksProvider, 
+        this.JwsSignatureValidator, 
+        this.JwsHeaderValidator, 
+        this.JwsPayloadValidator);
+
       SmartHealthCardModel SmartHealthCardModel = JwsDecoder.DecodePayload<SmartHealthCareJWSHeaderModel, SmartHealthCardModel>(Token: Token, Verity: true);
       return SmartHealthCardModel;
     }
@@ -116,18 +122,29 @@ namespace SmartHealthCard.Token
     /// <param name="Token"></param>
     /// <param name="Certificate"></param>
     /// <returns></returns>
-    public string VerifyAndDecodeToJson(string Token, X509Certificate2 Certificate)
-    {
-      this.Algorithm = new ES256Algorithm(Certificate);
-      InstantiationForVerifying(this.Algorithm);
-      JwsDecoder JwsDecoder = new JwsDecoder(this.HeaderSerializer, this.PayloadSerializer, this.JwsSignatureValidator, this.JwsHeaderValidator, this.JwsPayloadValidator);
+    public string VerifyAndDecodeToJson(string Token)
+    {      
+      InstantiationForVerifying();
+      JwsDecoder JwsDecoder = new JwsDecoder(
+        this.JsonSerializer, 
+        this.HeaderSerializer, 
+        this.PayloadSerializer, 
+        this.JwksProvider, 
+        this.JwsSignatureValidator, 
+        this.JwsHeaderValidator, 
+        this.JwsPayloadValidator);
+
       SmartHealthCardModel SmartHealthCardModel = JwsDecoder.DecodePayload<SmartHealthCareJWSHeaderModel, SmartHealthCardModel>(Token: Token, Verity: true);
-      return SmartHealthCardModelJsonSerializer.ToJson(SmartHealthCardModel, Minified: false);
+      JsonSerializer JsonSerializer = new JsonSerializer();
+      return JsonSerializer.ToJson(SmartHealthCardModel, Minified: false);
     }
 
-    private void InstantiationForVerifying(IAlgorithm Algorithm)
+    private void InstantiationForVerifying()
     {
-      this.JwsSignatureValidator = new JwsSignatureValidator(Algorithm);
+      if (this.JwksProvider is null)
+        this.JwksProvider = new JwksProvider(new JsonSerializer());
+
+      this.JwsSignatureValidator = new JwsSignatureValidator();
       this.JwsPayloadValidator = new SmartHealthCardPayloadValidator();
       this.JwsHeaderValidator = new SmartHealthCardHeaderValidator();
     }

@@ -8,16 +8,16 @@ namespace SmartHealthCard.Token.Model.Jws
   public class JwsHeader
   {
     [JsonProperty("typ")]
-    public string? Type { get; set; }
+    public string? Typ { get; set; }
 
     [JsonProperty("cty")]
-    public string? ContentType { get; set; }
+    public string? Cty { get; set; }
 
     [JsonProperty("alg")]
-    public string? Algorithm { get; set; }
+    public string? Alg { get; set; }
 
     [JsonProperty("kid")]
-    public string? KeyId { get; set; }
+    public string? Kid { get; set; }
 
     [JsonProperty("x5u")]
     public string? X5u { get; set; }

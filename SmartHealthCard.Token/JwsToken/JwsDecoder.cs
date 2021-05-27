@@ -1,66 +1,114 @@
 using SmartHealthCard.Token.Encoders;
+using SmartHealthCard.Token.Exceptions;
 using SmartHealthCard.Token.Model.Jws;
 using SmartHealthCard.Token.Serializers.Jws;
+using SmartHealthCard.Token.Model.Jwks;
 using System;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using SmartHealthCard.Token.Providers;
+using SmartHealthCard.Token.Serializers.Json;
 
 namespace SmartHealthCard.Token.JwsToken
 {
   public sealed class JwsDecoder
   {
+    private readonly IJsonSerializer? JsonSerializer;
     private readonly IJwsHeaderSerializer HeaderSerializer;
     private readonly IJwsPayloadSerializer PayloadSerializer;
     private readonly IJwsSignatureValidator? JwsSignatureValidator;
     private readonly IJwsPayloadValidator? JwsPayloadValidator;
     private readonly IJwsHeaderValidator? JwsHeaderValidator;
-    public JwsDecoder(IJwsHeaderSerializer HeaderSerializer, IJwsPayloadSerializer PayloadSerializer)
+    private readonly IJwksProvider? JwksProvider;
+    public JwsDecoder(
+      IJwsHeaderSerializer HeaderSerializer, 
+      IJwsPayloadSerializer PayloadSerializer)
     {
       this.HeaderSerializer = HeaderSerializer;
       this.PayloadSerializer = PayloadSerializer;
     }
 
-    public JwsDecoder(IJwsHeaderSerializer HeaderSerializer, IJwsPayloadSerializer PayloadSerializer, IJwsSignatureValidator? IJwsSignatureValidator, IJwsHeaderValidator? JwsHeaderValidator, IJwsPayloadValidator? IJwsPayloadValidator)
+    public JwsDecoder(
+      IJsonSerializer JsonSerializer,
+      IJwsHeaderSerializer HeaderSerializer, 
+      IJwsPayloadSerializer PayloadSerializer, 
+      IJwksProvider? JwksProvider, 
+      IJwsSignatureValidator? IJwsSignatureValidator, 
+      IJwsHeaderValidator? JwsHeaderValidator, 
+      IJwsPayloadValidator? IJwsPayloadValidator)
       : this(HeaderSerializer, PayloadSerializer)
     {
+      //todo: If as all are nullable they might provide one but not the other??
+      this.JsonSerializer = JsonSerializer;
+      this.JwksProvider = JwksProvider;
       this.JwsSignatureValidator = IJwsSignatureValidator;
       this.JwsHeaderValidator = JwsHeaderValidator;
       this.JwsPayloadValidator = IJwsPayloadValidator;
     }
 
     public PayloadType DecodePayload<HeaderType, PayloadType>(string Token, bool Verity = false)
-    {      
-      if (Verity)
-      {
-        if (this.JwsHeaderValidator is null) 
-          throw new NullReferenceException($"When Verify is true {nameof(this.JwsHeaderValidator)} must be not null.");
-        if (this.JwsSignatureValidator is null)
-          throw new NullReferenceException($"When Verify is true {nameof(this.JwsSignatureValidator)} must be not null.");
-        if (this.JwsPayloadValidator is null)
-          throw new NullReferenceException($"When Verify is true {nameof(this.JwsPayloadValidator)} must be not null.");
+    {
+      if (string.IsNullOrEmpty(Token))      
+        throw new InvalidTokenException("The Token provided was found to be null or empty.");
 
-        //Validate the header first as there is no need to try and deserialze the payload if Verify is true and the header is invalid.
-        if (this.JwsHeaderValidator is object)
-        {
-          this.JwsHeaderValidator.Validate(this.DecodeHeader<HeaderType>(Token));
-        }
-      }
-
-      if (string.IsNullOrEmpty(Token))
-      {
-        throw new ArgumentException(nameof(Token));
-      }
       string Payload = new JwsParts(Token).Payload;
       byte[] DecodedPayload = Base64UrlEncoder.Decode(Payload);
       PayloadType PayloadDeserialized = PayloadSerializer.Deserialize<PayloadType>(DecodedPayload);
 
-      if (Verity)
+      if (!Verity)
       {
-        //Can Dereference the null warning here as the  null is performed at the beginging of this method.
-#pragma warning disable CS8602 // Dereference of a possibly null reference 
-        this.JwsSignatureValidator.Validate(Token);
-        this.JwsPayloadValidator.Validate(PayloadDeserialized);
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        return PayloadDeserialized;
       }
-      return PayloadDeserialized;
+      else
+      {
+        //We must use the PayloadSerializer.Deserialize and not the JsonSerializer.FromJson() because for 
+        //SMART HEalth Cards the payload is DEFLATE compressed bytes and not a JSON string
+        JwsBody JwsBody = PayloadSerializer.Deserialize<JwsBody>(DecodedPayload);
+
+        if (JwsBody.Iss is null)
+          throw new SignatureVerificationException("No Issuer (iss) claim found in JWS Token body.");
+
+        if (!Uri.TryCreate($"{JwsBody.Iss}/.well-known/jwks.json", UriKind.Absolute, out Uri? WellKnownJwksUri))
+          throw new SignatureVerificationException($"Unable to parse the Issuer (iss) claim to a absolute uri, value was {$"{JwsBody.Iss}/.well-known/jwks.json"}");
+
+        if (JwksProvider is null)
+          throw new SignatureVerificationException($"When Verify is true {nameof(this.JwksProvider)} must be not null.");
+
+        JsonWebKeySet JsonWebKeySet = JwksProvider.GetJwks(WellKnownJwksUri);
+
+        string Header = new JwsParts(Token).Header;
+        byte[] DecodedHeader = Base64UrlEncoder.Decode(Header);
+        string HeaderJson = Utf8EncodingSupport.GetString(DecodedHeader);
+
+        if (JsonSerializer is null)
+          throw new SignatureVerificationException($"When Verify is true {nameof(this.JsonSerializer)} must be not null.");
+
+        JwsHeader JwsHeader = JsonSerializer.FromJson<JwsHeader>(HeaderJson);
+
+        if (JwsHeader.Kid is null)
+          throw new SignatureVerificationException("No key JWK Thumbprint (kid) claim found in JWS Token header.");
+        
+        Algorithms.IAlgorithm Algorithm = Algorithms.ES256Algorithm.FromJWKS(JwsHeader.Kid, JsonWebKeySet, JsonSerializer);
+
+        if (this.JwsSignatureValidator is null)
+          throw new NullReferenceException($"When Verify is true {nameof(this.JwsSignatureValidator)} must be not null.");
+
+        JwsSignatureValidator.Validate(Algorithm,Token);
+
+        if (this.JwsHeaderValidator is null)
+          throw new NullReferenceException($"When Verify is true {nameof(this.JwsHeaderValidator)} must be not null.");
+
+        this.JwsHeaderValidator.Validate(this.DecodeHeader<HeaderType>(Token));
+
+        if (this.JwsPayloadValidator is null)
+          throw new NullReferenceException($"When Verify is true {nameof(this.JwsPayloadValidator)} must be not null.");
+
+        this.JwsPayloadValidator.Validate(PayloadDeserialized);
+
+        return PayloadDeserialized;
+      }
+
     }
 
     public HeaderType DecodeHeader<HeaderType>(string Token)
@@ -73,6 +121,7 @@ namespace SmartHealthCard.Token.JwsToken
       byte[] DecodedHeader = Base64UrlEncoder.Decode(Header);
       return HeaderSerializer.Deserialize<HeaderType>(DecodedHeader);
     }
+
 
   }
 }

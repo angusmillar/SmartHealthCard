@@ -8,23 +8,21 @@ using static SmartHealthCard.Token.Encoders.Utf8EncodingSupport;
 
 namespace SmartHealthCard.Token.Serializers.Json
 {
-  public sealed class JsonSerializer : IJwsHeaderSerializer, IJwsPayloadSerializer
+  public class JsonSerializer : IJwsHeaderSerializer, IJwsPayloadSerializer, IJsonSerializer
   {
     private readonly Newtonsoft.Json.JsonSerializer Serializer;
 
-    public JsonSerializer(bool Minified = true)
+    public JsonSerializer()
     {
-      this.Serializer = Newtonsoft.Json.JsonSerializer.CreateDefault();
-      if (!Minified)       
-        Serializer.Formatting = Formatting.Indented;
+      this.Serializer = Newtonsoft.Json.JsonSerializer.CreateDefault();      
     }
 
-    public byte[] Serialize<T>(T Obj)
+    public virtual byte[] Serialize<T>(T Obj, bool Minified = true)
     {
-      return GetBytes(this.ToJson(Obj));     
+      return GetBytes(this.ToJson(Obj, Minified));     
     }
     
-    public T Deserialize<T>(byte[] bytes)
+    public virtual T Deserialize<T>(byte[] bytes)
     {
       T? Item = this.FromJson<T>(GetString(bytes));
       if (Item is null)
@@ -32,8 +30,11 @@ namespace SmartHealthCard.Token.Serializers.Json
       return Item;      
     }
 
-    public string ToJson<T>(T Obj)
+    public string ToJson<T>(T Obj, bool Minified = true)
     {
+      if (!Minified)
+        Serializer.Formatting = Formatting.Indented;
+
       var Builder = new StringBuilder();
       using var StringWriter = new StringWriter(Builder);
       using var JsonWriter = new  JsonTextWriter(StringWriter);
@@ -50,5 +51,6 @@ namespace SmartHealthCard.Token.Serializers.Json
         throw new DeserializationException($"Unable to deserialize the JWS Header to type {typeof(T).Name}");
       return Item;
     }
+
   }
 }

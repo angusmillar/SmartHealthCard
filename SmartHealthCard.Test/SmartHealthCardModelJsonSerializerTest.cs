@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using SmartHealthCard.Token.Serializers.Json;
 using SmartHealthCard.Token.Serializers.Shc;
 using SmartHealthCard.Token.Model.Shc;
 using SmartHealthCard.Token.Encoders;
@@ -20,8 +21,8 @@ namespace SmartHealthCard.Test
       string SmartHealthCardCovidJson = Utf8EncodingSupport.GetString(ResourceData.SmartHealthCardCovidExample);
 
       //### Act ##########################################################
-      
-      SmartHealthCardModel SmartHealthCardModel = SmartHealthCardModelJsonSerializer.FromJson(SmartHealthCardCovidJson);
+      JsonSerializer JsonSerializer = new JsonSerializer();
+      SmartHealthCardModel SmartHealthCardModel = JsonSerializer.FromJson<SmartHealthCardModel>(SmartHealthCardCovidJson);      
       
       //### Assert #######################################################
 
