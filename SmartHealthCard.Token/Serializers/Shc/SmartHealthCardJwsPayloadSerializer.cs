@@ -22,7 +22,7 @@ namespace SmartHealthCard.Token.Serializers.Shc
 
       if (Obj is SmartHealthCardModel SmartHealthCardModel)
       {
-        return DeflateCompression.Compress(JsonSerializer.ToJson(SmartHealthCardModel, true));        
+        return DeflateCompression.Compress(ToJson(SmartHealthCardModel, true));        
       }
       else
       {
@@ -35,13 +35,12 @@ namespace SmartHealthCard.Token.Serializers.Shc
       string MinifiedSmartHealthCardJson = DeflateCompression.Uncompress(bytes);
       if (typeof(T) == typeof(SmartHealthCardModel))
       {
-        SmartHealthCardModel SmartHealthCardModel = JsonSerializer.FromJson<SmartHealthCardModel>(MinifiedSmartHealthCardJson);
-        //SmartHealthCardModel SmartHealthCardModel = SmartHealthCardModelJsonSerializer.FromJson(MinifiedSmartHealthCardJson);
+        SmartHealthCardModel SmartHealthCardModel = FromJson<SmartHealthCardModel>(MinifiedSmartHealthCardJson);        
         return (T)(object)SmartHealthCardModel;
       }
       else if (typeof(T) == typeof(JwsBody))
       {
-        return (T)(object)JsonSerializer.FromJson<JwsBody>(MinifiedSmartHealthCardJson);
+        return (T)(object)FromJson<JwsBody>(MinifiedSmartHealthCardJson);
       }
       else
       {
@@ -50,14 +49,9 @@ namespace SmartHealthCard.Token.Serializers.Shc
 
     }
 
-    public string ToJson<T>(T Obj, bool Minified = true)
-    {
-      return JsonSerializer.ToJson<T>(Obj);
-    }
+    public string ToJson<T>(T Obj, bool Minified = true) => JsonSerializer.ToJson(Obj);
 
-    public T FromJson<T>(string Json)
-    {
-      return JsonSerializer.FromJson<T>(Json);
-    }
+    public T FromJson<T>(string Json) => JsonSerializer.FromJson<T>(Json);
+
   }
 }

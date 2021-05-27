@@ -1,6 +1,6 @@
 # SMART Health Card JWS token and QR code generation libaray #
 
-This is an open-source library for encoding/decoding/validating FHIR SMART Health Card JWS tokens and generating their QR Codes
+An open-source *MIT License* library for encoding/decoding/validating FHIR SMART Health Card JWS tokens and generating their QR Codes
 
 >See the official SMART Health Card specification page : [SMART Health Cards Framework](https://smarthealth.cards/)
 
@@ -8,9 +8,24 @@ This is an open-source library for encoding/decoding/validating FHIR SMART Healt
 
 ## Example of Encoding a SMART Health Card JWS token and generating its QR Code images 
 ```C#
+using SmartHealthCard.Token.Certificates;
+using SmartHealthCard.Token.Model.Shc;
+using SmartHealthCard.Token;
+using SmartHealthCard.QRCode;
+using System;
+using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
+using System.Drawing;
+using SmartHealthCard.Token.Model.Jwks;
+
+namespace SHC.Demo
+{
+  class Program
+  {
     static void Main(string[] args)
     {
-      //Get the ECC certificate from the Windows Certificate Store by Thumbprint
+      //Get the Certifiacte containing a private Elliptic Curve key using the P-256 curve
+      //from the Windows Certificate Store by Thumbprint
       string CertificateThumbprint = "72c78a3460fb27b9ef2ccfae2538675b75363fee";
       X509Certificate2 Certificate = X509CertificateSupport.GetFirstMatchingCertificate(
             CertificateThumbprint.ToUpper(),
@@ -23,7 +38,7 @@ This is an open-source library for encoding/decoding/validating FHIR SMART Healt
       //Set the Version of FHIR in use
       string FhirVersion = "4.0.1";
 
-      //This libaray does not validate that the FHIR Bundle provided is valid FHIR, it only checks that it is valid JSON.      
+      //This libaray does not validate that the FHIR Bundle provided is valid FHIR, it only parses it as valid JSON.      
       //I strongly suggest you use the FIRELY .NET SDK as found here: https://docs.fire.ly/projects/Firely-NET-SDK/index.html       
       //See the FHIR SMART Health Card FHIR profile site here: http://build.fhir.org/ig/dvci/vaccine-credential-ig/branches/main/index.html   
 
@@ -64,24 +79,32 @@ This is an open-source library for encoding/decoding/validating FHIR SMART Healt
         QRCodeImageList[i].Save(@$"C:\Temp\SMARTHealthCard\QRCode-{i}.png", System.Drawing.Imaging.ImageFormat.Png);
       }
     }
+  }
+}
+    
 ```
 
 ## Example of Decoding and Validating a SMART Health Card JWS token  
 ```C#
-using SmartHealthCard.Token;
 using SmartHealthCard.Token.Certificates;
 using SmartHealthCard.Token.Model.Shc;
+using SmartHealthCard.Token;
+using SmartHealthCard.QRCode;
 using System;
+using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using System.Drawing;
+using SmartHealthCard.Token.Model.Jwks;
 
 namespace SHC.Demo
 {
   class Program
-  {
+  {    
     static void Main(string[] args)
     {
       string SmartHealthCardJwsToken = "[A SMART Health Card JWS token]";
-      //Get the ECC certificate from the Windows Certificate Store by Thumbprint
+      //Get the Certifiacte containing a private Elliptic Curve key using the P-256 curve
+      //from the Windows Certificate Store by Thumbprint
       string CertificateThumbprint = "72c78a3460fb27b9ef2ccfae2538675b75363fee";
       X509Certificate2 Certificate = X509CertificateSupport.GetFirstMatchingCertificate(
             CertificateThumbprint.ToUpper(),
@@ -91,11 +114,39 @@ namespace SHC.Demo
             true
             );
 
-      //Instantiate the SMART Health Card Decoder
+      //Instantiate the SmartHealthCard Decoder
       SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder();
+
+      //Useful while in development!! 
+      //Optionaly for development, you can provide an implementation of the IJwksProvider interface
+      //which allows you to pass a Json Web Key Set (JKWS) that contain the public key used to verifiy you 
+      //token's signatures.
+
+      //If you don't do this the default implementation will use the Issuer (iss) value from Smart Health Card
+      //token payload to make a HTTP call to obtain the JWKS file, which in a prodcution system it the behavour you want.
+
+      //Yet in development this means you must have a public endpoint to proviode the JWKS.
+
+      //By providing this simple interface implementation (see MyJwksProvider class below) you can successfuly
+      //validate signatures in development with out the need for a public endpoint.
+      //Of cource you would not do this is production.
+
+      //Here is how you pass that interface implementation to the SmartHealthCardDecoder contructior.
+      //SmartHealthCard.Token.Providers.IJwksProvider MyJwksProvider = new MyJwksProvider(Certificate);
+      //SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder(MyJwksProvider);
+
+
       try
       {
-        SmartHealthCardModel DecodedSmartHealthCardModel = Decoder.DecodeToSmartHealthCardModel(Certificate, SmartHealthCardJwsToken, Verify: true);
+        //Decode and verifiy, returing an object model of the Smart Health Card, throws exceptions if not valid
+        SmartHealthCardModel DecodedSmartHealthCardModel = Decoder.Decode(SmartHealthCardJwsToken, Verify: true);
+
+        //Or decode without verifing, not recommended for production systems
+        //SmartHealthCardModel DecodedSmartHealthCard = Decoder.Decode(SmartHealthCardJwsToken);
+
+        //Or decode and verifiy, returing the Smart Health Card as a JSON string, throws exceptions if not valid
+        //string DecodedSmartHealthCardJson = Decoder.DecodeToJson(SmartHealthCardJwsToken, Verify: true);
+
       }
       catch (Exception Exec)
       {
@@ -104,11 +155,34 @@ namespace SHC.Demo
       }
     }
   }
+
+  //Example implementation of the IJwksProvider interface
+  public class MyJwksProvider : SmartHealthCard.Token.Providers.IJwksProvider
+  {
+    private readonly X509Certificate2 Certificate;
+    public MyJwksProvider(X509Certificate2 Certificate)
+    {
+      this.Certificate = Certificate;
+    }
+
+    public JsonWebKeySet GetJwks(Uri WellKnownJwksUri)
+    {
+      //In prodcution the default implmentation of this IJwksProvider interface would
+      //retrieve the JWKS file from the provided 'WellKnownJwksUri' Url that is found in
+      //the SMART Health Card Token payload. 
+      //Yet for development we can just ignore the 'WellKnownJwksUri' url and return our
+      //own JWKS which we have generated from our certificate as seen below.
+      //This allows you to test before you have a publicly exposed endpoint for you JWKS. 
+      SmartHealthCardJwks SmartHealthCardJwks = new SmartHealthCardJwks();
+      SmartHealthCard.Token.Model.Jwks.JsonWebKeySet Jwks = SmartHealthCardJwks.GetJsonWebKeySet(new List<X509Certificate2>() { Certificate });
+      return Jwks;
+    }
+  }
 }
 
 ```
 
-## How to create a ECC Private/Public keys with OpenSSL ##
+## How to create a ECC Private/Public keys using OpenSSL ##
 >Great example from Scott Brady : [Creating Elliptical Curve Keys using OpenSSL](https://www.scottbrady91.com/OpenSSL/Creating-Elliptical-Curve-Keys-using-OpenSSL)
 
 

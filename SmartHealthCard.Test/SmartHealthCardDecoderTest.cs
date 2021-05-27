@@ -34,7 +34,7 @@ namespace SmartHealthCard.Test
       SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder(MockedIJwksProvider);
 
       //### Act #######################################################
-      SmartHealthCardModel SmartHealthCardModel = Decoder.VerifyAndDecode(SmartHealthCardJwsToken);
+      SmartHealthCardModel SmartHealthCardModel = Decoder.Decode(SmartHealthCardJwsToken, Verify: true);
 
       //### Assert #######################################################
 
@@ -63,7 +63,7 @@ namespace SmartHealthCard.Test
       //### Act #######################################################
 
       //Verify and Decode
-      SmartHealthCardModel SmartHealthCardModel = Decoder.VerifyAndDecode(SmartHealthCardJwsToken);
+      SmartHealthCardModel SmartHealthCardModel = Decoder.Decode(SmartHealthCardJwsToken, Verify: true);
 
       //### Assert #######################################################
 

@@ -1,18 +1,16 @@
 using SmartHealthCard.Token.Encoders;
 using SmartHealthCard.Token.Exceptions;
-using SmartHealthCard.Token.Model.Jws;
-using SmartHealthCard.Token.Serializers.Jws;
 using SmartHealthCard.Token.Model.Jwks;
-using System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
+using SmartHealthCard.Token.Model.Jws;
 using SmartHealthCard.Token.Providers;
 using SmartHealthCard.Token.Serializers.Json;
+using SmartHealthCard.Token.Serializers.Jws;
+using SmartHealthCard.Token.Validators;
+using System;
 
 namespace SmartHealthCard.Token.JwsToken
 {
-  public sealed class JwsDecoder : IJwsDecoder
+  public sealed class SmartHealthCardJwsDecoder : IJwsDecoder
   {
     private readonly IJsonSerializer? JsonSerializer;
     private readonly IJwsHeaderSerializer HeaderSerializer;
@@ -21,7 +19,7 @@ namespace SmartHealthCard.Token.JwsToken
     private readonly IJwsPayloadValidator? JwsPayloadValidator;
     private readonly IJwsHeaderValidator? JwsHeaderValidator;
     private readonly IJwksProvider? JwksProvider;
-    public JwsDecoder(
+    public SmartHealthCardJwsDecoder(
       IJwsHeaderSerializer HeaderSerializer,
       IJwsPayloadSerializer PayloadSerializer)
     {
@@ -29,7 +27,7 @@ namespace SmartHealthCard.Token.JwsToken
       this.PayloadSerializer = PayloadSerializer;
     }
 
-    public JwsDecoder(
+    public SmartHealthCardJwsDecoder(
       IJsonSerializer JsonSerializer,
       IJwsHeaderSerializer HeaderSerializer,
       IJwsPayloadSerializer PayloadSerializer,
@@ -38,13 +36,13 @@ namespace SmartHealthCard.Token.JwsToken
       IJwsHeaderValidator? JwsHeaderValidator,
       IJwsPayloadValidator? IJwsPayloadValidator)
       : this(HeaderSerializer, PayloadSerializer)
-    {
-      //todo: If as all are nullable they might provide one but not the other??
-      this.JsonSerializer = JsonSerializer ?? new JsonSerializer();     
+    {      
+      this.JsonSerializer = JsonSerializer ?? new JsonSerializer();
+
       this.JwksProvider = JwksProvider ?? new JwksProvider(this.JsonSerializer);
-      this.JwsSignatureValidator = IJwsSignatureValidator;
-      this.JwsHeaderValidator = JwsHeaderValidator;
-      this.JwsPayloadValidator = IJwsPayloadValidator;
+      this.JwsSignatureValidator = IJwsSignatureValidator ?? new JwsSignatureValidator();
+      this.JwsHeaderValidator = JwsHeaderValidator ?? new SmartHealthCardHeaderValidator();
+      this.JwsPayloadValidator = IJwsPayloadValidator ?? new SmartHealthCardPayloadValidator();
     }
 
     public PayloadType DecodePayload<HeaderType, PayloadType>(string Token, bool Verity = false)
@@ -63,7 +61,7 @@ namespace SmartHealthCard.Token.JwsToken
       else
       {
         //We must use the PayloadSerializer.Deserialize and not the JsonSerializer.FromJson() because for 
-        //SMART HEalth Cards the payload is DEFLATE compressed bytes and not a JSON string
+        //SMART Health Cards the payload is DEFLATE compressed bytes and not a JSON string
         JwsBody JwsBody = PayloadSerializer.Deserialize<JwsBody>(DecodedPayload);
 
         if (JwsBody.Iss is null)
@@ -108,7 +106,6 @@ namespace SmartHealthCard.Token.JwsToken
 
         return PayloadDeserialized;
       }
-
     }
 
     public HeaderType DecodeHeader<HeaderType>(string Token)
@@ -121,7 +118,6 @@ namespace SmartHealthCard.Token.JwsToken
       byte[] DecodedHeader = Base64UrlEncoder.Decode(Header);
       return HeaderSerializer.Deserialize<HeaderType>(DecodedHeader);
     }
-
 
   }
 }

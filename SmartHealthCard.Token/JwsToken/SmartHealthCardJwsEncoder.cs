@@ -4,12 +4,12 @@ using SmartHealthCard.Token.Serializers.Jws;
 
 namespace SmartHealthCard.Token.JwsToken
 {
-  public class JwsEncoder : IJwsEncoder
+  public class SmartHealthCardJwsEncoder : IJwsEncoder
   {
     private readonly IAlgorithm Algorithm;
     private readonly IJwsHeaderSerializer HeaderSerializer;
     private readonly IJwsPayloadSerializer PayloadSerializer;
-    public JwsEncoder(IJwsHeaderSerializer HeaderSerializer, IJwsPayloadSerializer PayloadSerializer, IAlgorithm Algorithm)
+    public SmartHealthCardJwsEncoder(IJwsHeaderSerializer HeaderSerializer, IJwsPayloadSerializer PayloadSerializer, IAlgorithm Algorithm)
     {
       this.HeaderSerializer = HeaderSerializer;
       this.PayloadSerializer = PayloadSerializer;

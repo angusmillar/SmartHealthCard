@@ -1,7 +1,7 @@
 ﻿using SmartHealthCard.Token.JwsToken;
 using SmartHealthCard.Token.Model.Shc;
 
-namespace SmartHealthCard.Token
+namespace SmartHealthCard.Token.Validators
 {
   public class SmartHealthCardHeaderValidator : IJwsHeaderValidator
   {   
