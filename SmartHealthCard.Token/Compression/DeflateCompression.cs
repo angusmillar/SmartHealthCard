@@ -1,12 +1,13 @@
 ﻿using System.IO;
 using System.IO.Compression;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SmartHealthCard.Token.Compression
 {
   public static class DeflateCompression
   {
-    public static byte[] Compress(string input)
+    public static async Task<byte[]> CompressAsync(string input)
     {
       using (MemoryStream MemoryStream = new MemoryStream())
       {
@@ -14,14 +15,14 @@ namespace SmartHealthCard.Token.Compression
         {
           using (StreamWriter StreamWriter = new StreamWriter(DeflateStream, Encoding.UTF8))
           {
-            StreamWriter.Write(input);
+            await StreamWriter.WriteAsync(input);
           }
         }
         return MemoryStream.ToArray();
       }
     }
 
-    public static string Uncompress(byte[] input)
+    public static async Task<string> UncompressAsync(byte[] input)
     {
       using (MemoryStream MemoryStream = new MemoryStream(input))
       {
@@ -29,7 +30,7 @@ namespace SmartHealthCard.Token.Compression
         {
           using (StreamReader StreamReader = new StreamReader(DeflateStream, Encoding.UTF8))
           {
-            return StreamReader.ReadToEnd();
+            return await StreamReader.ReadToEndAsync();
           }
         }
       }

@@ -7,6 +7,7 @@ using SmartHealthCard.Token.Serializers.Json;
 using SmartHealthCard.Token.Serializers.Jws;
 using SmartHealthCard.Token.Serializers.Shc;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 
 namespace SmartHealthCard.Token
 {
@@ -91,9 +92,9 @@ namespace SmartHealthCard.Token
     /// <param name="Token"></param>
     /// <param name="Verify"></param>
     /// <returns></returns>
-    public string DecodeToJson(string Token, bool Verify = true)
+    public async Task<string> DecodeToJson(string Token, bool Verify = true)
     {
-      SmartHealthCardModel SmartHealthCardModel = Decode(Token, Verify);
+      SmartHealthCardModel SmartHealthCardModel = await DecodeAsync(Token, Verify);
       return JsonSerializer.ToJson(SmartHealthCardModel, Minified: false);
     }
 
@@ -103,7 +104,7 @@ namespace SmartHealthCard.Token
     /// <param name="Token"></param>
     /// <param name="Verify"></param>
     /// <returns></returns>
-    public SmartHealthCardModel Decode(string Token, bool Verify = true)
+    public async Task<SmartHealthCardModel> DecodeAsync(string Token, bool Verify = true)
     {
       if (Verify)
       {
@@ -116,7 +117,7 @@ namespace SmartHealthCard.Token
           this.JwsHeaderValidator,
           this.JwsPayloadValidator);
 
-        return JwsDecoder.DecodePayload<SmartHealthCareJWSHeaderModel, SmartHealthCardModel>(Token: Token, Verity: Verify);
+        return await JwsDecoder.DecodePayloadAsync<SmartHealthCareJWSHeaderModel, SmartHealthCardModel>(Token: Token, Verity: Verify);
       }
       else
       {
@@ -124,7 +125,7 @@ namespace SmartHealthCard.Token
           this.HeaderSerializer,
           this.PayloadSerializer);
 
-        return JwsDecoder.DecodePayload<SmartHealthCareJWSHeaderModel, SmartHealthCardModel>(Token: Token, Verity: Verify);
+        return await JwsDecoder.DecodePayloadAsync<SmartHealthCareJWSHeaderModel, SmartHealthCardModel>(Token: Token, Verity: Verify);
       }
     }
   }

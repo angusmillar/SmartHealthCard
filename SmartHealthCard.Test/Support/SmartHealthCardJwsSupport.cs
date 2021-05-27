@@ -14,7 +14,7 @@ namespace SmartHealthCard.Test.Support
 {
   public static class SmartHealthCardJwsSupport
   {
-    public static string GetJWSCovidExampleOne(X509Certificate2 Certificate, Uri Issuer)
+    public static async Task<string> GetJWSCovidExampleOneAsync(X509Certificate2 Certificate, Uri Issuer)
     {
       //The Version of FHIR in use
       string FhirVersion = "4.0.1";
@@ -40,7 +40,7 @@ namespace SmartHealthCard.Test.Support
       SmartHealthCardEncoder SmartHealthCardEncoder = new SmartHealthCardEncoder();
 
       //Get the Smart Health Card Jws Token 
-      return SmartHealthCardEncoder.GetToken(Certificate, SmartHealthCardToEncode);
+      return await SmartHealthCardEncoder.GetTokenAsync(Certificate, SmartHealthCardToEncode);
 
     }
   }

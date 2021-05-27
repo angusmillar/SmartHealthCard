@@ -1,6 +1,7 @@
 ﻿using SmartHealthCard.Token.Algorithms;
 using SmartHealthCard.Token.Encoders;
 using SmartHealthCard.Token.Serializers.Jws;
+using System.Threading.Tasks;
 
 namespace SmartHealthCard.Token.JwsToken
 {
@@ -16,10 +17,10 @@ namespace SmartHealthCard.Token.JwsToken
       this.Algorithm = Algorithm;
     }
 
-    public string Encode<HeaderType, PayloadType>(HeaderType Header, PayloadType Payload)
+    public async Task<string> EncodeAsync<HeaderType, PayloadType>(HeaderType Header, PayloadType Payload)
     {
-      var HeaderSegment = Base64UrlEncoder.Encode(HeaderSerializer.Serialize(Header));
-      var PayloadSegment = Base64UrlEncoder.Encode(PayloadSerializer.Serialize(Payload));
+      var HeaderSegment = Base64UrlEncoder.Encode(await HeaderSerializer .SerializeAsync(Header));
+      var PayloadSegment = Base64UrlEncoder.Encode(await PayloadSerializer.SerializeAsync(Payload));
 
       var BytesToSign = Utf8EncodingSupport.GetBytes($"{HeaderSegment}.{PayloadSegment}");
       var Signature = Algorithm.Sign(BytesToSign);

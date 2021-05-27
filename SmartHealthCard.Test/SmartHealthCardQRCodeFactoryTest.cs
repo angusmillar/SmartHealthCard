@@ -20,7 +20,7 @@ namespace SmartHealthCard.Test
   public class SmartHealthCardQRCodeFactoryTest
   {
     [Fact]
-    public void Create_QRCode()
+    public async void Create_QRCode()
     {
       //### Prepare ######################################################
 
@@ -56,7 +56,7 @@ namespace SmartHealthCard.Test
       //### Act ##########################################################
 
       //Get the Smart Health Card Jws Token 
-      string SmartHealthCardJwsToken = SmartHealthCardEncoder.GetToken(Certificate, SmartHealthCardToEncode);
+      string SmartHealthCardJwsToken = await SmartHealthCardEncoder.GetTokenAsync(Certificate, SmartHealthCardToEncode);
 
       //Create list of QR Codes
       SmartHealthCardQRCodeEncoder SmartHealthCardQRCodeFactory = new SmartHealthCardQRCodeEncoder();

@@ -6,6 +6,7 @@ using SmartHealthCard.Token.Serializers.Shc;
 using SmartHealthCard.Token.JwsToken;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 
 namespace SmartHealthCard.Token
 {
@@ -52,13 +53,13 @@ namespace SmartHealthCard.Token
     /// <param name="Certificate">Certifiacte containing a private Elliptic Curve key using the P-256 curve</param>
     /// <param name="SmartHealthCard">SMART Health Card payload in an object model form</param>
     /// <returns></returns>
-    public string GetToken(X509Certificate2 Certificate, SmartHealthCardModel SmartHealthCard)
+    public async Task<string> GetTokenAsync(X509Certificate2 Certificate, SmartHealthCardModel SmartHealthCard)
     {      
       //Create the Elliptic Curve Signing Algorithm
       IAlgorithm Algorithm = new ES256Algorithm(Certificate, JsonSerializer);
       SmartHealthCareJWSHeaderModel Header = GetHeader(Algorithm);
       IJwsEncoder JwsEncoder = GetEncoder(Certificate, Algorithm);
-      return JwsEncoder.Encode(Header, SmartHealthCard);
+      return await JwsEncoder.EncodeAsync(Header, SmartHealthCard);
     }
 
     /// <summary>
@@ -69,7 +70,7 @@ namespace SmartHealthCard.Token
     /// <param name="Certificate">Certifiacte containing a private Elliptic Curve key using the P-256 curve</param>
     /// <param name="SmartHealthCardList">List of SMART Health Card payload in an object model form</param>
     /// <returns></returns>
-    public string GetSmartHealthCardFile(X509Certificate2 Certificate, List<SmartHealthCardModel> SmartHealthCardList)
+    public async Task<string> GetSmartHealthCardFile(X509Certificate2 Certificate, List<SmartHealthCardModel> SmartHealthCardList)
     {
       //Create the Elliptic Curve Signing Algorithm
       IAlgorithm Algorithm = new ES256Algorithm(Certificate, JsonSerializer);
@@ -80,7 +81,7 @@ namespace SmartHealthCard.Token
       SmartHealthCardFile SmartHealthCardFile = new SmartHealthCardFile();
       foreach (SmartHealthCardModel SmartHealthCard in SmartHealthCardList)
       {
-        SmartHealthCardFile.VerifiableCredentialList.Add(JwsEncoder.Encode(Header, SmartHealthCard));
+        SmartHealthCardFile.VerifiableCredentialList.Add(await JwsEncoder.EncodeAsync(Header, SmartHealthCard));
       }
 
       return JsonSerializer.ToJson(SmartHealthCardFile);     

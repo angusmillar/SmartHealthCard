@@ -15,7 +15,7 @@ namespace SmartHealthCard.Test
   public class SmartHealthCardDecoderTest
   {
     [Fact]
-    public void Decode_Token_Verify_with_JWKS()
+    public async void Decode_Token_Verify_with_JWKS()
     {
       //### Prepare ######################################################
       //Get the ECC certificate from the Windows Certificate Store by Thumbprint      
@@ -24,7 +24,7 @@ namespace SmartHealthCard.Test
 
       //The base of the Url where a validator will retive the public keys from (e.g : [Issuer]/.well-known/jwks.json) 
       Uri Issuer = new Uri("https://sonichealthcare.com/something");
-      string SmartHealthCardJwsToken = SmartHealthCardJwsSupport.GetJWSCovidExampleOne(Certificate, Issuer);
+      string SmartHealthCardJwsToken = await SmartHealthCardJwsSupport.GetJWSCovidExampleOneAsync(Certificate, Issuer);
       
       //This testing JwksSupport class provides us wiht a mocked IJwksProvider that will inject the JWKS file
       //rather thnan make the HTTP call to go get it from a public endpoint.
@@ -34,7 +34,7 @@ namespace SmartHealthCard.Test
       SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder(MockedIJwksProvider);
 
       //### Act #######################################################
-      SmartHealthCardModel SmartHealthCardModel = Decoder.Decode(SmartHealthCardJwsToken, Verify: true);
+      SmartHealthCardModel SmartHealthCardModel = await Decoder.DecodeAsync(SmartHealthCardJwsToken, Verify: true);
 
       //### Assert #######################################################
 
@@ -43,7 +43,7 @@ namespace SmartHealthCard.Test
     }
 
     [Fact]
-    public void Decode_Token_Verify_with_Certificate()
+    public async void Decode_Token_Verify_with_Certificate()
     {
       //### Prepare ######################################################
       //Get the ECC certificate from the Windows Certificate Store by Thumbprint      
@@ -51,7 +51,7 @@ namespace SmartHealthCard.Test
 
       //The base of the Url where a validator will retive the public keys from (e.g : [Issuer]/.well-known/jwks.json) 
       Uri Issuer = new Uri("https://sonichealthcare.com/something");
-      string SmartHealthCardJwsToken = SmartHealthCardJwsSupport.GetJWSCovidExampleOne(Certificate, Issuer);
+      string SmartHealthCardJwsToken = await SmartHealthCardJwsSupport.GetJWSCovidExampleOneAsync(Certificate, Issuer);
 
       //This testing JwksSupport class provides us wiht a mocked IJwksProvider that will inject the JWKS file
       //rather thnan make the HTTP call to go get it from a public endpoint.
@@ -63,7 +63,7 @@ namespace SmartHealthCard.Test
       //### Act #######################################################
 
       //Verify and Decode
-      SmartHealthCardModel SmartHealthCardModel = Decoder.Decode(SmartHealthCardJwsToken, Verify: true);
+      SmartHealthCardModel SmartHealthCardModel = await Decoder.DecodeAsync(SmartHealthCardJwsToken, Verify: true);
 
       //### Assert #######################################################
 

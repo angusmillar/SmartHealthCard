@@ -7,6 +7,7 @@ using SmartHealthCard.Token.Serializers.Json;
 using SmartHealthCard.Token.Serializers.Jws;
 using SmartHealthCard.Token.Validators;
 using System;
+using System.Threading.Tasks;
 
 namespace SmartHealthCard.Token.JwsToken
 {
@@ -45,24 +46,24 @@ namespace SmartHealthCard.Token.JwsToken
       this.JwsPayloadValidator = IJwsPayloadValidator ?? new SmartHealthCardPayloadValidator();
     }
 
-    public PayloadType DecodePayload<HeaderType, PayloadType>(string Token, bool Verity = false)
+    public async Task<PayloadType> DecodePayloadAsync<HeaderType, PayloadType>(string Token, bool Verity = false)
     {
       if (string.IsNullOrEmpty(Token))
         throw new InvalidTokenException("The Token provided was found to be null or empty.");
 
       string Payload = new JwsParts(Token).Payload;
       byte[] DecodedPayload = Base64UrlEncoder.Decode(Payload);
-      PayloadType PayloadDeserialized = PayloadSerializer.Deserialize<PayloadType>(DecodedPayload);
+      PayloadType PayloadDeserialized = await PayloadSerializer.DeserializeAsync<PayloadType>(DecodedPayload);
 
       if (!Verity)
       {
-        return PayloadDeserialized;
+        return await Task.FromResult(PayloadDeserialized);
       }
       else
       {
         //We must use the PayloadSerializer.Deserialize and not the JsonSerializer.FromJson() because for 
         //SMART Health Cards the payload is DEFLATE compressed bytes and not a JSON string
-        JwsBody JwsBody = PayloadSerializer.Deserialize<JwsBody>(DecodedPayload);
+        JwsBody JwsBody = await PayloadSerializer.DeserializeAsync<JwsBody>(DecodedPayload);
 
         if (JwsBody.Iss is null)
           throw new SignatureVerificationException("No Issuer (iss) claim found in JWS Token body.");
@@ -73,7 +74,7 @@ namespace SmartHealthCard.Token.JwsToken
         if (JwksProvider is null)
           throw new SignatureVerificationException($"When Verify is true {nameof(this.JwksProvider)} must be not null.");
 
-        JsonWebKeySet JsonWebKeySet = JwksProvider.GetJwks(WellKnownJwksUri);
+        JsonWebKeySet JsonWebKeySet = await JwksProvider.GetJwksAsync(WellKnownJwksUri);
 
         string Header = new JwsParts(Token).Header;
         byte[] DecodedHeader = Base64UrlEncoder.Decode(Header);
@@ -97,7 +98,7 @@ namespace SmartHealthCard.Token.JwsToken
         if (this.JwsHeaderValidator is null)
           throw new NullReferenceException($"When Verify is true {nameof(this.JwsHeaderValidator)} must be not null.");
 
-        this.JwsHeaderValidator.Validate(this.DecodeHeader<HeaderType>(Token));
+        this.JwsHeaderValidator.Validate(this.DecodeHeaderAsync<HeaderType>(Token));
 
         if (this.JwsPayloadValidator is null)
           throw new NullReferenceException($"When Verify is true {nameof(this.JwsPayloadValidator)} must be not null.");
@@ -108,7 +109,7 @@ namespace SmartHealthCard.Token.JwsToken
       }
     }
 
-    public HeaderType DecodeHeader<HeaderType>(string Token)
+    public async Task<HeaderType> DecodeHeaderAsync<HeaderType>(string Token)
     {
       if (string.IsNullOrEmpty(Token))
       {
@@ -116,7 +117,7 @@ namespace SmartHealthCard.Token.JwsToken
       }
       string Header = new JwsParts(Token).Header;
       byte[] DecodedHeader = Base64UrlEncoder.Decode(Header);
-      return HeaderSerializer.Deserialize<HeaderType>(DecodedHeader);
+      return await HeaderSerializer.DeserializeAsync<HeaderType>(DecodedHeader);
     }
 
   }

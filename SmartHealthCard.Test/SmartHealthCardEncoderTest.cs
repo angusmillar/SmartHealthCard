@@ -18,7 +18,7 @@ namespace SmartHealthCard.Test
   public class SmartHealthCardEncoderTest
   {
     [Fact]
-    public void Create_Token_Decode_Token()
+    public async void Create_Token_Decode_Token()
     {
       //### Prepare ######################################################
       
@@ -62,14 +62,14 @@ namespace SmartHealthCard.Test
       //Get the Smart Health Card Jws Token 
       
       //string SmartHealthCardJwsToken = Assert.Throws<SmartHealthCardException>(() => SmartHealthCardEncoder.GetToken(Certificate, SmartHealthCardToEncode));
-      string SmartHealthCardJwsToken = SmartHealthCardEncoder.GetToken(Certificate, SmartHealthCard);
+      string SmartHealthCardJwsToken = await SmartHealthCardEncoder.GetTokenAsync(Certificate, SmartHealthCard);
 
       //### Assert #######################################################
 
       Assert.True(!string.IsNullOrWhiteSpace(SmartHealthCardJwsToken));
 
 
-      SmartHealthCardModel DecodedSmartHealthCardModle = Decoder.Decode(SmartHealthCardJwsToken, Verify: true);
+      SmartHealthCardModel DecodedSmartHealthCardModle = await Decoder .DecodeAsync(SmartHealthCardJwsToken, Verify: true);
 
       //Check the IssuanceDate as the same to seconds precision
       DateTimeOffset ActualIssuanceDate = DecodedSmartHealthCardModle.GetIssuanceDate();

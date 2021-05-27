@@ -1,8 +1,10 @@
-﻿namespace SmartHealthCard.Token.JwsToken
+﻿using System.Threading.Tasks;
+
+namespace SmartHealthCard.Token.JwsToken
 {
   public interface IJwsDecoder
   {
-    HeaderType DecodeHeader<HeaderType>(string Token);
-    PayloadType DecodePayload<HeaderType, PayloadType>(string Token, bool Verity = false);
+    Task<HeaderType> DecodeHeaderAsync<HeaderType>(string Token);
+    Task<PayloadType> DecodePayloadAsync<HeaderType, PayloadType>(string Token, bool Verity = false);
   }
 }

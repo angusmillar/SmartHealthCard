@@ -2,6 +2,7 @@
 using SmartHealthCard.Token.Serializers.Json;
 using SmartHealthCard.Token.Serializers.Jws;
 using System;
+using System.Threading.Tasks;
 
 namespace SmartHealthCard.Token.Serializers.Shc
 {
@@ -13,12 +14,12 @@ namespace SmartHealthCard.Token.Serializers.Shc
       this.JsonSerializer = JsonSerializer;
     }
     
-    public byte[] Serialize<T>(T Obj, bool Minified = true)
+    public async Task<byte[]> SerializeAsync<T>(T Obj, bool Minified = true)
     {
       if (Obj is SmartHealthCareJWSHeaderModel SmartHealthCareJWSHeaderModel)
       {
         string Json =  ToJson(SmartHealthCareJWSHeaderModel, Minified);
-        return Encoders.Utf8EncodingSupport.GetBytes(Json);        
+        return await Task.Run(() => Encoders.Utf8EncodingSupport.GetBytes(Json));        
       }
       else
       {
@@ -26,12 +27,12 @@ namespace SmartHealthCard.Token.Serializers.Shc
       }
     }
 
-    public T Deserialize<T>(byte[] bytes)
+    public async Task<T> DeserializeAsync<T>(byte[] bytes)
     {
       string json = Encoders.Utf8EncodingSupport.GetString(bytes);
       if (typeof(T) == typeof(SmartHealthCareJWSHeaderModel))
       {
-        return (T)(object)FromJson<SmartHealthCareJWSHeaderModel>(json);
+        return await Task.Run(() => (T)(object)FromJson<SmartHealthCareJWSHeaderModel>(json));
       }       
       else
       {

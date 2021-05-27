@@ -14,13 +14,11 @@ namespace SmartHealthCard.Token.Providers
       this.JsonSerializer = JsonSerializer;
     }
 
-    public JsonWebKeySet GetJwks(Uri WellKnownJwksUri)
+    public async Task<JsonWebKeySet> GetJwksAsync(Uri WellKnownJwksUri)
     {
       var HttpClient = new HttpClient();
-      var task = Task.Run(() => HttpClient.GetStringAsync(WellKnownJwksUri));
-      task.Wait();
-      string JsonWebKeySetJson = task.Result;
-      return JsonSerializer.FromJson<JsonWebKeySet>(JsonWebKeySetJson);
+      var JwksJson = await HttpClient.GetStringAsync(WellKnownJwksUri);     
+      return JsonSerializer.FromJson<JsonWebKeySet>(JwksJson);
     }
   }
 }

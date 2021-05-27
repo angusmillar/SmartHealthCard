@@ -4,6 +4,7 @@ using SmartHealthCard.Token.Exceptions;
 using SmartHealthCard.Token.Serializers.Jws;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using static SmartHealthCard.Token.Encoders.Utf8EncodingSupport;
 
 namespace SmartHealthCard.Token.Serializers.Json
@@ -17,14 +18,14 @@ namespace SmartHealthCard.Token.Serializers.Json
       this.Serializer = Newtonsoft.Json.JsonSerializer.CreateDefault();      
     }
 
-    public virtual byte[] Serialize<T>(T Obj, bool Minified = true)
-    {
-      return GetBytes(this.ToJson(Obj, Minified));     
+    public virtual async Task<byte[]> SerializeAsync<T>(T Obj, bool Minified = true)
+    {      
+      return await Task.Run(() => GetBytes(this.ToJson(Obj, Minified)));     
     }
     
-    public virtual T Deserialize<T>(byte[] bytes)
+    public virtual async Task<T> DeserializeAsync<T>(byte[] bytes)
     {
-      T? Item = this.FromJson<T>(GetString(bytes));
+      T? Item = await Task.Run(() => this.FromJson<T>(GetString(bytes)));
       if (Item is null)
         throw new DeserializationException($"Unable to deserialize the JWS Header to type {typeof(T).Name}");
       return Item;      
@@ -39,6 +40,7 @@ namespace SmartHealthCard.Token.Serializers.Json
       using var StringWriter = new StringWriter(Builder);
       using var JsonWriter = new  JsonTextWriter(StringWriter);
       Serializer.Serialize(JsonWriter, Obj);
+      Serializer.Serialize(JsonWriter, Obj);
       return Builder.ToString();
     }
 
@@ -52,5 +54,6 @@ namespace SmartHealthCard.Token.Serializers.Json
       return Item;
     }
 
+   
   }
 }
