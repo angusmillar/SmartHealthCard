@@ -3,11 +3,29 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <Version>0.1.0-alpha.1</Version>
+    <Authors>Angus Millar</Authors>
+    <Description>FHIR SMART Health Card JWS token QR Code encoder libaray</Description>
+    <Company>PyroHealth</Company>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/angusmillar/SmartHealthCard</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/angusmillar/SmartHealthCard</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>SmartHealthCard JWS JWT FHIR covid19 immunization laboratory VerifiableCredential</PackageTags>
+    <PackageReleaseNotes>This is the first alpha.1 release of the library for alpha development use</PackageReleaseNotes>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Net.Codecrete.QrCodeGenerator" Version="1.6.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

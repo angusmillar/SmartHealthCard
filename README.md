@@ -1,12 +1,44 @@
 # SMART Health Card JWS token and QR code generation library #
 
-An open-source *MIT License* library for encoding/decoding/validating FHIR SMART Health Card JWS tokens and generating their QR Codes
+### An open-source *MIT License* .NET 5.0 library for encoding/decoding/validating FHIR SMART Health Card JWS tokens and generating their QR Codes
 
+&nbsp;
+
+## SMART Health Cards Framework
 >See the official SMART Health Card specification page : [SMART Health Cards Framework](https://smarthealth.cards/)
 
->This implementation passes all test found here: [Smart Health Card verifier site](https://demo-portals.smarthealth.cards/VerifierPortal.html)
+&nbsp;
+
+## Smart Health Card Development
+>A fantasic site for testing your development: [Smart Health Card verifier site](https://demo-portals.smarthealth.cards/VerifierPortal.html)
+
+&nbsp;
+
+## How to create a ECC Private/Public keys using OpenSSL ##
+>Great example from Scott Brady : [Creating Elliptical Curve Keys using OpenSSL](https://www.scottbrady91.com/OpenSSL/Creating-Elliptical-Curve-Keys-using-OpenSSL)
+
+
+&nbsp;
+
+## Nuget Packages in this repository
+
+## [SmartHealthCard.Token](https://www.nuget.org/packages/SmartHealthCard.Token/0.1.0-alpha.1): Encode, Decode & Verifiy SMART Health Card JWS tokens  
+```
+Install-Package SmartHealthCard.QRCode -Version 0.1.0-alpha.1
+```
+
+
+## [SmartHealthCard.QRCode](https://www.nuget.org/packages/SmartHealthCard.QRCode/0.1.0-alpha.1): Encode SMART Health Card JWS token QR Code images
+```
+Install-Package SmartHealthCard.QRCode -Version 0.1.0-alpha.1
+```
+
+&nbsp;
+
+
 
 ## Example of Encoding a SMART Health Card JWS token and generating its QR Code images 
+---
 ```C#
 using SmartHealthCard.QRCode;
 using SmartHealthCard.Token;
@@ -90,6 +122,7 @@ namespace SHC.EncoderDemo
 ```
 
 ## Example of Decoding and Validating a SMART Health Card JWS token  
+---
 ```C#
 using SmartHealthCard.Token;
 using SmartHealthCard.Token.Certificates;
@@ -186,9 +219,6 @@ namespace SHC.DecoderDemo
   }
 }
 ```
-
-## How to create a ECC Private/Public keys using OpenSSL ##
->Great example from Scott Brady : [Creating Elliptical Curve Keys using OpenSSL](https://www.scottbrady91.com/OpenSSL/Creating-Elliptical-Curve-Keys-using-OpenSSL)
 
 
 ## Repo owner ##
