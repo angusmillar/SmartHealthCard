@@ -19,9 +19,9 @@ namespace SmartHealthCard.Token.Model.Shc
       //We must minify the FHIR Bundle as provided by users here as the
       //JSON Serializer/Deserializer does not minify JRaw types.
       //So if we don't do this here the JWS Token's payload's property 'vc.credentialSubject.fhirBundle'
-      //will not be minified yet the rest of the json will be.
+      //will not be minified yet the rest of the JSON will be.
       //We are storing the fhirBundle as JRaw so that we do not have to parse the FHIR bundle, as that
-      //would require dependancies on something like .NET FHIR API (https://fire.ly/products/firely-net-sdk/)
+      //would require dependencies on something like .NET FHIR API (https://fire.ly/products/firely-net-sdk/)
       //Maybe we should do this but at present I feel it is the role of the fhirBundle creator to ensure they get it right
       //I highly advise they use the .NET FHIR API
       this.FhirBundleData = GetMinifiedJsonJRaw(FhirBundle);

@@ -8,7 +8,7 @@
     string ToJson<T>(T Obj, bool Minified = true);
 
     /// <summary>
-    /// Deserialize a JSON string to typed object.
+    /// De-serialize a JSON string to typed object.
     /// </summary>
     T FromJson<T>(string Json);
   }

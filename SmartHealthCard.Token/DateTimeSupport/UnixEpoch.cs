@@ -16,7 +16,7 @@ namespace SmartHealthCard.Token.DateTimeSupport
 
     public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
     {
-      // Unix timestamp is seconds past epoch           
+      // Unix time stamp is seconds past epoch           
       return Value.AddSeconds(unixTimeStamp).ToLocalTime();
     }
   }

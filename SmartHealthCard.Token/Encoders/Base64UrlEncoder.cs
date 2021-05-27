@@ -23,11 +23,11 @@ namespace SmartHealthCard.Token.Encoders
       if (string.IsNullOrWhiteSpace(input))
         throw new ArgumentException(nameof(input));
 
-      //Url decoding proccess
+      //URL decoding process
       var output = input;
       output = output.Replace('-', '+'); // 62nd char 
       output = output.Replace('_', '/'); // 63rd char 
-      switch (output.Length % 4) // Pad the apropirate number of '='s
+      switch (output.Length % 4) // Pad the appropriate number of '='s
       {
         case 0:
           break; // None

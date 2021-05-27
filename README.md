@@ -1,4 +1,4 @@
-# SMART Health Card JWS token and QR code generation libaray #
+# SMART Health Card JWS token and QR code generation library #
 
 An open-source *MIT License* library for encoding/decoding/validating FHIR SMART Health Card JWS tokens and generating their QR Codes
 

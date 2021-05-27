@@ -30,7 +30,7 @@ namespace SmartHealthCard.QRCode.Chunker
       }
       else
       {
-        // here we keep dividing the total untill we get an even distrbution where all chunks numeric portion are under 1195 
+        // here we keep dividing the total until we get an even distribution where all chunks numeric portion are under 1195 
         IEnumerable<int>? ChunkSizes = new int[0];
         bool FindingFoundChuckSize = true;
         int Divider = 2;
@@ -46,7 +46,7 @@ namespace SmartHealthCard.QRCode.Chunker
             FindingFoundChuckSize = false;
           }
         }
-        //Now we have the length for each chunk so we builf the text for each QR Code
+        //Now we have the length for each chunk so we build the text for each QR Code
         int[] ChunkSizeArray = ChunkSizes.ToArray();
         int StartPosition = 0;
         for (int i = 0; i < ChunkSizeArray.Length; i++)

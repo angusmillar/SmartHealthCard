@@ -7,7 +7,7 @@ using System.Security.Cryptography.X509Certificates;
 namespace SmartHealthCard.Token
 {
   /// <summary>
-  /// Provided with a list of Certifiactes wiht each containing a private Elliptic Curve key using the P-256 curve
+  /// Provided with a list of Certificates with each containing a private Elliptic Curve key using the P-256 curve
   /// will generate a JSON Web Key Set (JWKS) file or object model 
   /// </summary>
   public class SmartHealthCardJwks
@@ -33,10 +33,10 @@ namespace SmartHealthCard.Token
 
     /// <summary>
     /// From the given X509Certificate2 certificate containing a Private Elliptic Curve key, 
-    /// generate a Json Web Key Set (JWKS) containing only the public key in an object model form 
+    /// generate a JSON Web Key Set (JWKS) containing only the public key in an object model form 
     /// </summary>
-    /// <param name="CertificateList">List of Certifiactes containing a private Elliptic Curve key using the P-256 curve</param>
-    /// <param name="Minified">Weather to minify the retunred JSON or not, default is true</param>
+    /// <param name="CertificateList">List of Certificates containing a private Elliptic Curve key using the P-256 curve</param>
+    /// <param name="Minified">Weather to minify the returned JSON or not, default is true</param>
     /// <returns></returns>
     public JsonWebKeySet GetJsonWebKeySet(IEnumerable<X509Certificate2> CertificateList, bool Minified = true)
     {
@@ -60,10 +60,10 @@ namespace SmartHealthCard.Token
     }
 
     /// <summary>
-    /// From the given X509Certificate2 certificate containing a Private Elliptic Curve key, generate a Json Web Key Set (JWKS) in JSON form
+    /// From the given X509Certificate2 certificate containing a Private Elliptic Curve key, generate a JSON Web Key Set (JWKS) in JSON form
     /// </summary>
-    /// <param name="CertificateList">List of Certifiactes containing a private Elliptic Curve key using the P-256 curve</param>
-    /// <param name="Minified">Weather to minify the retunred JSON or not, default is true</param>
+    /// <param name="CertificateList">List of Certificates containing a private Elliptic Curve key using the P-256 curve</param>
+    /// <param name="Minified">Weather to minify the returned JSON or not, default is true</param>
     /// <returns></returns>
     public string Get(IEnumerable<X509Certificate2> CertificateList, bool Minified = true)
     {

@@ -67,7 +67,7 @@ namespace SmartHealthCard.Token.Model.Shc
       if (IssuanceDateEpoch > (EpochNow - ExtraTimeMargin))
       {
         DateTime Date = UnixEpoch.UnixTimeStampToDateTime(EpochNow + ExtraTimeMargin);
-        throw new SmartHealthCardPayloadException($"The token's Issuance Date of {Date} is eariler than the current date.");
+        throw new SmartHealthCardPayloadException($"The token's Issuance Date of {Date} is earlier than the current date.");
       }      
     }
   }

@@ -38,8 +38,7 @@ namespace SmartHealthCard.Token.JwsToken
       IJwsHeaderValidator? JwsHeaderValidator,
       IJwsPayloadValidator? IJwsPayloadValidator)
       : this(HeaderSerializer, PayloadSerializer)
-    {
-      //todo: If as all are nullable they might provide one but not the other??
+    {      
       this.JsonSerializer = JsonSerializer ?? new JsonSerializer();     
       this.JwksProvider = JwksProvider ?? new JwksProvider(this.JsonSerializer);
       this.JwsSignatureValidator = IJwsSignatureValidator;
@@ -70,7 +69,7 @@ namespace SmartHealthCard.Token.JwsToken
           throw new SignatureVerificationException("No Issuer (iss) claim found in JWS Token body.");
 
         if (!Uri.TryCreate($"{JwsBody.Iss}/.well-known/jwks.json", UriKind.Absolute, out Uri? WellKnownJwksUri))
-          throw new SignatureVerificationException($"Unable to parse the Issuer (iss) claim to a absolute uri, value was {$"{JwsBody.Iss}/.well-known/jwks.json"}");
+          throw new SignatureVerificationException($"Unable to parse the Issuer (iss) claim to a absolute Uri, value was {$"{JwsBody.Iss}/.well-known/jwks.json"}");
 
         if (JwksProvider is null)
           throw new SignatureVerificationException($"When Verify is true {nameof(this.JwksProvider)} must be not null.");
@@ -87,7 +86,7 @@ namespace SmartHealthCard.Token.JwsToken
         JwsHeader JwsHeader = JsonSerializer.FromJson<JwsHeader>(HeaderJson);
 
         if (JwsHeader.Kid is null)
-          throw new SignatureVerificationException("No key JWK Thumbprint (kid) claim found in JWS Token header.");
+          throw new SignatureVerificationException("No key JWK Thumb-print (kid) claim found in JWS Token header.");
 
         Algorithms.IAlgorithm Algorithm = Algorithms.ES256Algorithm.FromJWKS(JwsHeader.Kid, JsonWebKeySet, JsonSerializer);
 

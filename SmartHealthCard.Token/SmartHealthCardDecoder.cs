@@ -14,8 +14,8 @@ namespace SmartHealthCard.Token
   /// <summary>
   /// A SMART Health Card decoder. 
   /// Take a SMART Health Card JWS token and decode's its payload to either a JSON string or an object model
-  /// Optionaly verifiy the token's signing signature.
-  /// For prodcution systems it is higly advised that you do verifiy the signature. 
+  /// Optionally verify the token's signing signature.
+  /// For production systems it is highly advised that you do verify the signature. 
   /// </summary>
   public class SmartHealthCardDecoder
   {
@@ -29,7 +29,7 @@ namespace SmartHealthCard.Token
     private IJwsPayloadValidator? JwsPayloadValidator;
 
     /// <summary>
-    /// Default Consttuctor
+    /// Default Constructor
     /// </summary>
     public SmartHealthCardDecoder()
     {
@@ -39,7 +39,7 @@ namespace SmartHealthCard.Token
     }
 
     /// <summary>
-    /// Provide any implementation of the IJwksProvider interface to overide the default implementation
+    /// Provide any implementation of the IJwksProvider interface to override the default implementation
     /// This allows you to inject a JWKS file to be used when validating the JWS signature instead of the 
     /// default implementation that will attempt to source the JWKS from the token's Issuer URL (iss) + /.well-known/jwks.json 
     /// </summary>
@@ -51,11 +51,11 @@ namespace SmartHealthCard.Token
     }
 
     /// <summary>
-    /// Provide any implementation of the follwowing interfaces to overide their default implementation
+    /// Provide any implementation of the following interfaces to override their default implementation
     /// </summary>
     /// <param name="JsonSerializer">Provides an implementation of a basic JSON serialization</param>
     /// <param name="HeaderSerializer">Provides an implementation that performs the serialization of the data that is packed into the JWS Header</param>
-    /// <param name="PayloadSerializer">Provides an implementation that performs the the data that is packed into the JWS Payload</param>
+    /// <param name="PayloadSerializer">Provides an implementation that performs the serialization of the data that is packed into the JWS Payload</param>
     public SmartHealthCardDecoder(IJsonSerializer? JsonSerializer, IJwsHeaderSerializer? HeaderSerializer, IJwsPayloadSerializer? PayloadSerializer)
     {
       this.JsonSerializer = JsonSerializer ?? new JsonSerializer();
@@ -64,15 +64,15 @@ namespace SmartHealthCard.Token
     }
 
     /// <summary>
-    /// Provide any implementation of the follwowing interfaces to overide their default implementation 
+    /// Provide any implementation of the following interfaces to override their default implementation 
     /// </summary>
     /// <param name="JsonSerializer">Provides an implementation of a basic JSON serialization</param>
     /// <param name="HeaderSerializer">Provides an implementation that performs the serialization of the data that is packed into the JWS Header</param>
-    /// <param name="PayloadSerializer">Provides an implementation that performs the the data that is packed into the JWS Payload</param>
+    /// <param name="PayloadSerializer">Provides an implementation that performs the serialization of the data that is packed into the JWS Payload</param>
     /// <param name="JwksProvider">Provides an implementation that sources the JWKS file for token signature verifying</param>
     /// <param name="JwsSignatureValidator">Provides an implementation of the JWS signature verifying</param>
-    /// <param name="JwsHeaderValidator">Provides an implementation that perfomes the serialization of the data that is packed into the JWS Payload</param>
-    /// <param name="JwsPayloadValidator">Provides an implementation that perfomes the serialization of the data that is packed into the JWS Payload</param>
+    /// <param name="JwsHeaderValidator">Provides an implementation that performs the serialization of the data that is packed into the JWS Payload</param>
+    /// <param name="JwsPayloadValidator">Provides an implementation that performs the serialization of the data that is packed into the JWS Payload</param>
     public SmartHealthCardDecoder(IJsonSerializer? JsonSerializer, IJwsHeaderSerializer? HeaderSerializer, IJwsPayloadSerializer? PayloadSerializer,
       IJwksProvider? JwksProvider, IJwsSignatureValidator? JwsSignatureValidator, IJwsHeaderValidator? JwsHeaderValidator, IJwsPayloadValidator? JwsPayloadValidator)
     {

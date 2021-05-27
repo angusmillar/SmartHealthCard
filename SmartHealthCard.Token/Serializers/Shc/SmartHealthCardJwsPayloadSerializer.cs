@@ -19,7 +19,7 @@ namespace SmartHealthCard.Token.Serializers.Shc
     public async Task<byte[]> SerializeAsync<T>(T Obj, bool Minified = true)
     {
       if (!Minified)
-        throw new ArgumentException($"{nameof(Minified)} must be true for Smart Health Card Jws Payload JSON.");
+        throw new ArgumentException($"{nameof(Minified)} must be true for Smart Health Card JWS Payload JSON.");
 
       if (Obj is SmartHealthCardModel SmartHealthCardModel)
       {

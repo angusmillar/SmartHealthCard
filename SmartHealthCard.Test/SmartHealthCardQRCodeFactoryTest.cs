@@ -24,17 +24,17 @@ namespace SmartHealthCard.Test
     {
       //### Prepare ######################################################
 
-      //Get the ECC certificate from the Windows Certificate Store by Thumbprint      
+      //Get the ECC certificate from the Windows Certificate Store by Thumb-print      
       X509Certificate2 Certificate = CertificateSupport.GetCertificate(Thumbprint: "72c78a3460fb27b9ef2ccfae2538675b75363fee");
 
       //The Version of FHIR in use
       string FhirVersion = "4.0.1";
 
-      //Get Fhir bundle
+      //Get FHIR bundle
       Bundle FhirBundleResource = FhirDataSupport.GetCovid19FhirBundleExample1();
       string FhirBundleJson = FhirSerializer.SerializeToJson(FhirBundleResource);
 
-      //The base of the Url where a validator will retive the public keys from (e.g : [Issuer]/.well-known/jwks.json) 
+      //The base of the URL where a validator will retie the public keys from (e.g : [Issuer]/.well-known/jwks.json) 
       Uri Issuer = new Uri("https://sonichealthcare.com/something");
 
       //When the Smart Health Card became valid, the from date.
@@ -55,7 +55,7 @@ namespace SmartHealthCard.Test
       
       //### Act ##########################################################
 
-      //Get the Smart Health Card Jws Token 
+      //Get the Smart Health Card retrieve Token 
       string SmartHealthCardJwsToken = await SmartHealthCardEncoder.GetTokenAsync(Certificate, SmartHealthCardToEncode);
 
       //Create list of QR Codes

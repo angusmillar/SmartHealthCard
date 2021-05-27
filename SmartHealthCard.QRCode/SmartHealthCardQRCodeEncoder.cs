@@ -40,7 +40,7 @@ namespace SmartHealthCard.QRCode
     }
 
     /// <summary>
-    /// Provide any implementation of the follwowing interfaces to overide their default implementation 
+    /// Provide any implementation of the following interfaces to override their default implementation 
     /// </summary>
     /// <param name="QRCodeEncoderSettings">Optionally provide setting for the encoder which control things like the QR Code size and color</param>
     /// <param name="NumericalModeEncoder">Provides an implementation of the Numerical encoding used for SMART Health Card QR Codes, see https://smarthealth.cards/#encoding-chunks-as-qr-codes </param>
@@ -59,9 +59,9 @@ namespace SmartHealthCard.QRCode
     }
 
     /// <summary>
-    /// Provided a SMART Health Card JWS Token it will return a list of Bitmaps that reprsente the entire SMART Health Card in QR Codes 
-    /// Note: SMART Health Card JWS Token wiht large payload may be broken up into manay QR Codes where verifiers can scan each in any order
-    /// to recostruct the SMART Health Card JWS Token
+    /// Provided a SMART Health Card JWS Token it will return a list of Bitmaps that represent the entire SMART Health Card in QR Codes 
+    /// Note: SMART Health Card JWS Token with large payload may be broken up into many QR Codes where verifiers can scan each in any order
+    /// to reconstruct the SMART Health Card JWS Token
     /// </summary>
     /// <param name="SmartHealthCardJWSToken"></param>
     /// <returns></returns>
@@ -73,8 +73,8 @@ namespace SmartHealthCard.QRCode
 
     /// <summary>
     /// Provided a SMART Health Card JWS Token it will return a string list of the raw data that can be encoded into a QR Codes 
-    /// Note: SMART Health Card JWS Token wiht large payload may be broken up into manay QR Codes where verifiers can scan each in any order
-    /// to recostruct the SMART Health Card JWS Token
+    /// Note: SMART Health Card JWS Token with large payload may be broken up into many QR Codes where verifiers can scan each in any order
+    /// to reconstruct the SMART Health Card JWS Token
     /// </summary>
     /// <param name="SmartHealthCardJWSToken"></param>
     /// <returns></returns>

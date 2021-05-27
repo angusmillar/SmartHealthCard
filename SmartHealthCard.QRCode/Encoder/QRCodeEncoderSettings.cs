@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace SmartHealthCard.QRCode.Encoder
 {
   /// <summary>
-  /// The avaliable setting for generating QR Code images 
+  /// The available setting for generating QR Code images 
   /// </summary>
   public class QRCodeEncoderSettings
   {
@@ -23,12 +23,12 @@ namespace SmartHealthCard.QRCode.Encoder
     /// </summary>
     public int Border { get; set; } = 5;
     /// <summary>
-    /// The QR Code Foreground is the colour
+    /// The QR Code Foreground is the color
     /// The default is Black
     /// </summary>
     public Color Foreground { get; set; } = Color.Black;
     /// <summary>
-    /// The QR Code Background is the colour
+    /// The QR Code Background is the color
     /// The default is White
     /// </summary>
     public Color Background { get; set; } = Color.White;

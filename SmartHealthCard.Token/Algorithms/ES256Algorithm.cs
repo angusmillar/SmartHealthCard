@@ -130,7 +130,7 @@ namespace SmartHealthCard.Token.Algorithms
     public string GetKid()
     {
       if (this.Certificate is null)
-        throw new NullReferenceException("Unable to get certificate thumbprint as no certificate provided.");
+        throw new NullReferenceException("Unable to get certificate thumb-print as no certificate provided.");
 
       var Intermediate = new JWKThumbprintComputationIntermediate(
        this.CurveName,

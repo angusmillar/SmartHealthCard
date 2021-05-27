@@ -12,9 +12,9 @@ namespace SmartHealthCard.Token
 {
   /// <summary>
   /// A SMART Health Card encoder. 
-  /// Take a SMART Health Card payload as an oject model and a and encoding it into a SMART Health Card JWS Token
+  /// Take a SMART Health Card payload as an object model and a and encoding it into a SMART Health Card JWS Token
   /// It can also take a list of SMART Health Card payloads and return the many as SMART Health Card JWS 
-  /// Tokens in a .smart-health-card JSON flie format  
+  /// Tokens in a .smart-health-card JSON file format  
   /// </summary>
   public class SmartHealthCardEncoder
   {
@@ -33,7 +33,7 @@ namespace SmartHealthCard.Token
     }
 
     /// <summary>
-    /// Provide any implementation of the follwowing interfaces to overide their default implementation
+    /// Provide any implementation of the following interfaces to override their default implementation
     /// </summary>
     /// <param name="JsonSerializer">Provides basic JSON serialization</param>
     /// <param name="HeaderSerializer">Provides the serialization of the data that is packed into the JWS Header</param>
@@ -47,10 +47,10 @@ namespace SmartHealthCard.Token
 
     /// <summary>
     /// Get a SMART Health Card JWS Token 
-    /// Requires a Certifiacte containing a private Elliptic Curve key using the P-256 curve
+    /// Requires a Certificate containing a private Elliptic Curve key using the P-256 curve
     /// Requires a SMART Health Card payload in an object model form    
     /// </summary>
-    /// <param name="Certificate">Certifiacte containing a private Elliptic Curve key using the P-256 curve</param>
+    /// <param name="Certificate">Certificate containing a private Elliptic Curve key using the P-256 curve</param>
     /// <param name="SmartHealthCard">SMART Health Card payload in an object model form</param>
     /// <returns></returns>
     public async Task<string> GetTokenAsync(X509Certificate2 Certificate, SmartHealthCardModel SmartHealthCard)
@@ -63,11 +63,11 @@ namespace SmartHealthCard.Token
     }
 
     /// <summary>
-    /// Get many SMART Health Card JWS Tokens in a .smart-health-card JSON flie format 
-    /// Requires a Certifiacte containing a private Elliptic Curve key using the P-256 curve
+    /// Get many SMART Health Card JWS Tokens in a .smart-health-card JSON file format 
+    /// Requires a Certificate containing a private Elliptic Curve key using the P-256 curve
     /// Requires a SMART Health Card payload in an object model form  
     /// </summary>
-    /// <param name="Certificate">Certifiacte containing a private Elliptic Curve key using the P-256 curve</param>
+    /// <param name="Certificate">Certificate containing a private Elliptic Curve key using the P-256 curve</param>
     /// <param name="SmartHealthCardList">List of SMART Health Card payload in an object model form</param>
     /// <returns></returns>
     public async Task<string> GetSmartHealthCardFile(X509Certificate2 Certificate, List<SmartHealthCardModel> SmartHealthCardList)
@@ -89,7 +89,7 @@ namespace SmartHealthCard.Token
 
     private IJwsEncoder GetEncoder(X509Certificate2 Certificate, IAlgorithm Algorithm)
     {
-      //Encode the JWS Token passing in the Header and Payload byte arrays from our two custom serializers 
+      //Encode the JWS Token passing in the Header and Payload byte arrays from our two custom serializes 
       return new SmartHealthCardJwsEncoder(HeaderSerializer, PayloadSerializer, Algorithm);
     }
 

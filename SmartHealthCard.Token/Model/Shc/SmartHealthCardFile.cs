@@ -23,10 +23,5 @@ namespace SmartHealthCard.Token.Model.Shc
 
     [JsonProperty("verifiableCredential", Required = Required.Always)]
     public List<string> VerifiableCredentialList { get; set; }
-
-    //internal string ToJson(bool Minified = false)
-    //{      
-    //  return JsonSerializer.ToJson(this, Minified);
-    //}
   }
 }

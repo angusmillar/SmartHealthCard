@@ -19,7 +19,7 @@ namespace SmartHealthCard.Test.Support
       //The Version of FHIR in use
       string FhirVersion = "4.0.1";
 
-      //Get Fhir bundle
+      //Get FHIR bundle
       Bundle FhirBundleResource = FhirDataSupport.GetCovid19FhirBundleExample1();
       string FhirBundleJson = FhirSerializer.SerializeToJson(FhirBundleResource);
 
@@ -39,7 +39,7 @@ namespace SmartHealthCard.Test.Support
       //Instantiate the SmartHealthCard Encoder
       SmartHealthCardEncoder SmartHealthCardEncoder = new SmartHealthCardEncoder();
 
-      //Get the Smart Health Card Jws Token 
+      //Get the Smart Health Card JWS Token 
       return await SmartHealthCardEncoder.GetTokenAsync(Certificate, SmartHealthCardToEncode);
 
     }

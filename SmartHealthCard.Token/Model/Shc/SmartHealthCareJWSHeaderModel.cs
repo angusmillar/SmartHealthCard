@@ -33,11 +33,11 @@ namespace SmartHealthCard.Token.Model.Shc
       string ExpectedAlg = "ES256";
       if (string.IsNullOrWhiteSpace(this.Alg))
       {
-        throw new SmartHealthCardHeaderException("The Algorythm (alg) property was empty.");
+        throw new SmartHealthCardHeaderException("The Algorithm (alg) property was empty.");
       }
       if (!this.Alg.ToUpper().Equals(ExpectedAlg))
       {
-        throw new SmartHealthCardHeaderException($"For Smart Health Cards the JWS header Algorythm (alg) property must be '{ExpectedAlg}', yet found {this.Alg}.");
+        throw new SmartHealthCardHeaderException($"For Smart Health Cards the JWS header Algorithm (alg) property must be '{ExpectedAlg}', yet found {this.Alg}.");
       }
     }
 
@@ -46,7 +46,7 @@ namespace SmartHealthCard.Token.Model.Shc
       string ExpectedZip = "DEF";
       if (string.IsNullOrWhiteSpace(this.Zip))
       {
-        throw new SmartHealthCardHeaderException("The Algorythm (alg) property was empty.");
+        throw new SmartHealthCardHeaderException("The Algorithm (alg) property was empty.");
       }
       if (!this.Zip.ToUpper().Equals(ExpectedZip))
       {
@@ -58,7 +58,7 @@ namespace SmartHealthCard.Token.Model.Shc
     {      
       if (string.IsNullOrWhiteSpace(this.Kid))
       {
-        throw new SmartHealthCardHeaderException("The JWK Thumbprint of the key (kid) property was empty.");
+        throw new SmartHealthCardHeaderException("The JWK Thumb-print of the key (kid) property was empty.");
       }      
     }
 
