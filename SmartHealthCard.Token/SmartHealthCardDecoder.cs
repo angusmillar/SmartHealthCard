@@ -92,7 +92,7 @@ namespace SmartHealthCard.Token
     /// <param name="Token"></param>
     /// <param name="Verify"></param>
     /// <returns></returns>
-    public async Task<string> DecodeToJson(string Token, bool Verify = true)
+    public async Task<string> DecodeToJsonAsync(string Token, bool Verify = true)
     {
       SmartHealthCardModel SmartHealthCardModel = await DecodeAsync(Token, Verify);
       return JsonSerializer.ToJson(SmartHealthCardModel, Minified: false);
