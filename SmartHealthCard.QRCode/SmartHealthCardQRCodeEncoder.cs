@@ -31,7 +31,7 @@ namespace SmartHealthCard.QRCode
     /// Optionally provide setting for the encoder which control things like the QR Code size and color
     /// </summary>
     /// <param name="QRCodeEncoderSettings"></param>
-    public SmartHealthCardQRCodeEncoder(QRCodeEncoderSettings QRCodeEncoderSettings = null)
+    public SmartHealthCardQRCodeEncoder(QRCodeEncoderSettings? QRCodeEncoderSettings = null)
     {
       this.QRCodeEncoderSettings = QRCodeEncoderSettings ?? new QRCodeEncoderSettings();
       this.NumericalModeEncoder = new NumericalModeEncoder();
