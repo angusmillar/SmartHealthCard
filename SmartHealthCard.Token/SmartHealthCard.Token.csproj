@@ -5,10 +5,31 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Angus Millar</Authors>
+    <Company>PyroHealth</Company>
+    <Description>FHIR SMART Health Card JWS token encoder, decoder and verifier libaray</Description>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/angusmillar/SmartHealthCard</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/angusmillar/SmartHealthCard</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>SmartHealthCard JWS JWT FHIR covid19 immunization laboratory VerifiableCredential</PackageTags>
+    <PackageReleaseNotes>This is the first alpha.1 release of the library for alpha development use</PackageReleaseNotes>
+    <NeutralLanguage>en</NeutralLanguage>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Version>0.1.0-alpha.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
