@@ -17,7 +17,7 @@ namespace SmartHealthCard.Test.Support
     {
       List<X509Certificate2> CertificateList = new List<X509Certificate2>() { Certificate };
       SmartHealthCardJwks SmartHealthCardJwks = new SmartHealthCardJwks();
-      JsonWebKeySet JsonWebKeySet = SmartHealthCardJwks.GetJsonWebKeySet(CertificateList, Minified: false);
+      JsonWebKeySet JsonWebKeySet = SmartHealthCardJwks.GetJsonWebKeySet(CertificateList);
       Uri WellKnownJwksUri = new Uri($"{Issuer.OriginalString}/.well-known/jwks.json");
       var JWKSProviderMock = new Mock<IJwksProvider>();
       JWKSProviderMock.Setup(x => x.GetJwksAsync(WellKnownJwksUri)).ReturnsAsync(JsonWebKeySet);

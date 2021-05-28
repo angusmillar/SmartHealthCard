@@ -19,7 +19,7 @@ namespace SmartHealthCard.Test
     {
       //### Prepare ######################################################
       //Get the ECC certificate from the Windows Certificate Store by Thumb-print      
-      X509Certificate2 Certificate = CertificateSupport.GetCertificate(Thumbprint: "72c78a3460fb27b9ef2ccfae2538675b75363fee");
+      X509Certificate2 Certificate = CertificateSupport.GetCertificate(Thumbprint: CertificateSupport.TestingThumbprint);
       List<X509Certificate2> CertificateList = new List<X509Certificate2>() { Certificate };
 
       //The base of the URL where a validator will retrieve the public keys from (e.g : [Issuer]/.well-known/jwks.json) 

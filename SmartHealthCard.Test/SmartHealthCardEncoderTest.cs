@@ -21,9 +21,9 @@ namespace SmartHealthCard.Test
     public async void Create_Token_Decode_Token()
     {
       //### Prepare ######################################################
-      
+
       //Get the ECC certificate from the Windows Certificate Store by Thumb-print      
-      X509Certificate2 Certificate = CertificateSupport.GetCertificate(Thumbprint: "72c78a3460fb27b9ef2ccfae2538675b75363fee");
+      X509Certificate2 Certificate = CertificateSupport.GetCertificate(Thumbprint: CertificateSupport.TestingThumbprint);
 
       //The Version of FHIR in use
       string FhirVersion = "4.0.1";

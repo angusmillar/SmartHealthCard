@@ -38,7 +38,7 @@ namespace SmartHealthCard.Token
     /// <param name="CertificateList">List of Certificates containing a private Elliptic Curve key using the P-256 curve</param>
     /// <param name="Minified">Weather to minify the returned JSON or not, default is true</param>
     /// <returns></returns>
-    public JsonWebKeySet GetJsonWebKeySet(IEnumerable<X509Certificate2> CertificateList, bool Minified = true)
+    public JsonWebKeySet GetJsonWebKeySet(IEnumerable<X509Certificate2> CertificateList)
     {
       List<JsonWebKey> JsonWebKeySetModelList = new List<JsonWebKey>();
       foreach (X509Certificate2 Certificate in CertificateList)
@@ -67,7 +67,7 @@ namespace SmartHealthCard.Token
     /// <returns></returns>
     public string Get(IEnumerable<X509Certificate2> CertificateList, bool Minified = true)
     {
-      JsonWebKeySet JsonWebKeySet = GetJsonWebKeySet(CertificateList, Minified);
+      JsonWebKeySet JsonWebKeySet = GetJsonWebKeySet(CertificateList);
       IJsonSerializer JsonSerializer = new JsonSerializer();
       return JsonSerializer.ToJson(JsonWebKeySet, Minified);
     }

@@ -39,8 +39,7 @@ namespace SmartHealthCard.Token.Serializers.Json
       var Builder = new StringBuilder();
       using var StringWriter = new StringWriter(Builder);
       using var JsonWriter = new  JsonTextWriter(StringWriter);
-      Serializer.Serialize(JsonWriter, Obj);
-      Serializer.Serialize(JsonWriter, Obj);
+      Serializer.Serialize(JsonWriter, Obj);      
       return Builder.ToString();
     }
 

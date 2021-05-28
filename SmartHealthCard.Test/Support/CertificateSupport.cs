@@ -10,6 +10,7 @@ namespace SmartHealthCard.Test.Support
 {
   public static class CertificateSupport
   {
+    public static string TestingThumbprint = "72c78a3460fb27b9ef2ccfae2538675b75363fee";
     public static X509Certificate2 GetCertificate(string Thumbprint)
     {
       //Loads the Certificate from the Windows Certificate store 
