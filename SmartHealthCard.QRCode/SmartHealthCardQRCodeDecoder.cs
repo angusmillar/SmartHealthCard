@@ -42,12 +42,9 @@ namespace SmartHealthCard.QRCode
     /// <param name="QRCodeRawDataList"></param>
     /// <returns></returns>
     public string GetToken(List<string> QRCodeRawDataList)
-    {
-      IQRCodeDecoder QRCodeDecoder = new QRCodeDecoder();
+    {      
       IEnumerable<Chunk> ChunkList = QRCodeDecoder.GetQRCodeChunkList(QRCodeRawDataList);
-      INumericalModeDecoder NumericalModeDecoder = new NumericalModeDecoder();
-      string test = NumericalModeDecoder.Decode(ChunkList);
-      return test;
+      return NumericalModeDecoder.Decode(ChunkList);      
     }
   }
 }
