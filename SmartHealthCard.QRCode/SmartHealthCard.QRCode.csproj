@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <Version>0.1.0-alpha.1</Version>
+    <Version>0.1.0-alpha.2</Version>
     <Authors>Angus Millar</Authors>
     <Description>FHIR SMART Health Card JWS token QR Code encoder libaray</Description>
     <Company>PyroHealth</Company>
@@ -12,7 +12,7 @@
     <RepositoryUrl>https://github.com/angusmillar/SmartHealthCard</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>SmartHealthCard JWS JWT FHIR covid19 immunization laboratory VerifiableCredential</PackageTags>
-    <PackageReleaseNotes>This is the first alpha.1 release of the library for alpha development use</PackageReleaseNotes>
+    <PackageReleaseNotes>Added support to decode the raw QR Code data to a SMART Health Card JWS token</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 

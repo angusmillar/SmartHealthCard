@@ -20,7 +20,7 @@ namespace SmartHealthCard.QRCode
 
 
     /// <summary>
-    /// An encoder to generate SMART Health Card QR Code Images or there raw payloads
+    /// Default Constructor
     /// </summary>
     public SmartHealthCardQRCodeEncoder()
       : this(new QRCodeEncoderSettings())
@@ -83,5 +83,6 @@ namespace SmartHealthCard.QRCode
       Chunk[] ChunkArray = SmartHealthCardJwsChunker.Chunk(SmartHealthCardJWSToken);
       return QRCodeEncoder.GetQRCodeRawDataList(ChunkArray);
     }
+    
   }
 }
