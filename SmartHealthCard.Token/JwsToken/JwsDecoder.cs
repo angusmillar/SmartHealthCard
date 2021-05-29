@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using SmartHealthCard.Token.Providers;
 using SmartHealthCard.Token.Serializers.Json;
+using SmartHealthCard.Token.Support;
 
 namespace SmartHealthCard.Token.JwsToken
 {
@@ -74,7 +75,16 @@ namespace SmartHealthCard.Token.JwsToken
         if (JwksProvider is null)
           throw new SignatureVerificationException($"When Verify is true {nameof(this.JwksProvider)} must be not null.");
 
-        JsonWebKeySet JsonWebKeySet = await JwksProvider.GetJwksAsync(WellKnownJwksUri);
+        Result<JsonWebKeySet> JsonWebKeySetResult = await JwksProvider.GetJwksAsync(WellKnownJwksUri);
+        JsonWebKeySet JsonWebKeySet;
+        if (JsonWebKeySetResult.Failure)
+        {
+          throw new SignatureVerificationException($"Unable to obtain the JsonWebKeySet (JWKS) from : {WellKnownJwksUri.OriginalString}. ErrorMessage: {JsonWebKeySetResult.ErrorMessage}");
+        }
+        else
+        {
+          JsonWebKeySet = JsonWebKeySetResult.Value;
+        }
 
         string Header = new JwsParts(Token).Header;
         byte[] DecodedHeader = Base64UrlEncoder.Decode(Header);

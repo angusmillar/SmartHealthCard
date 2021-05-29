@@ -3,7 +3,9 @@ using SmartHealthCard.Token.Model.Jws;
 using SmartHealthCard.Token.Model.Shc;
 using SmartHealthCard.Token.Serializers.Json;
 using SmartHealthCard.Token.Serializers.Jws;
+using SmartHealthCard.Token.Support;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace SmartHealthCard.Token.Serializers.Shc
@@ -54,5 +56,9 @@ namespace SmartHealthCard.Token.Serializers.Shc
 
     public T FromJson<T>(string Json) => JsonSerializer.FromJson<T>(Json);
 
+    public Result<T> FromJsonStream<T>(Stream JsonStream)
+    {
+      return JsonSerializer.FromJsonStream<T>(JsonStream);
+    }
   }
 }

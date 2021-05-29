@@ -1,4 +1,8 @@
-﻿namespace SmartHealthCard.Token.Serializers.Json
+﻿using SmartHealthCard.Token.Providers;
+using SmartHealthCard.Token.Support;
+using System.IO;
+
+namespace SmartHealthCard.Token.Serializers.Json
 {
   public interface IJsonSerializer 
   {
@@ -11,5 +15,7 @@
     /// De-serialize a JSON string to typed object.
     /// </summary>
     T FromJson<T>(string Json);
+
+    public Result<T> FromJsonStream<T>(Stream JsonStream);
   }
 }

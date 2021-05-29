@@ -2,9 +2,12 @@
 using SmartHealthCard.Token.Certificates;
 using SmartHealthCard.Token.Model.Jwks;
 using SmartHealthCard.Token.Model.Shc;
+using SmartHealthCard.Token.Providers;
+using SmartHealthCard.Token.Support;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SHC.DecoderDemo
@@ -78,7 +81,7 @@ namespace SHC.DecoderDemo
       this.Certificate = Certificate;
     }
 
-    public Task<JsonWebKeySet> GetJwksAsync(Uri WellKnownJwksUri)
+    public Task<Result<JsonWebKeySet>> GetJwksAsync(Uri WellKnownJwksUri, CancellationToken? CancellationToken = null)
     {
       //In production the default implementation of this IJwksProvider interface would
       //retrieve the JWKS file from the provided 'WellKnownJwksUri' URL that is found in
@@ -87,8 +90,11 @@ namespace SHC.DecoderDemo
       //own JWKS which we have generated from our certificate as seen below.
       //This allows you to test before you have a publicly exposed endpoint for you JWKS. 
       SmartHealthCardJwks SmartHealthCardJwks = new SmartHealthCardJwks();
-      SmartHealthCard.Token.Model.Jwks.JsonWebKeySet Jwks = SmartHealthCardJwks.GetJsonWebKeySet(new List<X509Certificate2>() { Certificate });
-      return Task.FromResult(Jwks);
+      JsonWebKeySet Jwks = SmartHealthCardJwks.GetJsonWebKeySet(new List<X509Certificate2>() { Certificate });
+
+      return Task.FromResult(Result<JsonWebKeySet>.Ok(Jwks));
     }
+
+   
   }
 }

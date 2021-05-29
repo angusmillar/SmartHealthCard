@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System;
 
 namespace SmartHealthCard.Token.Model.Jwks
 {
@@ -8,7 +9,7 @@ namespace SmartHealthCard.Token.Model.Jwks
     [JsonConstructor]
     public JsonWebKeySet(List<JsonWebKey> Keys)
     {
-      this.Keys = Keys;      
+      this.Keys = Keys ?? throw new ArgumentNullException(nameof(Keys));      
     }
 
     public JsonWebKeySet()

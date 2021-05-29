@@ -110,7 +110,7 @@ namespace SmartHealthCard.Token.Algorithms
 
     public static ES256Algorithm FromJWKS(string Kid, JsonWebKeySet JsonWebKeySet, IJsonSerializer JsonSerializer)
     {
-      JsonWebKey? Key = JsonWebKeySet.Keys.SingleOrDefault(x => x.Kid.Equals(Kid, StringComparison.CurrentCulture));
+      JsonWebKey? Key = JsonWebKeySet.Keys.Find(x => x.Kid.Equals(Kid, StringComparison.CurrentCulture));
       if (Key is null)
         throw new JsonWebKeySetException($"No key matching the token's header kid value of {Kid} found in the sourced JWKS file.");
 

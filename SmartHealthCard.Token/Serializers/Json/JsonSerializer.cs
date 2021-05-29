@@ -1,7 +1,10 @@
 ﻿using Newtonsoft.Json;
 using SmartHealthCard.Token.Encoders;
 using SmartHealthCard.Token.Exceptions;
+using SmartHealthCard.Token.Providers;
 using SmartHealthCard.Token.Serializers.Jws;
+using SmartHealthCard.Token.Support;
+using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -53,6 +56,28 @@ namespace SmartHealthCard.Token.Serializers.Json
       return Item;
     }
 
-   
-  }
+    public Result<T> FromJsonStream<T>(Stream JsonStream)
+    {      
+      try 
+      {
+        using (var streamReader = new StreamReader(JsonStream))
+        {
+          using (var jsonReader = new JsonTextReader(streamReader))
+          {
+            T? Item = Serializer.Deserialize<T>(jsonReader);
+            if (Item is null)
+              throw new DeserializationException($"Unable to deserialize the JWS Header to type {typeof(T).Name}");
+
+            return Result<T>.Ok(Item);
+          }
+        }
+      }
+      catch(Exception Exec)
+      {
+        return Result<T>.Fail($"Unable to parser the returned content to JWKS. Message: {Exec.Message }");
+      }            
+    }
+
+
+  } 
 }
