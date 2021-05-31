@@ -25,5 +25,7 @@ namespace SmartHealthCard.Test.Support
       JWKSProviderMock.Setup(x => x.GetJwksAsync(WellKnownJwksUri, null)).ReturnsAsync(Result<JsonWebKeySet>.Ok(JsonWebKeySet));
       return JWKSProviderMock.Object;
     }
+
+     
   }
 }

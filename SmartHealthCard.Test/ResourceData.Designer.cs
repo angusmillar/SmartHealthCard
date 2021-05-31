@@ -63,9 +63,39 @@ namespace SmartHealthCard.Test {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] InvalidJwks {
+            get {
+                object obj = ResourceManager.GetObject("InvalidJwks", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] SmartHealthCardCovidExample {
             get {
                 object obj = ResourceManager.GetObject("SmartHealthCardCovidExample", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] TestECC256Cert {
+            get {
+                object obj = ResourceManager.GetObject("TestECC256Cert", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] TestECC256Private_key {
+            get {
+                object obj = ResourceManager.GetObject("TestECC256Private_key", resourceCulture);
                 return ((byte[])(obj));
             }
         }

@@ -10,10 +10,10 @@ namespace SmartHealthCard.Test.Model
 {
   static class FhirDataSupport
   {
-    public static Bundle GetCovid19FhirBundleExample1()
+    public static Bundle GetCovid19DetectedFhirBundleExample()
     {
-      Patient PatientResource = GetPatientResource("TestFamilyName", "TestGivenName", new DateTime(1973, 09, 30), "61481059995");
-      
+      Patient PatientResource = GetPatientResource("Coyote", "Wile E", new DateTime(1973, 09, 30), "61481059995");
+
       Coding Code = new Coding(system: "http://loinc.org", code: "94558-4"); //SARS-CoV-2 (COVID-19) Ag [Presence] in Respiratory specimen by Rapid immunoassay
       Coding Value = new Coding(system: "http://snomed.info/sct", code: "260373001"); //Detected
       Observation CovidResultObservationResource = GetObservationResource(
@@ -21,6 +21,32 @@ namespace SmartHealthCard.Test.Model
         ObsValue: Value, 
         EffectiveDate: new DateTime(2021, 05, 24), 
         PerformerOrganisationName: "ACME Healthcare", 
+        IdentityAssuranceLevelCode: "IAL1.4");
+
+      List<Resource> BundleResourceList = new List<Resource>()
+      {
+        PatientResource,
+        CovidResultObservationResource
+      };
+
+      Bundle Bundle = new Bundle();
+      Bundle.Type = Bundle.BundleType.Collection;
+      Bundle.Entry = GetBundleResourceEntryList(BundleResourceList);
+
+      return Bundle;
+    }
+
+    public static Bundle GetCovid19NotDetectedFhirBundleExample()
+    {
+      Patient PatientResource = GetPatientResource("Coyote", "Wile E", new DateTime(1973, 09, 30), "61481059995");
+
+      Coding Code = new Coding(system: "http://loinc.org", code: "94558-4"); //SARS-CoV-2 (COVID-19) Ag [Presence] in Respiratory specimen by Rapid immunoassay
+      Coding Value = new Coding(system: "http://snomed.info/sct", code: "260415000"); //Not Detected
+      Observation CovidResultObservationResource = GetObservationResource(
+        ObsCode: Code,
+        ObsValue: Value,
+        EffectiveDate: new DateTime(2021, 05, 24),
+        PerformerOrganisationName: "ACME Healthcare",
         IdentityAssuranceLevelCode: "IAL1.4");
 
       List<Resource> BundleResourceList = new List<Resource>()
@@ -77,7 +103,7 @@ namespace SmartHealthCard.Test.Model
       {
         Coding = new List<Coding>()
          {
-           new Coding(system: "http://loinc.org", code: "94558-4")
+           ObsCode
          }
       };
       
@@ -86,7 +112,7 @@ namespace SmartHealthCard.Test.Model
       {
           Coding = new List<Coding>()
           {
-            new Coding(system: "http://snomed.info/sct", code: "260373001")
+            ObsValue
           }
       };
       Observation.Performer = new List<ResourceReference>()

@@ -20,7 +20,7 @@ namespace SmartHealthCard.Test.Support
       string FhirVersion = "4.0.1";
 
       //Get FHIR bundle
-      Bundle FhirBundleResource = FhirDataSupport.GetCovid19FhirBundleExample1();
+      Bundle FhirBundleResource = FhirDataSupport.GetCovid19DetectedFhirBundleExample();
       string FhirBundleJson = FhirSerializer.SerializeToJson(FhirBundleResource);
 
       //When the Smart Health Card became valid, the from date.

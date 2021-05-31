@@ -4,12 +4,14 @@ using SmartHealthCard.Test.Model;
 using SmartHealthCard.Test.Serializers;
 using SmartHealthCard.Test.Support;
 using SmartHealthCard.Token;
+using SmartHealthCard.Token.Encoders;
 using SmartHealthCard.Token.Exceptions;
 using SmartHealthCard.Token.Model.Jwks;
 using SmartHealthCard.Token.Model.Shc;
 using SmartHealthCard.Token.Providers;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using Xunit;
 
@@ -22,14 +24,14 @@ namespace SmartHealthCard.Test
     {
       //### Prepare ######################################################
 
-      //Get the ECC certificate from the Windows Certificate Store by Thumb-print      
-      X509Certificate2 Certificate = CertificateSupport.GetCertificate(Thumbprint: CertificateSupport.TestingThumbprint);
-
+      //Get the ECC certificate from the Cert and Private key PEM files
+      X509Certificate2 Certificate = CertificateSupport.GetCertificateFromPemFiles();
+      
       //The Version of FHIR in use
       string FhirVersion = "4.0.1";
 
       //Get FHIR bundle
-      Bundle FhirBundleResource = FhirDataSupport.GetCovid19FhirBundleExample1();
+      Bundle FhirBundleResource = FhirDataSupport.GetCovid19DetectedFhirBundleExample();
       string FhirBundleJson = FhirSerializer.SerializeToJson(FhirBundleResource);
       
       //The base of the URL where a validator will retrieve the public keys from (e.g : [Issuer]/.well-known/jwks.json) 

@@ -18,8 +18,10 @@ namespace SmartHealthCard.Test
     public async void Decode_Token_Verify_with_JWKS()
     {
       //### Prepare ######################################################
-      //Get the ECC certificate from the Windows Certificate Store by Thumb-print      
-      X509Certificate2 Certificate = CertificateSupport.GetCertificate(Thumbprint: CertificateSupport.TestingThumbprint);
+      
+      //Get the ECC certificate from the Cert and Private key PEM files
+      X509Certificate2 Certificate = CertificateSupport.GetCertificateFromPemFiles();
+
       List<X509Certificate2> CertificateList = new List<X509Certificate2>() { Certificate };
 
       //The base of the URL where a validator will retrieve the public keys from (e.g : [Issuer]/.well-known/jwks.json) 
@@ -46,8 +48,8 @@ namespace SmartHealthCard.Test
     public async void Decode_Token_Verify_with_Certificate()
     {
       //### Prepare ######################################################
-      //Get the ECC certificate from the Windows Certificate Store by Thumb-print      
-      X509Certificate2 Certificate = CertificateSupport.GetCertificate(Thumbprint: "72c78a3460fb27b9ef2ccfae2538675b75363fee");
+      //Get the ECC certificate from the Cert and Private key PEM files
+      X509Certificate2 Certificate = CertificateSupport.GetCertificateFromPemFiles();
 
       //The base of the URL where a validator will retrieve the public keys from (e.g : [Issuer]/.well-known/jwks.json) 
       Uri Issuer = new Uri("https://sonichealthcare.com/something");

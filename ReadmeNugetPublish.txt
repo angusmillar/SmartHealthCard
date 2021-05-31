@@ -1,4 +1,4 @@
-How to pubish to Nuget:
+How to publish to Nuget:
 
 1. Rev the version in the project package dialog and save
 2. Right click the project and select Pack
