@@ -30,7 +30,7 @@ Install-Package SmartHealthCard.QRCode -Version 0.1.0-alpha.3
 
 ## [SmartHealthCard.QRCode](https://www.nuget.org/packages/SmartHealthCard.QRCode/0.1.0-alpha.1): Encode SMART Health Card JWS token QR Code images
 ```
-Install-Package SmartHealthCard.QRCode -Version 0.1.0-alpha.1
+Install-Package SmartHealthCard.QRCode -Version 0.1.0-alpha.2
 ```
 
 &nbsp;
