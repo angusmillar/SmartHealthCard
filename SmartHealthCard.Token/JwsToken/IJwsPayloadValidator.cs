@@ -1,7 +1,9 @@
-﻿namespace SmartHealthCard.Token.JwsToken
+﻿using SmartHealthCard.Token.Support;
+
+namespace SmartHealthCard.Token.JwsToken
 {
   public interface IJwsPayloadValidator
   {
-    void Validate<T>(T Obj);
+    Result Validate<T>(T Obj);
   }
 }

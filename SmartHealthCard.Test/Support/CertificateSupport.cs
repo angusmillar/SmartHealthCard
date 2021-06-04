@@ -1,4 +1,5 @@
 ﻿using SmartHealthCard.Token.Certificates;
+using SmartHealthCard.Token.Encoders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,5 +23,15 @@ namespace SmartHealthCard.Test.Support
           true
           );
     }
+
+    public static X509Certificate2 GetCertificateFromPemFiles()
+    {
+      string CertificatePEM = Utf8EncodingSupport.GetString(ResourceData.TestECC256Cert);
+      string PrivateKeyPEM = Utf8EncodingSupport.GetString(ResourceData.TestECC256Private_key);
+      return X509Certificate2.CreateFromPem(CertificatePEM, PrivateKeyPEM);
+    }
+
+    
+
   }
 }

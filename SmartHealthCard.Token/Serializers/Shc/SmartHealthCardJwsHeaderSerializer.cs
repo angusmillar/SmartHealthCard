@@ -1,7 +1,9 @@
 ﻿using SmartHealthCard.Token.Model.Shc;
 using SmartHealthCard.Token.Serializers.Json;
 using SmartHealthCard.Token.Serializers.Jws;
+using SmartHealthCard.Token.Support;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace SmartHealthCard.Token.Serializers.Shc
@@ -14,35 +16,42 @@ namespace SmartHealthCard.Token.Serializers.Shc
       this.JsonSerializer = JsonSerializer;
     }
     
-    public async Task<byte[]> SerializeAsync<T>(T Obj, bool Minified = true)
+    public async Task<Result<byte[]>> SerializeAsync<T>(T Obj, bool Minified = true)
     {
       if (Obj is SmartHealthCareJWSHeaderModel SmartHealthCareJWSHeaderModel)
       {
-        string Json =  ToJson(SmartHealthCareJWSHeaderModel, Minified);
-        return await Task.Run(() => Encoders.Utf8EncodingSupport.GetBytes(Json));        
+        Result<string> ToJsonResult =  ToJson(SmartHealthCareJWSHeaderModel, Minified);
+        if (ToJsonResult.Failure)
+          return Result<byte[]>.Fail($"{ToJsonResult.ErrorMessage}");
+        
+        return await Task.Run(() => Result<byte[]>.Ok(Encoders.Utf8EncodingSupport.GetBytes(ToJsonResult.Value)));        
       }
       else
       {
-        throw new ArgumentException($"The {this.GetType().Name} Serialize method can only work with an input of type {typeof(SmartHealthCareJWSHeaderModel).Name}");
+        throw new InvalidCastException($"The {this.GetType().Name} Serialize method can only work with an input of type {typeof(SmartHealthCareJWSHeaderModel).Name}");
       }
     }
 
-    public async Task<T> DeserializeAsync<T>(byte[] bytes)
+    public async Task<Result<T>> DeserializeAsync<T>(byte[] bytes)
     {
       string json = Encoders.Utf8EncodingSupport.GetString(bytes);
       if (typeof(T) == typeof(SmartHealthCareJWSHeaderModel))
       {
-        return await Task.Run(() => (T)(object)FromJson<SmartHealthCareJWSHeaderModel>(json));
-      }       
+        return await Task.Run(() => FromJson<T>(json));       
+      }
       else
       {
-        throw new TypeAccessException(typeof(T).Name);
+        throw new InvalidCastException(typeof(T).Name);
       }
-
     }
+    
+    public Result<string> ToJson<T>(T Obj, bool Minified = true) => JsonSerializer.ToJson(Obj);
 
-    public string ToJson<T>(T Obj, bool Minified = true) => JsonSerializer.ToJson(Obj);
+    public Result<T> FromJson<T>(string Json) => JsonSerializer.FromJson<T>(Json);
 
-    public T FromJson<T>(string Json) => JsonSerializer.FromJson<T>(Json);
+    public Result<T> FromJsonStream<T>(Stream JsonStream)
+    {
+      return JsonSerializer.FromJsonStream<T>(JsonStream);
+    }
   }
 }

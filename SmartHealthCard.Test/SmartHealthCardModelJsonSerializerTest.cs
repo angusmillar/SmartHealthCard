@@ -8,6 +8,7 @@ using SmartHealthCard.Token.Serializers.Json;
 using SmartHealthCard.Token.Serializers.Shc;
 using SmartHealthCard.Token.Model.Shc;
 using SmartHealthCard.Token.Encoders;
+using SmartHealthCard.Token.Support;
 
 namespace SmartHealthCard.Test
 {
@@ -22,8 +23,9 @@ namespace SmartHealthCard.Test
 
       //### Act ##########################################################
       JsonSerializer JsonSerializer = new JsonSerializer();
-      SmartHealthCardModel SmartHealthCardModel = JsonSerializer.FromJson<SmartHealthCardModel>(SmartHealthCardCovidJson);      
-      
+      Result<SmartHealthCardModel> SmartHealthCardModelResult = JsonSerializer.FromJson<SmartHealthCardModel>(SmartHealthCardCovidJson);
+      SmartHealthCardModel SmartHealthCardModel = SmartHealthCardModelResult.Value;
+
       //### Assert #######################################################
 
       Assert.Equal("1621444043.769", SmartHealthCardModel.IssuanceDate);

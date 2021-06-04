@@ -7,6 +7,8 @@ using SmartHealthCard.Token.JwsToken;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using SmartHealthCard.Token.Support;
+using SmartHealthCard.Token.Exceptions;
 
 namespace SmartHealthCard.Token
 {
@@ -59,7 +61,10 @@ namespace SmartHealthCard.Token
       IAlgorithm Algorithm = new ES256Algorithm(Certificate, JsonSerializer);
       SmartHealthCareJWSHeaderModel Header = GetHeader(Algorithm);
       IJwsEncoder JwsEncoder = GetEncoder(Certificate, Algorithm);
-      return await JwsEncoder.EncodeAsync(Header, SmartHealthCard);
+      Result<string> EncoderResult = await JwsEncoder.EncodeAsync(Header, SmartHealthCard);
+      if (EncoderResult.Failure)
+        throw new SmartHealthCardEncoderException(EncoderResult.ErrorMessage);
+      return EncoderResult.Value;
     }
 
     /// <summary>
@@ -81,10 +86,17 @@ namespace SmartHealthCard.Token
       SmartHealthCardFile SmartHealthCardFile = new SmartHealthCardFile();
       foreach (SmartHealthCardModel SmartHealthCard in SmartHealthCardList)
       {
-        SmartHealthCardFile.VerifiableCredentialList.Add(await JwsEncoder.EncodeAsync(Header, SmartHealthCard));
+        Result<string> EncoderResult = await JwsEncoder.EncodeAsync(Header, SmartHealthCard);
+        if (EncoderResult.Success)
+          SmartHealthCardFile.VerifiableCredentialList.Add(EncoderResult.Value);
+        else
+          throw new SmartHealthCardEncoderException(EncoderResult.ErrorMessage);
       }
+      Result<string> ToJsonResult = JsonSerializer.ToJson(SmartHealthCardFile);
+      if (ToJsonResult.Failure)
+        throw new SmartHealthCardEncoderException(ToJsonResult.ErrorMessage);
 
-      return JsonSerializer.ToJson(SmartHealthCardFile);     
+      return ToJsonResult.Value;
     }
 
     private IJwsEncoder GetEncoder(X509Certificate2 Certificate, IAlgorithm Algorithm)
@@ -95,8 +107,12 @@ namespace SmartHealthCard.Token
 
     private SmartHealthCareJWSHeaderModel GetHeader(IAlgorithm Algorithm)
     {
+      Result<string> KidResult = Algorithm.GetKid();
+      if (KidResult.Failure)
+        throw new SmartHealthCardEncoderException(KidResult.ErrorMessage);
+          
       //Create the Smart Health Card JWS Header Model
-      return new SmartHealthCareJWSHeaderModel(Algorithm.Name, "DEF", Algorithm.GetKid());
+      return new SmartHealthCareJWSHeaderModel(Algorithm.Name, "DEF", KidResult.Value);
     }
   }
 }

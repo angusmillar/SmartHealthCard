@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using SmartHealthCard.Token.DateTimeSupport;
 using SmartHealthCard.Token.Exceptions;
+using SmartHealthCard.Token.Support;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,12 +46,12 @@ namespace SmartHealthCard.Token.Model.Shc
       return new DateTimeOffset(UnixEpoch.UnixTimeStampToDateTime(NbfDouble));     
     }
 
-    internal void Validate()
+    internal Result Validate()
     {     
-      this.ValidateIssuanceDate();      
+      return this.ValidateIssuanceDate();      
     }
     
-    private void ValidateIssuanceDate()
+    private Result ValidateIssuanceDate()
     {
       var EpochNow = UnixEpoch.GetSecondsSince(DateTimeOffset.UtcNow);
       int ExtraTimeMargin = 0; //Can add extra seconds onto expiry if required
@@ -61,14 +62,15 @@ namespace SmartHealthCard.Token.Model.Shc
       }
       catch
       {
-        throw new SmartHealthCardPayloadException($"IssuanceDate (nbf) must be a number, found the value of {this.IssuanceDate}.");
+        return Result.Fail($"IssuanceDate (nbf) must be a number, found the value of {this.IssuanceDate}.");        
       }
 
       if (IssuanceDateEpoch > (EpochNow - ExtraTimeMargin))
       {
         DateTime Date = UnixEpoch.UnixTimeStampToDateTime(EpochNow + ExtraTimeMargin);
-        throw new SmartHealthCardPayloadException($"The token's Issuance Date of {Date} is earlier than the current date.");
-      }      
+        return Result.Fail($"The token's Issuance Date of {Date} is earlier than the current date.");        
+      }
+      return Result.Ok();
     }
   }
 }

@@ -12,22 +12,22 @@ namespace SmartHealthCard.Token.Model.Jwks
       this.Alg = Alg;
       this.Crv = Crv;
       this.X = X;
-      this.Y = Y;
+      this.Y = Y;      
     }
 
-    [JsonProperty("kty")]
+    [JsonProperty("kty", Required = Required.Always)]
     public string Kty { get; set; }
-    [JsonProperty("kid")]
+    [JsonProperty("kid", Required = Required.Always)]
     public string Kid { get; set; }
-    [JsonProperty("use")]
+    [JsonProperty("use", Required = Required.Always)]
     public string Use { get; set; }
-    [JsonProperty("alg")]
+    [JsonProperty("alg", Required = Required.Always)]
     public string Alg { get; set; }
-    [JsonProperty("crv")]
+    [JsonProperty("crv", Required = Required.Always)]
     public string Crv { get; set; }
-    [JsonProperty("x")]
+    [JsonProperty("x", Required = Required.Always)]
     public string X { get; set; }
-    [JsonProperty("y")]
+    [JsonProperty("y", Required = Required.Always)]
     public string Y { get; set; }
   }
 }

@@ -1,10 +1,11 @@
 ﻿using SmartHealthCard.Token.Algorithms;
+using SmartHealthCard.Token.Support;
 
 namespace SmartHealthCard.Token.JwsToken
 {
   public interface IJwsSignatureValidator
   {
-    void Validate(IAlgorithm Algorithm, string Token);
+    Result Validate(IAlgorithm Algorithm, string Token);
 
   }
 }

@@ -8,6 +8,7 @@ using Moq;
 using SmartHealthCard.Token;
 using SmartHealthCard.Token.Model.Jwks;
 using SmartHealthCard.Token.Providers;
+using SmartHealthCard.Token.Support;
 
 namespace SmartHealthCard.Test.Support
 {
@@ -20,8 +21,11 @@ namespace SmartHealthCard.Test.Support
       JsonWebKeySet JsonWebKeySet = SmartHealthCardJwks.GetJsonWebKeySet(CertificateList);
       Uri WellKnownJwksUri = new Uri($"{Issuer.OriginalString}/.well-known/jwks.json");
       var JWKSProviderMock = new Mock<IJwksProvider>();
-      JWKSProviderMock.Setup(x => x.GetJwksAsync(WellKnownJwksUri)).ReturnsAsync(JsonWebKeySet);
+
+      JWKSProviderMock.Setup(x => x.GetJwksAsync(WellKnownJwksUri, null)).ReturnsAsync(Result<JsonWebKeySet>.Ok(JsonWebKeySet));
       return JWKSProviderMock.Object;
     }
+
+     
   }
 }

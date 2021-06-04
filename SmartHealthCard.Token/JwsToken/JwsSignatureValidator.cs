@@ -2,24 +2,31 @@
 using SmartHealthCard.Token.Encoders;
 using SmartHealthCard.Token.Exceptions;
 using SmartHealthCard.Token.Model.Jws;
+using SmartHealthCard.Token.Support;
 using System;
 
 namespace SmartHealthCard.Token.JwsToken
 {
   public sealed class JwsSignatureValidator : IJwsSignatureValidator
   {    
-    public void Validate(IAlgorithm Algorithm, string Token)
+    public Result Validate(IAlgorithm Algorithm, string Token)
     {
-      if (string.IsNullOrEmpty(Token))      
-        throw new ArgumentException($"The provided {nameof(Token)} was found to be empty.");
-      
-      JwsParts JwtParts = new JwsParts(Token);
-      byte[] BytesToSign = Utf8EncodingSupport.GetBytes(JwtParts.Header, (byte)'.', JwtParts.Payload);
-      byte[] Signature = Base64UrlEncoder.Decode(JwtParts.Signature);
-      if (!Algorithm.Verify(BytesToSign, Signature))
+      if (string.IsNullOrEmpty(Token))
+        return Result.Fail("The provided Token was found to be null or empty.");
+ 
+      Result<JwsParts> JwtPartsParseResult = JwsParts.ParseToken(Token);
+      if (JwtPartsParseResult.Failure)
+        return Result.Fail(JwtPartsParseResult.ErrorMessage);
+
+      byte[] BytesToSign = Utf8EncodingSupport.GetBytes(JwtPartsParseResult.Value.Header, (byte)'.', JwtPartsParseResult.Value.Payload);
+      byte[] Signature = Base64UrlEncoder.Decode(JwtPartsParseResult.Value.Signature);
+      Result<bool> VerifyResult = Algorithm.Verify(BytesToSign, Signature);
+
+      if (VerifyResult.Failure)
       {
-        throw new SignatureVerificationException("The JWS signature is invalid.");
-      }     
+        return Result.Fail($"The JWS signing signature is invalid. {VerifyResult.ErrorMessage}");       
+      }
+      return Result.Ok();
     }
   }
 }

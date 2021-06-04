@@ -1,6 +1,7 @@
 ﻿using SmartHealthCard.QRCode;
 using SmartHealthCard.Token;
 using SmartHealthCard.Token.Certificates;
+using SmartHealthCard.Token.Exceptions;
 using SmartHealthCard.Token.Model.Shc;
 using System;
 using System.Collections.Generic;
@@ -58,8 +59,22 @@ namespace SHC.EncoderDemo
       //Instantiate the Smart Health Card Encoder
       SmartHealthCardEncoder SmartHealthCardEncoder = new SmartHealthCardEncoder();
 
-      //Get the Smart Health Card JWS Token 
-      string SmartHealthCardJwsToken = await SmartHealthCardEncoder.GetTokenAsync(Certificate, SmartHealthCard);
+      string SmartHealthCardJwsToken = string.Empty;
+      try
+      {
+        //Get the Smart Health Card JWS Token 
+        SmartHealthCardJwsToken = await SmartHealthCardEncoder.GetTokenAsync(Certificate, SmartHealthCard);
+      }
+      catch (SmartHealthCardEncoderException EncoderException)
+      {
+        Console.WriteLine("The SMART Health Card Encoder has found an error, please see message below:");
+        Console.WriteLine(EncoderException.Message);
+      }
+      catch (Exception Exception)
+      {
+        Console.WriteLine("Oops, there is an unexpected development exception");
+        Console.WriteLine(Exception.Message);
+      }
 
       //Instantiate the Smart Health Card QR Code Factory
       SmartHealthCardQRCodeEncoder SmartHealthCardQRCodeEncoder = new SmartHealthCardQRCodeEncoder();

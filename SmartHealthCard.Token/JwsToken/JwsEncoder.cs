@@ -1,6 +1,7 @@
 ﻿using SmartHealthCard.Token.Algorithms;
 using SmartHealthCard.Token.Encoders;
 using SmartHealthCard.Token.Serializers.Jws;
+using SmartHealthCard.Token.Support;
 using System.Threading.Tasks;
 
 namespace SmartHealthCard.Token.JwsToken
@@ -17,16 +18,24 @@ namespace SmartHealthCard.Token.JwsToken
       this.Algorithm = Algorithm;
     }
 
-    public async Task<string> EncodeAsync<HeaderType, PayloadType>(HeaderType Header, PayloadType Payload)
+    public async Task<Result<string>> EncodeAsync<HeaderType, PayloadType>(HeaderType Header, PayloadType Payload)
     {
-      var HeaderSegment = Base64UrlEncoder.Encode(await HeaderSerializer.SerializeAsync(Header));
-      var PayloadSegment = Base64UrlEncoder.Encode(await PayloadSerializer.SerializeAsync(Payload));
+      Result<byte[]> HeaderSerializeResult = await HeaderSerializer.SerializeAsync(Header);
+      Result<byte[]> PayloadSerializeResult = await PayloadSerializer.SerializeAsync(Payload);
+      var CombineResult = Result.Combine(HeaderSerializeResult, PayloadSerializeResult);
+      if (CombineResult.Failure)
+        return await Task.FromResult(Result<string>.Fail(CombineResult.ErrorMessage));
+
+      var HeaderSegment = Base64UrlEncoder.Encode(HeaderSerializeResult.Value);
+      var PayloadSegment = Base64UrlEncoder.Encode(PayloadSerializeResult.Value);
 
       var BytesToSign = Utf8EncodingSupport.GetBytes($"{HeaderSegment}.{PayloadSegment}");
-      var Signature = Algorithm.Sign(BytesToSign);
-      var SignatureSegment = Base64UrlEncoder.Encode(Signature);
+      Result<byte[]> SignResult = Algorithm.Sign(BytesToSign);
+      if (SignResult.Failure)
+        return await Task.FromResult(Result<string>.Fail(SignResult.ErrorMessage));
 
-      return $"{HeaderSegment}.{PayloadSegment}.{ SignatureSegment}";
+      var SignatureSegment = Base64UrlEncoder.Encode(SignResult.Value);
+      return Result<string>.Ok($"{HeaderSegment}.{PayloadSegment}.{SignatureSegment}");
     }
   }
 }

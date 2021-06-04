@@ -118,7 +118,16 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="InvalidJwks" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\InvalidJwks.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="SmartHealthCardCovidExample" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\SmartHealthCardCovidExample.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="TestECC256Cert" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\TestECC256Cert.pem;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="TestECC256Private_key" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\TestECC256Private-key.pem;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>
