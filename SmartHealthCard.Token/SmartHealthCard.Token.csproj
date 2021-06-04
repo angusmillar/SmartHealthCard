@@ -14,13 +14,11 @@
     <RepositoryUrl>https://github.com/angusmillar/SmartHealthCard</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>SmartHealthCard JWS JWT FHIR covid19 immunization laboratory VerifiableCredential</PackageTags>
-    <PackageReleaseNotes>Fixed bug in SmartHealthCardJwks where duplicate Key objects where output and invalid JSON as there was no comma between the objects. The issue was deep in the JsonSerilizer therefore this bug would have effected many other JSON outputs.
- Removed the Minified property from the call to SmartHealthCardJwks.GetJsonWebKeySet() as you can not minifiy the returned object model, it was only required on  the SmartHealthCardJwks.Get() method that retrurn JSON.
-</PackageReleaseNotes>
+    <PackageReleaseNotes>Improved repoting and handling and reporting</PackageReleaseNotes>
     <NeutralLanguage>en</NeutralLanguage>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
-    <Version>0.1.0-alpha.2</Version>
+    <Version>0.1.0-alpha.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
