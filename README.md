@@ -24,7 +24,7 @@
 
 ## [SmartHealthCard.Token](https://www.nuget.org/packages/SmartHealthCard.Token/0.1.0-alpha.1): Encode, Decode & Verifiy SMART Health Card JWS tokens  
 ```
-Install-Package SmartHealthCard.QRCode -Version 0.1.0-alpha.1
+Install-Package SmartHealthCard.QRCode -Version 0.1.0-alpha.3
 ```
 
 
@@ -43,6 +43,7 @@ Install-Package SmartHealthCard.QRCode -Version 0.1.0-alpha.1
 using SmartHealthCard.QRCode;
 using SmartHealthCard.Token;
 using SmartHealthCard.Token.Certificates;
+using SmartHealthCard.Token.Exceptions;
 using SmartHealthCard.Token.Model.Shc;
 using System;
 using System.Collections.Generic;
@@ -100,8 +101,22 @@ namespace SHC.EncoderDemo
       //Instantiate the Smart Health Card Encoder
       SmartHealthCardEncoder SmartHealthCardEncoder = new SmartHealthCardEncoder();
 
-      //Get the Smart Health Card JWS Token 
-      string SmartHealthCardJwsToken = await SmartHealthCardEncoder.GetTokenAsync(Certificate, SmartHealthCard);
+      string SmartHealthCardJwsToken = string.Empty;
+      try
+      {
+        //Get the Smart Health Card JWS Token 
+        SmartHealthCardJwsToken = await SmartHealthCardEncoder.GetTokenAsync(Certificate, SmartHealthCard);
+      }
+      catch (SmartHealthCardEncoderException EncoderException)
+      {
+        Console.WriteLine("The SMART Health Card Encoder has found an error, please see message below:");
+        Console.WriteLine(EncoderException.Message);
+      }
+      catch (Exception Exception)
+      {
+        Console.WriteLine("Oops, there is an unexpected development exception");
+        Console.WriteLine(Exception.Message);
+      }
 
       //Instantiate the Smart Health Card QR Code Factory
       SmartHealthCardQRCodeEncoder SmartHealthCardQRCodeEncoder = new SmartHealthCardQRCodeEncoder();
@@ -126,11 +141,15 @@ namespace SHC.EncoderDemo
 ```C#
 using SmartHealthCard.Token;
 using SmartHealthCard.Token.Certificates;
+using SmartHealthCard.Token.Exceptions;
 using SmartHealthCard.Token.Model.Jwks;
 using SmartHealthCard.Token.Model.Shc;
+using SmartHealthCard.Token.Providers;
+using SmartHealthCard.Token.Support;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SHC.DecoderDemo
@@ -187,10 +206,15 @@ namespace SHC.DecoderDemo
         //Or decode and verify, returning the Smart Health Card as a JSON string, throws exceptions if not valid
         //string DecodedSmartHealthCardJson = await Decoder.DecodeToJsonAsync(SmartHealthCardJwsToken, Verify: true);
       }
-      catch (Exception Exec)
+      catch (SmartHealthCardDecoderException DecoderException)
       {
         Console.WriteLine("The SMART Health Card JWS token was invalid, please see message below:");
-        Console.WriteLine(Exec.Message);
+        Console.WriteLine(DecoderException.Message);
+      }
+      catch (Exception Exception)
+      {
+        Console.WriteLine("Oops, there is an unexpected development exception");
+        Console.WriteLine(Exception.Message);
       }
     }
   }
@@ -204,7 +228,7 @@ namespace SHC.DecoderDemo
       this.Certificate = Certificate;
     }
 
-    public Task<JsonWebKeySet> GetJwksAsync(Uri WellKnownJwksUri)
+    public Task<Result<JsonWebKeySet>> GetJwksAsync(Uri WellKnownJwksUri, CancellationToken? CancellationToken = null)
     {
       //In production the default implementation of this IJwksProvider interface would
       //retrieve the JWKS file from the provided 'WellKnownJwksUri' URL that is found in
@@ -213,9 +237,11 @@ namespace SHC.DecoderDemo
       //own JWKS which we have generated from our certificate as seen below.
       //This allows you to test before you have a publicly exposed endpoint for you JWKS. 
       SmartHealthCardJwks SmartHealthCardJwks = new SmartHealthCardJwks();
-      SmartHealthCard.Token.Model.Jwks.JsonWebKeySet Jwks = SmartHealthCardJwks.GetJsonWebKeySet(new List<X509Certificate2>() { Certificate });
-      return Task.FromResult(Jwks);
+      JsonWebKeySet Jwks = SmartHealthCardJwks.GetJsonWebKeySet(new List<X509Certificate2>() { Certificate });
+      return Task.FromResult(Result<JsonWebKeySet>.Ok(Jwks));
     }
+
+   
   }
 }
 ```

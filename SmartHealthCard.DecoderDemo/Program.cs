@@ -1,5 +1,6 @@
 ﻿using SmartHealthCard.Token;
 using SmartHealthCard.Token.Certificates;
+using SmartHealthCard.Token.Exceptions;
 using SmartHealthCard.Token.Model.Jwks;
 using SmartHealthCard.Token.Model.Shc;
 using SmartHealthCard.Token.Providers;
@@ -64,10 +65,15 @@ namespace SHC.DecoderDemo
         //Or decode and verify, returning the Smart Health Card as a JSON string, throws exceptions if not valid
         //string DecodedSmartHealthCardJson = await Decoder.DecodeToJsonAsync(SmartHealthCardJwsToken, Verify: true);
       }
-      catch (Exception Exec)
+      catch (SmartHealthCardDecoderException DecoderException)
       {
         Console.WriteLine("The SMART Health Card JWS token was invalid, please see message below:");
-        Console.WriteLine(Exec.Message);
+        Console.WriteLine(DecoderException.Message);
+      }
+      catch (Exception Exception)
+      {
+        Console.WriteLine("Oops, there is an unexpected development exception");
+        Console.WriteLine(Exception.Message);
       }
     }
   }
@@ -91,7 +97,6 @@ namespace SHC.DecoderDemo
       //This allows you to test before you have a publicly exposed endpoint for you JWKS. 
       SmartHealthCardJwks SmartHealthCardJwks = new SmartHealthCardJwks();
       JsonWebKeySet Jwks = SmartHealthCardJwks.GetJsonWebKeySet(new List<X509Certificate2>() { Certificate });
-
       return Task.FromResult(Result<JsonWebKeySet>.Ok(Jwks));
     }
 
