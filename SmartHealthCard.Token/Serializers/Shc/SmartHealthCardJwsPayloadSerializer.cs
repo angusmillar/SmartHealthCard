@@ -45,9 +45,7 @@ namespace SmartHealthCard.Token.Serializers.Shc
         Result<T> SmartHealthCardModelResult = FromJson<T>(MinifiedSmartHealthCardJson);
         if (SmartHealthCardModelResult.Failure)          
           return Result<T>.Fail(SmartHealthCardModelResult.ErrorMessage);
-
-        return await Task.Run(() => FromJson<T>(MinifiedSmartHealthCardJson));       
-        //return (T)(object)SmartHealthCardModel;
+        return await Task.Run(() => FromJson<T>(MinifiedSmartHealthCardJson));               
       }
       else if (typeof(T) == typeof(JwsBody))
       {
@@ -56,16 +54,12 @@ namespace SmartHealthCard.Token.Serializers.Shc
         Result<T> JwsBodyResult = FromJson<T>(MinifiedSmartHealthCardJson);
         if (JwsBodyResult.Failure)
           return Result<T>.Fail(JwsBodyResult.ErrorMessage);
-
         return await Task.Run(() => FromJson<T>(MinifiedSmartHealthCardJson));
-
-        //return (T)(object)FromJson<JwsBody>(MinifiedSmartHealthCardJson);
       }
       else
       {
         throw new TypeAccessException(typeof(T).Name);
       }
-
     }
 
     public Result<string> ToJson<T>(T Obj, bool Minified = true) => JsonSerializer.ToJson(Obj);

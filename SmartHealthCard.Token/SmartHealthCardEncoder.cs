@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using SmartHealthCard.Token.Support;
+using SmartHealthCard.Token.Exceptions;
 
 namespace SmartHealthCard.Token
 {
@@ -62,7 +63,7 @@ namespace SmartHealthCard.Token
       IJwsEncoder JwsEncoder = GetEncoder(Certificate, Algorithm);
       Result<string> EncoderResult = await JwsEncoder.EncodeAsync(Header, SmartHealthCard);
       if (EncoderResult.Failure)
-        throw new System.Exception(EncoderResult.ErrorMessage);
+        throw new SmartHealthCardEncoderException(EncoderResult.ErrorMessage);
       return EncoderResult.Value;
     }
 
@@ -89,12 +90,11 @@ namespace SmartHealthCard.Token
         if (EncoderResult.Success)
           SmartHealthCardFile.VerifiableCredentialList.Add(EncoderResult.Value);
         else
-          throw new System.Exception(EncoderResult.ErrorMessage);
+          throw new SmartHealthCardEncoderException(EncoderResult.ErrorMessage);
       }
       Result<string> ToJsonResult = JsonSerializer.ToJson(SmartHealthCardFile);
       if (ToJsonResult.Failure)
-        throw new System.Exception(ToJsonResult.ErrorMessage);
-
+        throw new SmartHealthCardEncoderException(ToJsonResult.ErrorMessage);
 
       return ToJsonResult.Value;
     }
@@ -109,7 +109,7 @@ namespace SmartHealthCard.Token
     {
       Result<string> KidResult = Algorithm.GetKid();
       if (KidResult.Failure)
-        throw new System.Exception(KidResult.ErrorMessage);
+        throw new SmartHealthCardEncoderException(KidResult.ErrorMessage);
           
       //Create the Smart Health Card JWS Header Model
       return new SmartHealthCareJWSHeaderModel(Algorithm.Name, "DEF", KidResult.Value);

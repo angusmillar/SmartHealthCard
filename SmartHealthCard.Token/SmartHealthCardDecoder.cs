@@ -1,4 +1,5 @@
 ﻿using SmartHealthCard.Token.Algorithms;
+using SmartHealthCard.Token.Exceptions;
 using SmartHealthCard.Token.JwsToken;
 using SmartHealthCard.Token.Model.Jwks;
 using SmartHealthCard.Token.Model.Shc;
@@ -98,7 +99,7 @@ namespace SmartHealthCard.Token
       SmartHealthCardModel SmartHealthCardModel = await DecodeAsync(Token, Verify);
       Result<string> ToJsonResult = JsonSerializer.ToJson(SmartHealthCardModel, Minified: false);
       if (ToJsonResult.Failure)
-        throw new System.Exception(ToJsonResult.ErrorMessage);
+        throw new SmartHealthCardDecoderException(ToJsonResult.ErrorMessage);
 
       return ToJsonResult.Value;
     }
@@ -123,7 +124,7 @@ namespace SmartHealthCard.Token
           this.JwsPayloadValidator);
         Result<SmartHealthCardModel> DecodePayloadResult = await JwsDecoder.DecodePayloadAsync<SmartHealthCareJWSHeaderModel, SmartHealthCardModel>(Token: Token, Verity: Verify);
         if (DecodePayloadResult.Failure)
-          throw new System.Exception(DecodePayloadResult.ErrorMessage);
+          throw new SmartHealthCardDecoderException(DecodePayloadResult.ErrorMessage);
 
         return DecodePayloadResult.Value;
       }
@@ -135,7 +136,7 @@ namespace SmartHealthCard.Token
 
         Result<SmartHealthCardModel> DecodePayloadResult = await JwsDecoder.DecodePayloadAsync<SmartHealthCareJWSHeaderModel, SmartHealthCardModel>(Token: Token, Verity: Verify);
         if (DecodePayloadResult.Failure)
-          throw new System.Exception(DecodePayloadResult.ErrorMessage);
+          throw new SmartHealthCardDecoderException(DecodePayloadResult.ErrorMessage);
 
         return DecodePayloadResult.Value;
       }
