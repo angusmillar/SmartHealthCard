@@ -12,6 +12,7 @@ using SmartHealthCard.Token.Model.Jwks;
 using SmartHealthCard.Token.Encoders;
 using System.IO;
 using System.Security.Cryptography;
+using SmartHealthCard.Token.Support;
 
 namespace SmartHealthCard.Test
 {
@@ -38,8 +39,8 @@ namespace SmartHealthCard.Test
       string JwksJson = SmartHealthCardJwks.Get(CertificateList, Minified: false);
       
       //Parse the JSON back to the model
-      JsonWebKeySet JsonWebKeySet = JsonSerializer.FromJson<JsonWebKeySet>(JwksJson);
-
+      Result<JsonWebKeySet> JsonWebKeySetResult = JsonSerializer.FromJson<JsonWebKeySet>(JwksJson);
+      JsonWebKeySet JsonWebKeySet = JsonWebKeySetResult.Value;
 
       //### Assert #######################################################
       Assert.NotNull(JwksJson);

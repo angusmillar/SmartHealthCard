@@ -6,6 +6,7 @@ using SmartHealthCard.Token.Providers;
 using SmartHealthCard.Token.Serializers.Json;
 using SmartHealthCard.Token.Serializers.Jws;
 using SmartHealthCard.Token.Serializers.Shc;
+using SmartHealthCard.Token.Support;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
@@ -95,7 +96,11 @@ namespace SmartHealthCard.Token
     public async Task<string> DecodeToJsonAsync(string Token, bool Verify = true)
     {
       SmartHealthCardModel SmartHealthCardModel = await DecodeAsync(Token, Verify);
-      return JsonSerializer.ToJson(SmartHealthCardModel, Minified: false);
+      Result<string> ToJsonResult = JsonSerializer.ToJson(SmartHealthCardModel, Minified: false);
+      if (ToJsonResult.Failure)
+        throw new System.Exception(ToJsonResult.ErrorMessage);
+
+      return ToJsonResult.Value;
     }
 
     /// <summary>
@@ -116,8 +121,11 @@ namespace SmartHealthCard.Token
           this.JwsSignatureValidator,
           this.JwsHeaderValidator,
           this.JwsPayloadValidator);
+        Result<SmartHealthCardModel> DecodePayloadResult = await JwsDecoder.DecodePayloadAsync<SmartHealthCareJWSHeaderModel, SmartHealthCardModel>(Token: Token, Verity: Verify);
+        if (DecodePayloadResult.Failure)
+          throw new System.Exception(DecodePayloadResult.ErrorMessage);
 
-        return await JwsDecoder.DecodePayloadAsync<SmartHealthCareJWSHeaderModel, SmartHealthCardModel>(Token: Token, Verity: Verify);
+        return DecodePayloadResult.Value;
       }
       else
       {
@@ -125,7 +133,11 @@ namespace SmartHealthCard.Token
           this.HeaderSerializer,
           this.PayloadSerializer);
 
-        return await JwsDecoder.DecodePayloadAsync<SmartHealthCareJWSHeaderModel, SmartHealthCardModel>(Token: Token, Verity: Verify);
+        Result<SmartHealthCardModel> DecodePayloadResult = await JwsDecoder.DecodePayloadAsync<SmartHealthCareJWSHeaderModel, SmartHealthCardModel>(Token: Token, Verity: Verify);
+        if (DecodePayloadResult.Failure)
+          throw new System.Exception(DecodePayloadResult.ErrorMessage);
+
+        return DecodePayloadResult.Value;
       }
     }
   }

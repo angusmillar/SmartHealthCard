@@ -1,10 +1,11 @@
 ﻿using System.Threading.Tasks;
+using SmartHealthCard.Token.Support;
 
 namespace SmartHealthCard.Token.JwsToken
 {
   public interface IJwsDecoder
   {
-    Task<HeaderType> DecodeHeaderAsync<HeaderType>(string Token);
-    Task<PayloadType> DecodePayloadAsync<HeaderType, PayloadType>(string Token, bool Verity = false);
+    Task<Result<HeaderType>> DecodeHeaderAsync<HeaderType>(string Token);
+    Task<Result<PayloadType>> DecodePayloadAsync<HeaderType, PayloadType>(string Token, bool Verity = false);
   }
 }

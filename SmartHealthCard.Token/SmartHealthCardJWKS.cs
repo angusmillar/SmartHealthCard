@@ -1,6 +1,7 @@
 ﻿using SmartHealthCard.Token.Algorithms;
 using SmartHealthCard.Token.Model.Jwks;
 using SmartHealthCard.Token.Serializers.Json;
+using SmartHealthCard.Token.Support;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 
@@ -44,15 +45,26 @@ namespace SmartHealthCard.Token
       foreach (X509Certificate2 Certificate in CertificateList)
       {
         ES256Algorithm Algorithm = new ES256Algorithm(Certificate, JsonSerializer);
+        Result<string> KidResult = Algorithm.GetKid();
+        if (KidResult.Failure)
+          throw new System.Exception(KidResult.ErrorMessage);
+
+        Result<string> XResult = Algorithm.GetPointCoordinateX();
+        if (XResult.Failure)
+          throw new System.Exception(XResult.ErrorMessage);
+
+        Result<string> YResult = Algorithm.GetPointCoordinateY();
+        if (YResult.Failure)
+          throw new System.Exception(YResult.ErrorMessage);
 
         JsonWebKey JsonWebKeySetModel = new JsonWebKey(
           Kty: Algorithm.KeyTypeName,
-          Kid: Algorithm.GetKid(),
+          Kid: KidResult.Value,
           Use: "sig",
           Alg: Algorithm.Name,
           Crv: Algorithm.CurveName,
-          X: Algorithm.GetPointCoordinateX(),
-          Y: Algorithm.GetPointCoordinateY());
+          X: XResult.Value,
+          Y: YResult.Value);
 
         JsonWebKeySetModelList.Add(JsonWebKeySetModel);
       }
@@ -69,7 +81,11 @@ namespace SmartHealthCard.Token
     {
       JsonWebKeySet JsonWebKeySet = GetJsonWebKeySet(CertificateList);
       IJsonSerializer JsonSerializer = new JsonSerializer();
-      return JsonSerializer.ToJson(JsonWebKeySet, Minified);
+      Result<string> ToJsonResult = JsonSerializer.ToJson(JsonWebKeySet, Minified);
+      if (ToJsonResult.Failure)
+        throw new System.Exception(ToJsonResult.ErrorMessage);
+
+      return ToJsonResult.Value;
     }
   }
 }

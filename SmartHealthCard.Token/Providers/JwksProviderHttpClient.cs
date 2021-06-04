@@ -23,7 +23,6 @@ namespace SmartHealthCard.Token.Providers
       this.JsonSerializer = JsonSerializer;
     }
 
-
     public async Task<Result<JsonWebKeySet>> Get(Uri WellKnownUrl, CancellationToken? CancellationToken = null)
     {
       var request = new HttpRequestMessage(HttpMethod.Get, WellKnownUrl);
@@ -37,21 +36,11 @@ namespace SmartHealthCard.Token.Providers
             {
               return Result<JsonWebKeySet>.Fail("Response content was null");
             }
-
-            System.IO.Stream ResponseStream = await response.Content.ReadAsStreamAsync();
-            //var responseJson = await response.Content.ReadAsStringAsync();
+            System.IO.Stream ResponseStream = await response.Content.ReadAsStreamAsync();            
             Result<JsonWebKeySet> JsonWebKeySetResult = JsonSerializer.FromJsonStream<JsonWebKeySet>(ResponseStream);
-
-            if (JsonWebKeySetResult.Success)
-            {
-              return JsonWebKeySetResult;
-            }
-            else
-            {
-              
-              
-              return Result<JsonWebKeySet>.Fail($"Failed to deserialize response: {JsonWebKeySetResult.ErrorMessage}");
-            }            
+            if (JsonWebKeySetResult.Failure)
+               return Result<JsonWebKeySet>.Fail($"Failed to deserialize the JsonWebKeySet (JWKS) which was returned from the endpoint {WellKnownUrl.OriginalString}. {JsonWebKeySetResult.ErrorMessage}");            
+            return JsonWebKeySetResult;                        
           }
           else
           {
@@ -66,8 +55,7 @@ namespace SmartHealthCard.Token.Providers
               return Result<JsonWebKeySet>.Fail($"Response status: {response.StatusCode}, Content: [None]");
             }           
           }
-        }
-        
+        }        
       }
       catch(HttpRequestException HttpRequestException)
       {
