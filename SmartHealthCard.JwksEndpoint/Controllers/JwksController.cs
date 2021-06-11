@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using SmartHealthCard.JwksEndpoint.CertificateSupport;
 using SmartHealthCard.JwksEndpoint.JwksSupport;
 
@@ -16,6 +17,7 @@ namespace SmartHealthCard.JwksEndpoint.Controllers
 
     // GET: .well-known/jwks.json
     [HttpGet]
+    [EnableCors("access-control-allow-origin-policy")]
     [Produces("application/json")]
     public ActionResult Get()
     {
