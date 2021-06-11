@@ -13,12 +13,13 @@
     <PackageProjectUrl>https://github.com/angusmillar/SmartHealthCard</PackageProjectUrl>
     <RepositoryUrl>https://github.com/angusmillar/SmartHealthCard</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>SmartHealthCard JWS JWT FHIR covid19 immunization laboratory VerifiableCredential</PackageTags>
-    <PackageReleaseNotes>Improved repoting and handling and reporting</PackageReleaseNotes>
+    <PackageTags>SmartHealthCard Smart Health Card JWS JWT FHIR covid19 immunization laboratory VerifiableCredential Verifiable Credential</PackageTags>
+    <PackageReleaseNotes>Fixed issuerDate (nbf) was output as a string in the JWT JSON when it should have been a number.</PackageReleaseNotes>
     <NeutralLanguage>en</NeutralLanguage>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
-    <Version>0.1.0-alpha.3</Version>
+    <Version>1.0.0</Version>
+    <PackageIcon>128-x-128-Pyro-Icon.jpg</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,6 +28,10 @@
 
   <ItemGroup>
     <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="H:\My Drive\PyroHealth\Pyro FHIR Server\Images\Pyro Icon\NewPyroIcon\128-x-128-Pyro-Icon.jpg">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>

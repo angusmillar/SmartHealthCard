@@ -22,9 +22,9 @@
 
 ## Nuget Packages in this repository
 
-## [SmartHealthCard.Token](https://www.nuget.org/packages/SmartHealthCard.Token/0.1.0-alpha.1): Encode, Decode & Verifiy SMART Health Card JWS tokens  
+## [SmartHealthCard.Token](https://www.nuget.org/packages/SmartHealthCard.Token/0.1.0-alpha.4): Encode, Decode & Verifiy SMART Health Card JWS tokens  
 ```
-Install-Package SmartHealthCard.QRCode -Version 0.1.0-alpha.3
+Install-Package SmartHealthCard.QRCode -Version 0.1.0-alpha.4
 ```
 
 
@@ -43,6 +43,7 @@ Install-Package SmartHealthCard.QRCode -Version 0.1.0-alpha.2
 using SmartHealthCard.QRCode;
 using SmartHealthCard.Token;
 using SmartHealthCard.Token.Certificates;
+using SmartHealthCard.Token.Exceptions;
 using SmartHealthCard.Token.Model.Shc;
 using System;
 using System.Collections.Generic;
@@ -84,13 +85,17 @@ namespace SHC.EncoderDemo
       string FhirBundleJson = "[A Smart Health Card FHIR Bundle in JSON format]";
 
       //Set the base of the URL where any validator will retrieve the public keys from (e.g : [Issuer]/.well-known/jwks.json) 
-      Uri Issuer = new Uri("https://sonichealthcare.com/something");
+      Uri Issuer = new Uri("https://acmecare.com/shc");
 
       //Set when the Smart Health Card becomes valid, (e.g the from date).
       DateTimeOffset IssuanceDateTimeOffset = DateTimeOffset.Now.AddMinutes(-1);
 
       //Set the appropriate VerifiableCredentialsType enum list, for more info see: see: https://smarthealth.cards/vocabulary/
-      var VerifiableCredentialTypeList = new List<VerifiableCredentialType>() { VerifiableCredentialType.Covid19 };
+      List<VerifiableCredentialType> VerifiableCredentialTypeList = new List<VerifiableCredentialType>()
+      {
+        VerifiableCredentialType.HealthCard,
+        VerifiableCredentialType.Covid19
+      };
 
       //Instantiate and populate the Smart Health Card Model with the properties we just setup
       SmartHealthCardModel SmartHealthCard = new SmartHealthCardModel(Issuer, IssuanceDateTimeOffset,
@@ -100,8 +105,22 @@ namespace SHC.EncoderDemo
       //Instantiate the Smart Health Card Encoder
       SmartHealthCardEncoder SmartHealthCardEncoder = new SmartHealthCardEncoder();
 
-      //Get the Smart Health Card JWS Token 
-      string SmartHealthCardJwsToken = await SmartHealthCardEncoder.GetTokenAsync(Certificate, SmartHealthCard);
+      string SmartHealthCardJwsToken = string.Empty;
+      try
+      {
+        //Get the Smart Health Card JWS Token 
+        SmartHealthCardJwsToken = await SmartHealthCardEncoder.GetTokenAsync(Certificate, SmartHealthCard);
+      }
+      catch (SmartHealthCardEncoderException EncoderException)
+      {
+        Console.WriteLine("The SMART Health Card Encoder has found an error, please see message below:");
+        Console.WriteLine(EncoderException.Message);
+      }
+      catch (Exception Exception)
+      {
+        Console.WriteLine("Oops, there is an unexpected development exception");
+        Console.WriteLine(Exception.Message);
+      }
 
       //Instantiate the Smart Health Card QR Code Factory
       SmartHealthCardQRCodeEncoder SmartHealthCardQRCodeEncoder = new SmartHealthCardQRCodeEncoder();
@@ -158,24 +177,6 @@ namespace SHC.DecoderDemo
       //Instantiate the SmartHealthCard Decoder
       SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder();
 
-      //Useful while in development!! 
-      //Optionally for development, you can provide an implementation of the IJwksProvider interface
-      //which allows you to pass a JSON Web Key Set (JKWS) that contain the public key used to verify you 
-      //token's signatures.
-
-      //If you don't do this the default implementation will use the Issuer (iss) value from Smart Health Card
-      //token payload to make a HTTP call to obtain the JWKS file, which in a production system it the behavior you want.
-
-      //Yet in development this means you must have a public endpoint to provide the JWKS.
-
-      //By providing this simple interface implementation (see MyJwksProvider class below) you can successfully
-      //validate signatures in development with out the need for a public endpoint.
-      //Of course you would not do this is production.
-
-      //Here is how you pass that interface implementation to the SmartHealthCardDecoder constructor.
-      //SmartHealthCard.Token.Providers.IJwksProvider MyJwksProvider = new MyJwksProvider(Certificate);
-      //SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder(MyJwksProvider);
-
       try
       {
         //Decode and verify, returning an object model of the Smart Health Card, throws exceptions if not valid
@@ -195,7 +196,27 @@ namespace SHC.DecoderDemo
     }
   }
 
-  //Example implementation of the IJwksProvider interface
+  
+  //When in development!
+  //For development, you can provide an implementation of the IJwksProvider interface
+  //which will allow you to pass to the decoder a JSON Web Key Set (JKWS) that contain the public key 
+  //used to verify the token's signatures.
+
+  //If you don't do this the default implementation will use the Issuer (iss) value from Smart Health Card
+  //token payload to make a HTTP call to obtain the JWKS file, which in a production system it the behavior 
+  //you want.
+
+  //For development this would means you must have a public endpoint to provide the JWKS.
+
+  //By providing this simple interface implementation (see MyJwksProvider class below) you can successfully
+  //validate signatures in development with out the need for a public endpoint. Of course you would not do 
+  //this is production.
+
+  //Here is how you pass that interface implementation to the SmartHealthCardDecoder constructor.
+  //SmartHealthCard.Token.Providers.IJwksProvider MyJwksProvider = new MyJwksProvider(Certificate);
+  //SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder(MyJwksProvider);
+  
+  //Here is an xxample implementation of the IJwksProvider interface
   public class MyJwksProvider : SmartHealthCard.Token.Providers.IJwksProvider
   {
     private readonly X509Certificate2 Certificate;
