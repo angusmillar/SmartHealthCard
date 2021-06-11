@@ -12,13 +12,13 @@ namespace SmartHealthCard.Token.Model.Shc
   {
     public SmartHealthCardModel(Uri Issuer, DateTimeOffset IssuanceDate, VerifiableCredential VerifiableCredential)
     {
-      this.Issuer = Issuer;
-      this.IssuanceDate = UnixEpoch.GetSecondsSince(IssuanceDate.ToUniversalTime()).ToString();
+      this.Issuer = Issuer;      
+      this.IssuanceDate = UnixEpoch.GetSecondsSince(IssuanceDate.ToUniversalTime());
       this.VerifiableCredential = VerifiableCredential;
     }
 
     [JsonConstructor]
-    public SmartHealthCardModel(Uri Issuer, string IssuanceDate, VerifiableCredential VerifiableCredential)
+    public SmartHealthCardModel(Uri Issuer, double IssuanceDate, VerifiableCredential VerifiableCredential)
     {
       this.Issuer = Issuer;
       this.IssuanceDate = IssuanceDate;
@@ -28,7 +28,7 @@ namespace SmartHealthCard.Token.Model.Shc
     [JsonProperty("iss", Required = Required.Always)]
     public Uri Issuer { get; set; }
     [JsonProperty("nbf", Required = Required.Always)]
-    public string IssuanceDate { get; set; }
+    public double IssuanceDate { get; set; }
     [JsonProperty("vc", Required = Required.Always)]
     public VerifiableCredential VerifiableCredential { get; set; }
 
