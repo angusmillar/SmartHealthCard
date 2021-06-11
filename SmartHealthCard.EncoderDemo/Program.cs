@@ -49,7 +49,11 @@ namespace SHC.EncoderDemo
       DateTimeOffset IssuanceDateTimeOffset = DateTimeOffset.Now.AddMinutes(-1);
 
       //Set the appropriate VerifiableCredentialsType enum list, for more info see: see: https://smarthealth.cards/vocabulary/
-      var VerifiableCredentialTypeList = new List<VerifiableCredentialType>() { VerifiableCredentialType.Covid19 };
+      List<VerifiableCredentialType> VerifiableCredentialTypeList = new List<VerifiableCredentialType>()
+      {
+        VerifiableCredentialType.HealthCard,
+        VerifiableCredentialType.Covid19
+      };
 
       //Instantiate and populate the Smart Health Card Model with the properties we just setup
       SmartHealthCardModel SmartHealthCard = new SmartHealthCardModel(Issuer, IssuanceDateTimeOffset,
