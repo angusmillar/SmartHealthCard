@@ -44,8 +44,12 @@ namespace SmartHealthCard.Test
       DateTimeOffset IssuanceDateTimeOffset = DateTimeOffset.Now.AddMinutes(-1);
 
       //The Uri for the type of VerifiableCredentials
-     // Uri VerifiableCredentialType = new Uri("https://smarthealth.cards#covid19");
-      List<VerifiableCredentialType> VerifiableCredentialTypeList = new List<VerifiableCredentialType>() { VerifiableCredentialType.Covid19 };
+      // Uri VerifiableCredentialType = new Uri("https://smarthealth.cards#covid19");
+      List<VerifiableCredentialType> VerifiableCredentialTypeList = new List<VerifiableCredentialType>()
+      {
+        VerifiableCredentialType.HealthCard,
+        VerifiableCredentialType.Covid19
+      };
 
       //Create the SmartHealthCardModel
       SmartHealthCardModel SmartHealthCardToEncode = new SmartHealthCardModel(Issuer, IssuanceDateTimeOffset,
@@ -87,6 +91,7 @@ namespace SmartHealthCard.Test
 
       //Get the ECC certificate from the Cert and Private key PEM files
       X509Certificate2 Certificate = CertificateSupport.GetCertificateFromPemFiles();
+      //X509Certificate2 Certificate = CertificateSupport.GetCertificate(CertificateSupport.TestingThumbprint);
 
       //The Version of FHIR in use
       string FhirVersion = "4.0.1";
@@ -97,14 +102,18 @@ namespace SmartHealthCard.Test
       string FhirBundleJson = FhirSerializer.SerializeToJson(FhirBundleResource);
 
       //The base of the URL where a validator will retie the public keys from (e.g : [Issuer]/.well-known/jwks.json) 
-      Uri Issuer = new Uri("https://localhost:44306/Smart-health-card");
+      Uri Issuer = new Uri("https://e1414486fce0.ngrok.io");
 
       //When the Smart Health Card became valid, the from date.
       DateTimeOffset IssuanceDateTimeOffset = DateTimeOffset.Now.AddMinutes(-1);
 
       //The Uri for the type of VerifiableCredentials
       // Uri VerifiableCredentialType = new Uri("https://smarthealth.cards#covid19");
-      List<VerifiableCredentialType> VerifiableCredentialTypeList = new List<VerifiableCredentialType>() { VerifiableCredentialType.Covid19 };
+      List<VerifiableCredentialType> VerifiableCredentialTypeList = new List<VerifiableCredentialType>() 
+      { 
+        VerifiableCredentialType.HealthCard, 
+        VerifiableCredentialType.Covid19 
+      };
 
       //Create the SmartHealthCardModel
       SmartHealthCardModel SmartHealthCardModel = new SmartHealthCardModel(Issuer, IssuanceDateTimeOffset,
@@ -127,7 +136,7 @@ namespace SmartHealthCard.Test
       //Write out Raw QR Code data to file
       //for (int i = 0; i < QRCodeRawDataList.Count; i++)
       //{
-      //  File.WriteAllText(@$"C:\Temp\SMARTHealthCard\RawQRCodeData-{i}.txt", QRCodeRawDataList[i]);
+      //  File.WriteAllText(@$"C:\Temp\SMARTHealthCard\Output\RawQRCodeData-{i}.txt", QRCodeRawDataList[i]);
       //}
 
       SmartHealthCardQRCodeDecoder SmartHealthCardQRCodeDecoder = new SmartHealthCardQRCodeDecoder();

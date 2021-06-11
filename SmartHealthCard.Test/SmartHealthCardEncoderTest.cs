@@ -26,7 +26,8 @@ namespace SmartHealthCard.Test
 
       //Get the ECC certificate from the Cert and Private key PEM files
       X509Certificate2 Certificate = CertificateSupport.GetCertificateFromPemFiles();
-      
+      //X509Certificate2 Certificate = CertificateSupport.GetCertificate(CertificateSupport.TestingThumbprint);
+
       //The Version of FHIR in use
       string FhirVersion = "4.0.1";
 
@@ -35,14 +36,18 @@ namespace SmartHealthCard.Test
       string FhirBundleJson = FhirSerializer.SerializeToJson(FhirBundleResource);
       
       //The base of the URL where a validator will retrieve the public keys from (e.g : [Issuer]/.well-known/jwks.json) 
-      Uri Issuer = new Uri("https://sonichealthcare.com/something");      
+      Uri Issuer = new Uri("https://e1414486fce0.ngrok.io");      
 
       //When the Smart Health Card became valid, the from date.
-      DateTimeOffset IssuanceDateTimeOffset = DateTimeOffset.Now.AddMinutes(-1);      
-      
+      DateTimeOffset IssuanceDateTimeOffset = DateTimeOffset.Now.AddMinutes(-1);
+
       //The Uri for the type of VerifiableCredentials
-      //Uri VerifiableCredentialType = new Uri("https://smarthealth.cards#covid19");
-      List<VerifiableCredentialType> VerifiableCredentialTypeList = new List<VerifiableCredentialType>() { VerifiableCredentialType.Covid19 };
+      // Uri VerifiableCredentialType = new Uri("https://smarthealth.cards#covid19");
+      List<VerifiableCredentialType> VerifiableCredentialTypeList = new List<VerifiableCredentialType>()
+      {
+        VerifiableCredentialType.HealthCard,
+        VerifiableCredentialType.Covid19
+      };
 
       //Create the SmartHealthCardModel
       SmartHealthCardModel SmartHealthCard = new SmartHealthCardModel(Issuer, IssuanceDateTimeOffset,
@@ -57,14 +62,18 @@ namespace SmartHealthCard.Test
       IJwksProvider MockedIJwksProvider = JwksSupport.GetMockedIJwksProvider(Certificate, Issuer);
 
       //Instantiate the SmartHealthCard Decoder
+      //SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder();
       SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder(MockedIJwksProvider);
 
       //### Act ##########################################################
 
       //Get the Smart Health Card JWS Token 
-      
+
       //string SmartHealthCardJwsToken = Assert.Throws<SmartHealthCardException>(() => SmartHealthCardEncoder.GetToken(Certificate, SmartHealthCardToEncode));
       string SmartHealthCardJwsToken = await SmartHealthCardEncoder.GetTokenAsync(Certificate, SmartHealthCard);
+
+      //File.WriteAllText(@$"C:\Temp\SMARTHealthCard\Output\SmartHealthCardJwt.json", SmartHealthCardJwsToken);
+
 
       //### Assert #######################################################
 

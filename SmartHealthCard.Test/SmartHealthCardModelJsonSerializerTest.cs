@@ -28,7 +28,7 @@ namespace SmartHealthCard.Test
 
       //### Assert #######################################################
 
-      Assert.Equal("1621444043.769", SmartHealthCardModel.IssuanceDate);
+      Assert.Equal(1621444043.769, SmartHealthCardModel.IssuanceDate);
       Assert.Equal(new Uri("https://smarthealth.cards/examples/issuer"), SmartHealthCardModel.Issuer);
       Assert.NotNull(SmartHealthCardModel.VerifiableCredential);
       Assert.NotNull(SmartHealthCardModel.VerifiableCredential.VerifiableCredentialTypeList);
