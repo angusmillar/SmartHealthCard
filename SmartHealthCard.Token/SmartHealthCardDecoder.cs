@@ -26,6 +26,7 @@ namespace SmartHealthCard.Token
     private readonly IJwsPayloadSerializer PayloadSerializer;
 
     private IJwksProvider? JwksProvider;
+    private IHttpClient? HttpClient;
     private IJwsSignatureValidator? JwsSignatureValidator;
     private IJwsHeaderValidator? JwsHeaderValidator;
     private IJwsPayloadValidator? JwsPayloadValidator;
@@ -46,10 +47,22 @@ namespace SmartHealthCard.Token
     /// default implementation that will attempt to source the JWKS from the token's Issuer URL (iss) + /.well-known/jwks.json 
     /// </summary>
     /// <param name="JwksProvider">Provides the provider for sourcing the JWKS file for token signature verifying</param>
-    public SmartHealthCardDecoder(IJwksProvider? JwksProvider)
+    public SmartHealthCardDecoder(IJwksProvider JwksProvider)
       :this()
     {
       this.JwksProvider = JwksProvider;
+    }
+
+    /// <summary>
+    /// Provide any implementation of the IJwksProvider interface to override the default implementation
+    /// This allows you to inject a JWKS file to be used when validating the JWS signature instead of the 
+    /// default implementation that will attempt to source the JWKS from the token's Issuer URL (iss) + /.well-known/jwks.json 
+    /// </summary>
+    /// <param name="JwksProvider">Provides the provider for sourcing the JWKS file for token signature verifying</param>
+    public SmartHealthCardDecoder(IHttpClient HttpClient)
+      : this()
+    {
+      this.HttpClient = HttpClient;
     }
 
     /// <summary>
@@ -119,6 +132,7 @@ namespace SmartHealthCard.Token
           this.HeaderSerializer,
           this.PayloadSerializer,
           this.JwksProvider,
+          this.HttpClient,
           this.JwsSignatureValidator,
           this.JwsHeaderValidator,
           this.JwsPayloadValidator);
