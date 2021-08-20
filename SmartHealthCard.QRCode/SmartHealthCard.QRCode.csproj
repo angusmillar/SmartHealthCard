@@ -14,6 +14,8 @@
     <PackageTags>SmartHealthCard JWS JWT FHIR covid19 immunization laboratory VerifiableCredential</PackageTags>
     <PackageReleaseNotes>Added support to decode the raw QR Code data to a SMART Health Card JWS token</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageIcon>128-x-128-Pyro-Icon.jpg</PackageIcon>
+    <PackageIconUrl />
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,6 +24,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\128-x-128-Pyro-Icon.jpg">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
     <None Include="..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
