@@ -57,7 +57,7 @@ namespace SmartHealthCard.QRCode.Chunker
 
           //Syntax: shc:/[This Chunk index]/[Total Chunks]/[This chunk's data]
           //shc:/2/3/56762909524320603460292437404460 ..etc
-          ChunkList.Add(new Chunk($"{Prefix}/{i}/{ChunkSizeArray.Length}/", NumericChunkData));
+          ChunkList.Add(new Chunk($"{Prefix}/{i+1}/{ChunkSizeArray.Length}/", NumericChunkData));
           StartPosition += ChunkSizeArray[i];
         }
         return ChunkList.ToArray();

@@ -9,11 +9,15 @@ namespace SmartHealthCard.Token.Compression
   {
     public static async Task<byte[]> CompressAsync(string input)
     {
+      // Remove BOM and ZERO WIDTH SPACE
+      input = input.Trim(new char[] { '\uFEFF', '\u200B' });
+
       using (MemoryStream MemoryStream = new MemoryStream())
       {
         using (DeflateStream DeflateStream = new DeflateStream(MemoryStream, CompressionMode.Compress))
         {
-          using (StreamWriter StreamWriter = new StreamWriter(DeflateStream, Encoding.UTF8))
+          // set encoderShouldEmitUTF8Identifier to false to not include the BOM
+          using (StreamWriter StreamWriter = new StreamWriter(DeflateStream, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false)))
           {
             await StreamWriter.WriteAsync(input);
           }
