@@ -36,24 +36,6 @@ namespace SHC.DecoderDemo
       //Instantiate the SmartHealthCard Decoder
       SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder();
 
-      //Useful while in development!! 
-      //Optionally for development, you can provide an implementation of the IJwksProvider interface
-      //which allows you to pass a JSON Web Key Set (JKWS) that contain the public key used to verify you 
-      //token's signatures.
-
-      //If you don't do this the default implementation will use the Issuer (iss) value from Smart Health Card
-      //token payload to make a HTTP call to obtain the JWKS file, which in a production system it the behavior you want.
-
-      //Yet in development this means you must have a public endpoint to provide the JWKS.
-
-      //By providing this simple interface implementation (see MyJwksProvider class below) you can successfully
-      //validate signatures in development with out the need for a public endpoint.
-      //Of course you would not do this is production.
-
-      //Here is how you pass that interface implementation to the SmartHealthCardDecoder constructor.
-      //SmartHealthCard.Token.Providers.IJwksProvider MyJwksProvider = new MyJwksProvider(Certificate);
-      //SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder(MyJwksProvider);
-
       try
       {
         //Decode and verify, returning an object model of the Smart Health Card, throws exceptions if not valid
@@ -78,7 +60,25 @@ namespace SHC.DecoderDemo
     }
   }
 
-  //Example implementation of the IJwksProvider interface
+  //While in development!! 
+  //Optionally for development, you can provide an implementation of the IJwksProvider interface
+  //which allows you to pass a JSON Web Key Set (JKWS) that contain the public key used to verify you 
+  //token's signatures.
+
+  //If you don't do this the default implementation will use the Issuer (iss) value from Smart Health Card
+  //token payload to make a HTTP call to obtain the JWKS file, which in a production system it the behavior you want.
+
+  //Yet in development this means you must have a public endpoint to provide the JWKS.
+
+  //By providing this simple interface implementation (see MyJwksProvider class below) you can successfully
+  //validate signatures in development with out the need for a public endpoint.
+  //Of course you would not do this is production.
+
+  //Here is how you pass that interface implementation to the SmartHealthCardDecoder constructor.
+  //SmartHealthCard.Token.Providers.IJwksProvider MyJwksProvider = new MyJwksProvider(Certificate);
+  //SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder(MyJwksProvider);
+
+  //Where below is an example implementation of the IJwksProvider interface
   public class MyJwksProvider : SmartHealthCard.Token.Providers.IJwksProvider
   {
     private readonly X509Certificate2 Certificate;
@@ -95,11 +95,10 @@ namespace SHC.DecoderDemo
       //Yet for development we can just ignore the 'WellKnownJwksUri' URL and return our
       //own JWKS which we have generated from our certificate as seen below.
       //This allows you to test before you have a publicly exposed endpoint for you JWKS. 
+      //Alternatively you could not do this and use a service such as : https://ngrok.com/
       SmartHealthCardJwks SmartHealthCardJwks = new SmartHealthCardJwks();
       JsonWebKeySet Jwks = SmartHealthCardJwks.GetJsonWebKeySet(new List<X509Certificate2>() { Certificate });
       return Task.FromResult(Result<JsonWebKeySet>.Ok(Jwks));
-    }
-
-   
+    }   
   }
 }

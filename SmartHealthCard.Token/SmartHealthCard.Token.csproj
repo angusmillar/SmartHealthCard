@@ -18,8 +18,14 @@
     <NeutralLanguage>en</NeutralLanguage>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
+<<<<<<< HEAD
     <Version>1.0.0</Version>
     <PackageIcon>128-x-128-Pyro-Icon.jpg</PackageIcon>
+=======
+    <Version>0.1.0-alpha.2</Version>
+    <PackageIcon>128-x-128-Pyro-Icon.jpg</PackageIcon>
+    <PackageIconUrl />
+>>>>>>> development
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,6 +33,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\128-x-128-Pyro-Icon.jpg">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
     <None Include="..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>

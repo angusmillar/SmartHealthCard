@@ -21,6 +21,7 @@ namespace SmartHealthCard.Token.JwsToken
     private readonly IJwsPayloadValidator? JwsPayloadValidator;
     private readonly IJwsHeaderValidator? JwsHeaderValidator;
     private readonly IJwksProvider? JwksProvider;
+    private readonly IHttpClient? HttpClient;
     public SmartHealthCardJwsDecoder(
       IJwsHeaderSerializer HeaderSerializer,
       IJwsPayloadSerializer PayloadSerializer)
@@ -34,14 +35,15 @@ namespace SmartHealthCard.Token.JwsToken
       IJwsHeaderSerializer HeaderSerializer,
       IJwsPayloadSerializer PayloadSerializer,
       IJwksProvider? JwksProvider,
+      IHttpClient? HttpClient,
       IJwsSignatureValidator? IJwsSignatureValidator,
       IJwsHeaderValidator? JwsHeaderValidator,
       IJwsPayloadValidator? IJwsPayloadValidator)
       : this(HeaderSerializer, PayloadSerializer)
     {      
       this.JsonSerializer = JsonSerializer ?? new JsonSerializer();
-
-      this.JwksProvider = JwksProvider ?? new JwksProvider(this.JsonSerializer);
+      this.HttpClient = HttpClient ?? Providers.HttpClient.Create();
+      this.JwksProvider = JwksProvider ?? new JwksProvider(this.HttpClient, this.JsonSerializer);
       this.JwsSignatureValidator = IJwsSignatureValidator ?? new JwsSignatureValidator();
       this.JwsHeaderValidator = JwsHeaderValidator ?? new SmartHealthCardHeaderValidator();
       this.JwsPayloadValidator = IJwsPayloadValidator ?? new SmartHealthCardPayloadValidator();
