@@ -14,11 +14,11 @@
     <RepositoryUrl>https://github.com/angusmillar/SmartHealthCard</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>SmartHealthCard Smart Health Card JWS JWT FHIR covid19 immunization laboratory VerifiableCredential Verifiable Credential</PackageTags>
-    <PackageReleaseNotes>Fixed issuerDate (nbf) was output as a string in the JWT JSON when it should have been a number.</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixed issue preventing QR Codes from being scanned by verifier apps due to BOM in compressed payload. Thanks goes to Kevin Snow</PackageReleaseNotes>
     <NeutralLanguage>en</NeutralLanguage>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <PackageIcon>128-x-128-Pyro-Icon.jpg</PackageIcon>
   </PropertyGroup>
 
