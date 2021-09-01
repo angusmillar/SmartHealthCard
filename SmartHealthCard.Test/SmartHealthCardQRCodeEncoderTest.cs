@@ -48,7 +48,8 @@ namespace SmartHealthCard.Test
       List<VerifiableCredentialType> VerifiableCredentialTypeList = new List<VerifiableCredentialType>()
       {
         VerifiableCredentialType.HealthCard,
-        VerifiableCredentialType.Covid19
+        VerifiableCredentialType.Covid19,
+        VerifiableCredentialType.Laboratory
       };
 
       //Create the SmartHealthCardModel
