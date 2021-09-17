@@ -23,7 +23,7 @@ namespace SHC.EncoderDemo
     {
       //Get the Certificate containing a private Elliptic Curve key using the P-256 curve
       //from the Windows Certificate Store by Thumb-print
-      string CertificateThumbprint = "72c78a3460fb27b9ef2ccfae2538675b75363fee";
+      string CertificateThumbprint = "89faeeea715ab86bd0ade30830cc313ff76cca79".ToUpper();
       X509Certificate2 Certificate = X509CertificateSupport.GetFirstMatchingCertificate(
             CertificateThumbprint.ToUpper(),
             X509FindType.FindByThumbprint,
