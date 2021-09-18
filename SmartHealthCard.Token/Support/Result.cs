@@ -136,7 +136,7 @@ namespace SmartHealthCard.Token.Support
     }
     
     protected internal Result(bool Success, bool Retryable, string ErrorMessage)
-        : base(Success: Success, Retryable: false, ErrorMessage: ErrorMessage)
+        : base(Success: Success, Retryable: Retryable, ErrorMessage: ErrorMessage)
     {
       this.ResultValue = default;
     }
