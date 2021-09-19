@@ -97,7 +97,7 @@ namespace SmartHealthCard.Token.Providers
       }
       catch (OperationCanceledException)
       {        
-        return Result<JsonWebKeySet>.Retry("Task was canceled during call to API");
+        return Result<JsonWebKeySet>.Fail("Task was canceled during call to API");
       }      
     }
   }
