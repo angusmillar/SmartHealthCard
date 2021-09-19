@@ -8,6 +8,7 @@ using SmartHealthCard.Token.Serializers.Jws;
 using SmartHealthCard.Token.Support;
 using SmartHealthCard.Token.Validators;
 using System;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SmartHealthCard.Token.JwsToken
@@ -83,8 +84,8 @@ namespace SmartHealthCard.Token.JwsToken
 
         if (JwksProvider is null)
           return await Task.FromResult(Result<PayloadType>.Fail($"When Verify is true {nameof(this.JwksProvider)} must be not null."));        
-        
-        Result<JsonWebKeySet> JsonWebKeySetResult = await JwksProvider.GetJwksAsync(WellKnownJwksUri);
+                
+        Result<JsonWebKeySet> JsonWebKeySetResult = await RetryEnabledGetJwksAsync(JwksProvider, WellKnownJwksUri);
         JsonWebKeySet JsonWebKeySet;
         if (JsonWebKeySetResult.Success)
         {
@@ -140,6 +141,42 @@ namespace SmartHealthCard.Token.JwsToken
         return Result<PayloadType>.Ok(PayloadDeserializedResult.Value);
       }
     }
+
+    private static async Task<Result<JsonWebKeySet>> RetryEnabledGetJwksAsync(IJwksProvider JwksProvider, Uri WellKnownJwksUri)
+    {
+      Result<JsonWebKeySet> JsonWebKeySetResult = await JwksProvider.GetJwksAsync(WellKnownJwksUri);
+      if (JsonWebKeySetResult.Success)
+      {
+        return JsonWebKeySetResult;
+      }
+      int RetryCount = 1;
+      int MaxRetries = 4;
+      StringBuilder RetryErrorMessageList = new StringBuilder($"Failed to get JsonWebKeySet (JWKS), up to {MaxRetries} retries will be attempted. Inital atempt message was: { JsonWebKeySetResult.ErrorMessage}, ");      
+      while (JsonWebKeySetResult.Retryable && (RetryCount <= MaxRetries))
+      {        
+        TimeSpan RetryInterval = RetryCount switch
+        {
+          1 => TimeSpan.FromMilliseconds(250),  //Wait 250 ms
+          2 => TimeSpan.FromMilliseconds(1000), //Wait 250 ms
+          3 => TimeSpan.FromMilliseconds(3000), //Wait 500 ms          
+          _ => TimeSpan.FromMilliseconds(5000), //Wait 5 sec
+        };
+        
+        System.Threading.Thread.Sleep(RetryInterval);        
+        JsonWebKeySetResult = await JwksProvider.GetJwksAsync(WellKnownJwksUri);
+        if (JsonWebKeySetResult.Retryable)
+          RetryErrorMessageList.Append($"Atempt {RetryCount} after a {RetryInterval.TotalMilliseconds} ms delay message was: {JsonWebKeySetResult.ErrorMessage},  ");
+        RetryCount++;
+      }
+      if (JsonWebKeySetResult.Retryable)
+      {        
+        return Result<JsonWebKeySet>.Fail(RetryErrorMessageList.ToString());
+      }
+      else
+      {
+        return JsonWebKeySetResult;
+      }        
+    }    
 
     public async Task<Result<HeaderType>> DecodeHeaderAsync<HeaderType>(string Token)
     {
