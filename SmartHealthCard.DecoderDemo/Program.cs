@@ -3,7 +3,6 @@ using SmartHealthCard.Token.Certificates;
 using SmartHealthCard.Token.Exceptions;
 using SmartHealthCard.Token.Model.Jwks;
 using SmartHealthCard.Token.Model.Shc;
-using SmartHealthCard.Token.Providers;
 using SmartHealthCard.Token.Support;
 using System;
 using System.Collections.Generic;
@@ -22,7 +21,6 @@ namespace SHC.DecoderDemo
     }
     static async Task DecoderDemoRunner()
     {
-      string SmartHealthCardJwsToken = "[A SMART Health Card JWS token]";
       //Get the ECC certificate from the Windows Certificate Store by Thumb-print
       string CertificateThumbprint = "72c78a3460fb27b9ef2ccfae2538675b75363fee";
       X509Certificate2 Certificate = X509CertificateSupport.GetFirstMatchingCertificate(
@@ -33,12 +31,22 @@ namespace SHC.DecoderDemo
             true
             );
 
+      //Below is a single QR Code's raw data
+      string QRCodeRawData = "shc:/567629595326546034602....etc";
+      
+      //We must add it to a string list as you may have many if the payload was large and spread accross many QR Code images.
+      List<string> QRCodeRawDataList = new List<string>() { QRCodeRawData };
+
+      //Next we use the SmartHealthCardQRCodeDecoder to convert the set of QR Code data into its equivalent JWS token
+      var SmartHealthCardQRCodeDecoder = new SmartHealthCard.QRCode.SmartHealthCardQRCodeDecoder();
+      string SmartHealthCardJwsToken = SmartHealthCardQRCodeDecoder.GetToken(QRCodeRawDataList);
+
       //Instantiate the SmartHealthCard Decoder
-      SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder();
+      SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder();      
 
       try
       {
-        //Decode and verify, returning an object model of the Smart Health Card, throws exceptions if not valid
+        //Decode and verify the JWS, returning an object model of the Smart Health Card, throws exceptions if not valid
         SmartHealthCardModel DecodedSmartHealthCardModel = await Decoder.DecodeAsync(SmartHealthCardJwsToken, Verify: true);
 
         //Or decode without verifying, not recommended for production systems
