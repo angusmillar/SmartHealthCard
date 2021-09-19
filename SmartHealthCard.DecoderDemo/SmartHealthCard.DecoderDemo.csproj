@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SmartHealthCard.QRCode\SmartHealthCard.QRCode.csproj" />
     <ProjectReference Include="..\SmartHealthCard.Token\SmartHealthCard.Token.csproj" />
   </ItemGroup>
 
