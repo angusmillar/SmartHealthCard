@@ -55,9 +55,14 @@ namespace SHC.DecoderDemo
         //Or decode and verify, returning the Smart Health Card as a JSON string, throws exceptions if not valid
         //string DecodedSmartHealthCardJson = await Decoder.DecodeToJsonAsync(SmartHealthCardJwsToken, Verify: true);
       }
+      catch (SmartHealthCardSignatureInvalidException SignatureInvalidException)
+      {
+        Console.WriteLine("The SMART Health Card is invalid");
+        Console.WriteLine(SignatureInvalidException.Message);
+      }
       catch (SmartHealthCardDecoderException DecoderException)
       {
-        Console.WriteLine("The SMART Health Card JWS token was invalid, please see message below:");
+        Console.WriteLine("The SMART Health Card Decoder has found an error, please see message below::");
         Console.WriteLine(DecoderException.Message);
       }
       catch (Exception Exception)

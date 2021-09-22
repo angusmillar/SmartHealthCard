@@ -116,9 +116,19 @@ namespace SmartHealthCard.Token.JwsToken
         if (this.JwsSignatureValidator is null)
           return await Task.FromResult(Result<PayloadType>.Fail($"When Verify is true {nameof(this.JwsSignatureValidator)} must be not null."));
 
-        Result JwsSignatureValidatorResult = JwsSignatureValidator.Validate(AlgorithmResult.Value, Token);
-        if (JwsSignatureValidatorResult.Failure)
+        Result<bool> JwsSignatureValidatorResult = JwsSignatureValidator.Validate(AlgorithmResult.Value, Token);
+        if (JwsSignatureValidatorResult.Success)
+        {
+          bool IsJwsSignatureValid = JwsSignatureValidatorResult.Value;
+          if (!IsJwsSignatureValid)
+          {
+            throw new SmartHealthCardSignatureInvalidException($"The JWS signing signature is invalid.");
+          }
+        }
+        else
+        {
           return await Task.FromResult(Result<PayloadType>.Fail(JwsSignatureValidatorResult.ErrorMessage));
+        }          
 
         if (this.JwsHeaderValidator is null)
           return await Task.FromResult(Result<PayloadType>.Fail($"When Verify is true {nameof(this.JwsHeaderValidator)} must be not null."));

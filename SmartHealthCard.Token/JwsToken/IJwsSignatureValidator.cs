@@ -5,7 +5,7 @@ namespace SmartHealthCard.Token.JwsToken
 {
   public interface IJwsSignatureValidator
   {
-    Result Validate(IAlgorithm Algorithm, string Token);
+    Result<bool> Validate(IAlgorithm Algorithm, string Token);
 
   }
 }
