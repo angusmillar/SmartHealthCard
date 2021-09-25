@@ -14,11 +14,12 @@
     <RepositoryUrl>https://github.com/angusmillar/SmartHealthCard</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>SmartHealthCard Smart Health Card JWS JWT FHIR covid19 immunization laboratory VerifiableCredential Verifiable Credential</PackageTags>
-    <PackageReleaseNotes>Fixed issue preventing QR Codes from being scanned by verifier apps due to BOM in compressed payload. Thanks goes to Kevin Snow</PackageReleaseNotes>
+    <PackageReleaseNotes>Fix a critical bug which prevented the libaray throwing the required exception when encountering an invalid token signature. Activated the retry behaviour when retrieving JWKS files (Public Keys) during decoding.  If the first attempt returns a Retry flag we will wait 250ms before trying again, then 1 sec, 3 sec, 5sec before giving up and returning failed which results in an exception to the calling system.
+Als</PackageReleaseNotes>
     <NeutralLanguage>en</NeutralLanguage>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <PackageIcon>128-x-128-Pyro-Icon.jpg</PackageIcon>
   </PropertyGroup>
 
