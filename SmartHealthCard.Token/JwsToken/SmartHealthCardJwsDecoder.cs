@@ -161,7 +161,7 @@ namespace SmartHealthCard.Token.JwsToken
       }
       int RetryCount = 1;
       int MaxRetries = 4;
-      StringBuilder RetryErrorMessageList = new StringBuilder($"Failed to get JsonWebKeySet (JWKS), up to {MaxRetries} retries will be attempted. Inital atempt message was: { JsonWebKeySetResult.ErrorMessage}, ");      
+      StringBuilder RetryErrorMessageList = new StringBuilder($"Failed to get JsonWebKeySet (JWKS), up to {MaxRetries} retries will be attempted. Initial attempt message was: { JsonWebKeySetResult.ErrorMessage}, ");      
       while (JsonWebKeySetResult.Retryable && (RetryCount <= MaxRetries))
       {        
         TimeSpan RetryInterval = RetryCount switch
@@ -175,7 +175,7 @@ namespace SmartHealthCard.Token.JwsToken
         System.Threading.Thread.Sleep(RetryInterval);        
         JsonWebKeySetResult = await JwksProvider.GetJwksAsync(WellKnownJwksUri);
         if (JsonWebKeySetResult.Retryable)
-          RetryErrorMessageList.Append($"Atempt {RetryCount} after a {RetryInterval.TotalMilliseconds} ms delay message was: {JsonWebKeySetResult.ErrorMessage},  ");
+          RetryErrorMessageList.Append($"Attempt {RetryCount} after a {RetryInterval.TotalMilliseconds} ms delay message was: {JsonWebKeySetResult.ErrorMessage},  ");
         RetryCount++;
       }
       if (JsonWebKeySetResult.Retryable)
