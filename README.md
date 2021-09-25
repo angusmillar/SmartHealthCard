@@ -22,9 +22,9 @@
 
 ## Nuget Packages in this repository
 
-## [SmartHealthCard.Token](https://www.nuget.org/packages/SmartHealthCard.Token/1.0.1): Encode, Decode & Verifiy SMART Health Card JWS tokens  
+## [SmartHealthCard.Token](https://www.nuget.org/packages/SmartHealthCard.Token/1.0.2): Encode, Decode & Verifiy SMART Health Card JWS tokens  
 ```
-Install-Package SmartHealthCard.QRCode -Version 1.0.1
+Install-Package SmartHealthCard.QRCode -Version 1.0.2
 ```
 
 
