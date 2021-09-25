@@ -26,7 +26,7 @@ namespace SmartHealthCard.Test
 
       //The base of the URL where a validator will retrieve the public keys from (e.g : [Issuer]/.well-known/jwks.json) 
       Uri Issuer = new Uri("https://sonichealthcare.com/something");
-      string SmartHealthCardJwsToken = await SmartHealthCardJwsSupport.GetJWSCovidExampleOneAsync(Certificate, Issuer);
+      string SmartHealthCardJwsToken = await SmartHealthCardJwsSupport.GetJWSCovidDetectedExampleOneAsync(Certificate, Issuer);
 
       //This MockedRetryIJwksProvider only retunes a retry, it does not retuns a JWKS
       //IJwksProvider MockedRetryIJwksProvider = JwksSupport.GetMockedRetryIJwksProvider(Certificate,Issuer);
@@ -42,9 +42,9 @@ namespace SmartHealthCard.Test
 
       //### Assert #######################################################
 
-      var exception = await Assert.ThrowsAsync<SmartHealthCardDecoderException>(Act);
+      var exception = await Assert.ThrowsAsync<SmartHealthCardJwksRequestException>(Act);
       Assert.StartsWith("Unable to obtain the JsonWebKeySet (JWKS) from :", exception.Message);
-      Assert.Contains("Atempt 1 after", exception.Message);
+      Assert.Contains("Attempt 1 after", exception.Message);
     }
   }
   public class TestSmartHealthCardJwsDecoderTwo
@@ -58,7 +58,7 @@ namespace SmartHealthCard.Test
 
       //The base of the URL where a validator will retrieve the public keys from (e.g : [Issuer]/.well-known/jwks.json) 
       Uri Issuer = new Uri("https://sonichealthcare.com/something");
-      string SmartHealthCardJwsToken = await SmartHealthCardJwsSupport.GetJWSCovidExampleOneAsync(Certificate, Issuer);
+      string SmartHealthCardJwsToken = await SmartHealthCardJwsSupport.GetJWSCovidDetectedExampleOneAsync(Certificate, Issuer);
 
       //This MockedRetryIJwksProvider only retunes a retry, it does not retuns a JWKS
       //IJwksProvider MockedRetryIJwksProvider = JwksSupport.GetMockedRetryIJwksProvider(Certificate,Issuer);
