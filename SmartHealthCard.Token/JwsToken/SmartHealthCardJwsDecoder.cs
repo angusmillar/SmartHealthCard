@@ -93,7 +93,7 @@ namespace SmartHealthCard.Token.JwsToken
         }
         else
         {
-          return await Task.FromResult(Result<PayloadType>.Fail($"Unable to obtain the JsonWebKeySet (JWKS) from : {WellKnownJwksUri.OriginalString}. ErrorMessage: {JsonWebKeySetResult.ErrorMessage}"));          
+          throw new SmartHealthCardJwksRequestException($"Unable to obtain the JsonWebKeySet (JWKS) from : {WellKnownJwksUri.OriginalString}. ErrorMessage: {JsonWebKeySetResult.ErrorMessage}");          
         }
        
         byte[] DecodedHeader = Base64UrlEncoder.Decode(JwsPartsParseResult.Value.Header);
