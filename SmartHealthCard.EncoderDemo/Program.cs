@@ -51,6 +51,7 @@ namespace SHC.EncoderDemo
       //Set the appropriate VerifiableCredentialsType enum list, for more info see: see: https://smarthealth.cards/vocabulary/
       List<VerifiableCredentialType> VerifiableCredentialTypeList = new List<VerifiableCredentialType>()
       {
+        VerifiableCredentialType.VerifiableCredential,
         VerifiableCredentialType.HealthCard,
         VerifiableCredentialType.Covid19
       };
