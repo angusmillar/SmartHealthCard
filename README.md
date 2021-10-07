@@ -22,9 +22,9 @@
 
 ## Nuget Packages in this repository
 
-## [SmartHealthCard.Token](https://www.nuget.org/packages/SmartHealthCard.Token/1.0.2): Encode, Decode & Verifiy SMART Health Card JWS tokens  
+## [SmartHealthCard.Token](https://www.nuget.org/packages/SmartHealthCard.Token/1.0.3): Encode, Decode & Verifiy SMART Health Card JWS tokens  
 ```
-Install-Package SmartHealthCard.QRCode -Version 1.0.2
+Install-Package SmartHealthCard.QRCode -Version 1.0.3
 ```
 
 
@@ -93,6 +93,7 @@ namespace SHC.EncoderDemo
       //Set the appropriate VerifiableCredentialsType enum list, for more info see: see: https://smarthealth.cards/vocabulary/
       List<VerifiableCredentialType> VerifiableCredentialTypeList = new List<VerifiableCredentialType>()
       {
+        VerifiableCredentialType.VerifiableCredential,
         VerifiableCredentialType.HealthCard,
         VerifiableCredentialType.Covid19
       };
