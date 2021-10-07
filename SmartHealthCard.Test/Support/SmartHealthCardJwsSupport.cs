@@ -30,6 +30,7 @@ namespace SmartHealthCard.Test.Support
       // Uri VerifiableCredentialType = new Uri("https://smarthealth.cards#covid19");
       List<VerifiableCredentialType> VerifiableCredentialTypeList = new List<VerifiableCredentialType>()
       {
+        VerifiableCredentialType.VerifiableCredential,
         VerifiableCredentialType.HealthCard,
         VerifiableCredentialType.Covid19
       };
@@ -63,6 +64,7 @@ namespace SmartHealthCard.Test.Support
       // Uri VerifiableCredentialType = new Uri("https://smarthealth.cards#covid19");
       List<VerifiableCredentialType> VerifiableCredentialTypeList = new List<VerifiableCredentialType>()
       {
+        VerifiableCredentialType.VerifiableCredential,
         VerifiableCredentialType.HealthCard,
         VerifiableCredentialType.Covid19
       };
