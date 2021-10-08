@@ -17,18 +17,15 @@
 ## How to create a ECC Private/Public keys using OpenSSL ##
 >Great example from Scott Brady : [Creating Elliptical Curve Keys using OpenSSL](https://www.scottbrady91.com/OpenSSL/Creating-Elliptical-Curve-Keys-using-OpenSSL)
 
-
 &nbsp;
 
 ## Nuget Packages in this repository
-
-## [SmartHealthCard.Token](https://www.nuget.org/packages/SmartHealthCard.Token/1.0.3): Encode, Decode & Verifiy SMART Health Card JWS tokens  
+>SMART Health Card JWS token encoding, decoding & verifying: [SmartHealthCard.Token](https://www.nuget.org/packages/SmartHealthCard.Token/1.0.3)   
 ```
 Install-Package SmartHealthCard.Token -Version 1.0.3
 ```
 
-
-## [SmartHealthCard.QRCode](https://www.nuget.org/packages/SmartHealthCard.QRCode/1.0.1): Encode SMART Health Card JWS token QR Code images
+>SMART Health Card QR Code image encoding, decoding to JWS: [SmartHealthCard.QRCode](https://www.nuget.org/packages/SmartHealthCard.QRCode/1.0.1)
 ```
 Install-Package SmartHealthCard.QRCode -Version 1.0.1
 ```
@@ -37,7 +34,7 @@ Install-Package SmartHealthCard.QRCode -Version 1.0.1
 
 
 
-## Example of Encoding a SMART Health Card JWS token and generating its QR Code images 
+## Example of encoding a SMART Health Card JWS token and generating its QR Code images 
 ---
 ```C#
 using SmartHealthCard.QRCode;
@@ -141,7 +138,7 @@ namespace SHC.EncoderDemo
 }
 ```
 
-## Example of Decoding and Validating a SMART Health Card JWS token  
+## Example of decoding and validating a SMART Health Card QR Code and JWS token  
 ---
 ```C#
 using SmartHealthCard.Token;
