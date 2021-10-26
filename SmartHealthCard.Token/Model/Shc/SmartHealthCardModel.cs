@@ -14,6 +14,11 @@ namespace SmartHealthCard.Token.Model.Shc
     public SmartHealthCardModel(Uri Issuer, DateTimeOffset IssuanceDate, VerifiableCredential VerifiableCredential)
     {
       this.Issuer = Issuer;      
+
+      if (IssuanceDate.ToUniversalTime() < UnixEpoch.UnixTimeStampToLocalDateTimeOffset(0))
+      {
+        throw new SmartHealthCardPayloadException("The provided IssuanceDate is a date and time before the minimum allowed date and time of: 00:00:00 UTC on 1 January 1970");
+      }
       this.IssuanceDate = UnixEpoch.GetSecondsSince(IssuanceDate.ToUniversalTime());
       this.VerifiableCredential = VerifiableCredential;
     }
