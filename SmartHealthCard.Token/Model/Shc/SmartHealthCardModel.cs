@@ -4,6 +4,7 @@ using SmartHealthCard.Token.Exceptions;
 using SmartHealthCard.Token.Support;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace SmartHealthCard.Token.Model.Shc
@@ -27,8 +28,8 @@ namespace SmartHealthCard.Token.Model.Shc
 
     [JsonProperty("iss", Required = Required.Always)]
     public Uri Issuer { get; set; }
-    [JsonProperty("nbf", Required = Required.Always)]
-    public double IssuanceDate { get; set; }
+    [JsonProperty("nbf", Required = Required.Default)]
+    public double? IssuanceDate { get; set; }
     [JsonProperty("vc", Required = Required.Always)]
     public VerifiableCredential VerifiableCredential { get; set; }
 
@@ -43,18 +44,30 @@ namespace SmartHealthCard.Token.Model.Shc
       {
         throw new SmartHealthCardPayloadException($"IssuanceDate (nbf) must be a number, found the value of {this.IssuanceDate}.");
       }
-      return new DateTimeOffset(UnixEpoch.UnixTimeStampToDateTime(NbfDouble));     
+      return UnixEpoch.UnixTimeStampToLocalDateTimeOffset(NbfDouble);     
     }
 
     internal Result Validate()
     {     
-      return this.ValidateIssuanceDate();      
+      return this.ValidateIssuanceDate();       
     }
-    
+
+    /// <summary>
+    /// Note that the Json parser for IssuanceDate or (nbf) allows a blank nbf property in the token. In this case the IssuanceDate double is equal to zero '0'.
+    /// Therefore this validation still runs yet the IssuanceDate is now equal to the Unix Epoch minimum datetime which 00:00:00 UTC on 1 January 1970.
+    /// Given that SMART Health Cards or JWT token did not exist prior to this date this should not be a problem; unless someone wishes to create a token that is valid from before that datetime.
+    /// It is therefore a design descion of this libaray to not support IssuanceDate's prior to 00:00:00 UTC on 1 January 1970.  
+    /// </summary>
+    /// <returns></returns>
     private Result ValidateIssuanceDate()
     {
       var EpochNow = UnixEpoch.GetSecondsSince(DateTimeOffset.UtcNow);
-      int ExtraTimeMargin = 0; //Can add extra seconds onto expiry if required
+
+      //(https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.5)
+      //Quote: Implementers MAY provide for some small leeway, usually no more than a few minutes, to account for clock skew. 
+      //This libaray will add 2 min for the leeway.
+      int ExtraTimeMargin = 120;
+      
       double IssuanceDateEpoch;
       try
       {
@@ -65,11 +78,12 @@ namespace SmartHealthCard.Token.Model.Shc
         return Result.Fail($"IssuanceDate (nbf) must be a number, found the value of {this.IssuanceDate}.");        
       }
 
-      if (IssuanceDateEpoch > (EpochNow - ExtraTimeMargin))
+      if ((EpochNow + ExtraTimeMargin) < IssuanceDateEpoch)
       {
-        DateTime Date = UnixEpoch.UnixTimeStampToDateTime(EpochNow + ExtraTimeMargin);
-        return Result.Fail($"The token's Issuance Date of {Date} is earlier than the current date.");        
+        DateTimeOffset Date = UnixEpoch.UnixTimeStampToLocalDateTimeOffset(EpochNow + ExtraTimeMargin);        
+        return Result.Fail($"The token's Issuance Date (nbf) timestamp is earlier than the current date and time. The token is not valid untill: {Date.ToString(CultureInfo.CurrentCulture)}.");
       }
+      
       return Result.Ok();
     }
   }

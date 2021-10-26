@@ -14,10 +14,16 @@ namespace SmartHealthCard.Token.DateTimeSupport
     public static double GetSecondsSince(DateTimeOffset time) =>
         Math.Round((time - Value).TotalSeconds);
 
-    public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
+    public static DateTime UnixTimeStampToLocalDateTime(double unixTimeStamp)
     {
       // Unix time stamp is seconds past epoch           
       return Value.AddSeconds(unixTimeStamp).ToLocalTime();
+    }
+
+    public static DateTimeOffset UnixTimeStampToLocalDateTimeOffset(double unixTimeStamp)
+    {
+      // Unix time stamp as local time as a DateTimeOffset            
+      return new DateTimeOffset(UnixEpoch.UnixTimeStampToLocalDateTime(unixTimeStamp));
     }
   }
 }
