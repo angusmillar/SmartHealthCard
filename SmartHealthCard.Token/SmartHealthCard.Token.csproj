@@ -14,12 +14,12 @@
     <RepositoryUrl>https://github.com/angusmillar/SmartHealthCard</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>SmartHealthCard Smart Health Card JWS JWT FHIR covid19 immunization laboratory VerifiableCredential Verifiable Credential</PackageTags>
-    <PackageReleaseNotes>Added support for a new Verifiable Credential type of 'VerifiableCredential' in response to GitHub Issue: VerifiableCredentialTypes (vc.type) Was Not An Allowed Value #9
-This particular type comes from the base W3's specification for Verifiable Credentials and was not highlighted as required in in the SMART Health Specification.  Reading that base spec here : https://www.w3.org/TR/vc-data-model/#types it is clear that all Verifiable Credentials tokens, SMART Health Card tokens included, should state that they are a Verifiable Credentials by setting the type of  'VerifiableCredential' in there Type property. Other down stream specifications for specialised types of Verifiable Credentials, such as SMART Health Cards, can then add their own new types for their purposes. The SMART Health Cards spec does this by adding the specialised types of (https://smarthealth.cards#health-card, https://smarthealth.cards#covid19, https://smarthealth.cards#immunization and https://smarthealth.cards#laboratory) as found here: https://spec.smarthealth.cards/vocabulary/</PackageReleaseNotes>
+    <PackageReleaseNotes>Relaxed requirment that Smart Health Card tokens must have a IssuanceDate (nbf) property when decoding. If not found the libaray defaults the property to the unix epoch start time of 00:00:00 UTC on 1 January 1970.
+GitHub Issue: SmartHealthCardJwsDecoder.DecodePayloadAsync(..., Verify: false) does not disable required SmartHealthCardModel json property checks #10</PackageReleaseNotes>
     <NeutralLanguage>en</NeutralLanguage>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <PackageIcon>128-x-128-Pyro-Icon.jpg</PackageIcon>
   </PropertyGroup>
 
