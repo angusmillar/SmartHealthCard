@@ -44,7 +44,7 @@ namespace SmartHealthCard.Token.JwsToken
       this.JwsPayloadValidator = IJwsPayloadValidator;
     }
 
-    public async Task<Result<PayloadType>> DecodePayloadAsync<HeaderType, PayloadType>(string Token, bool Verity = false)
+    public async Task<Result<PayloadType>> DecodePayloadAsync<HeaderType, PayloadType>(string Token, bool Verify = false)
     {
       if (string.IsNullOrEmpty(Token))
         return await Task.FromResult(Result<PayloadType>.Fail("The provided Token was found to be null or empty."));

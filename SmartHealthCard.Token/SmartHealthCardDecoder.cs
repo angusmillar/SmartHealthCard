@@ -136,7 +136,7 @@ namespace SmartHealthCard.Token
           this.JwsSignatureValidator,
           this.JwsHeaderValidator,
           this.JwsPayloadValidator);
-        Result<SmartHealthCardModel> DecodePayloadResult = await JwsDecoder.DecodePayloadAsync<SmartHealthCareJWSHeaderModel, SmartHealthCardModel>(Token: Token, Verity: Verify);
+        Result<SmartHealthCardModel> DecodePayloadResult = await JwsDecoder.DecodePayloadAsync<SmartHealthCareJWSHeaderModel, SmartHealthCardModel>(Token: Token, Verify: Verify);
         if (DecodePayloadResult.Failure)
           throw new SmartHealthCardDecoderException(DecodePayloadResult.ErrorMessage);
 
@@ -148,7 +148,7 @@ namespace SmartHealthCard.Token
           this.HeaderSerializer,
           this.PayloadSerializer);
 
-        Result<SmartHealthCardModel> DecodePayloadResult = await JwsDecoder.DecodePayloadAsync<SmartHealthCareJWSHeaderModel, SmartHealthCardModel>(Token: Token, Verity: Verify);
+        Result<SmartHealthCardModel> DecodePayloadResult = await JwsDecoder.DecodePayloadAsync<SmartHealthCareJWSHeaderModel, SmartHealthCardModel>(Token: Token, Verify: Verify);
         if (DecodePayloadResult.Failure)
           throw new SmartHealthCardDecoderException(DecodePayloadResult.ErrorMessage);
 
