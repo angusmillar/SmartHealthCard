@@ -1,3 +1,6 @@
 I need to add to the VC claim a new property called "rid". This is call the Revocation Idenitfier.
 This Idenitfier will be the first 64 chars of a hash or the FHIR Bundel payload, yet that is still to be confirmed. In reality it just needs to be unquie such as a GUID, yet it MUST be no more then 24 char long, GUIDS are 36.
 See the image from Grahame in the soution named: RevocationScreenshot 2021-11-24 103711.png
+
+Verifiers, wallets & apps:
+https://github.com/the-commons-project/vci-directory/pull/266/files#diff-079ab6aac49b6a91cc73724dbad90b9dbe6d8973095800295c8ee569f6e83b78
