@@ -14,35 +14,25 @@ namespace SHC.DecoderDemo
 {
   class Program
   {
-    static void Main(string[] args)
+    static void Main()
     {
       //Run the Decoder demo
       DecoderDemoRunner().Wait();
     }
     static async Task DecoderDemoRunner()
     {
-      //Get the ECC certificate from the Windows Certificate Store by Thumb-print
-      string CertificateThumbprint = "72c78a3460fb27b9ef2ccfae2538675b75363fee";
-      X509Certificate2 Certificate = X509CertificateSupport.GetFirstMatchingCertificate(
-            CertificateThumbprint.ToUpper(),
-            X509FindType.FindByThumbprint,
-            StoreName.My,
-            StoreLocation.LocalMachine,
-            true
-            );
-
       //Below is a single QR Code's raw data
       string QRCodeRawData = "shc:/567629595326546034602....etc";
       
       //We must add it to a string list as you may have many if the payload was large and spread accross many QR Code images.
-      List<string> QRCodeRawDataList = new List<string>() { QRCodeRawData };
+      List<string> QRCodeRawDataList = new() { QRCodeRawData };
 
       //Next we use the SmartHealthCardQRCodeDecoder to convert the set of QR Code data into its equivalent JWS token
       var SmartHealthCardQRCodeDecoder = new SmartHealthCard.QRCode.SmartHealthCardQRCodeDecoder();
       string SmartHealthCardJwsToken = SmartHealthCardQRCodeDecoder.GetToken(QRCodeRawDataList);
 
       //Instantiate the SmartHealthCard Decoder
-      SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder();      
+      SmartHealthCardDecoder Decoder = new();      
 
       try
       {
@@ -99,6 +89,16 @@ namespace SHC.DecoderDemo
   //Of course you would not do this is production.
 
   //Here is how you pass that interface implementation to the SmartHealthCardDecoder constructor.
+  
+  //Get the ECC certificate from the Windows Certificate Store by Thumb-print
+  //string CertificateThumbprint = "72c78a3460fb27b9ef2ccfae2538675b75363fee";
+  //X509Certificate2 Certificate = X509CertificateSupport.GetFirstMatchingCertificate(
+  //      CertificateThumbprint.ToUpper(),
+  //      X509FindType.FindByThumbprint,
+  //      StoreName.My,
+  //      StoreLocation.LocalMachine,
+  //      true
+  //      );
   //SmartHealthCard.Token.Providers.IJwksProvider MyJwksProvider = new MyJwksProvider(Certificate);
   //SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder(MyJwksProvider);
 
@@ -120,7 +120,7 @@ namespace SHC.DecoderDemo
       //own JWKS which we have generated from our certificate as seen below.
       //This allows you to test before you have a publicly exposed endpoint for you JWKS. 
       //Alternatively you could not do this and use a service such as : https://ngrok.com/
-      SmartHealthCardJwks SmartHealthCardJwks = new SmartHealthCardJwks();
+      SmartHealthCardJwks SmartHealthCardJwks = new();
       JsonWebKeySet Jwks = SmartHealthCardJwks.GetJsonWebKeySet(new List<X509Certificate2>() { Certificate });
       return Task.FromResult(Result<JsonWebKeySet>.Ok(Jwks));
     }   

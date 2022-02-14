@@ -13,7 +13,7 @@ namespace SHC.EncoderDemo
 {
   class Program
   {
-    static void Main(string[] args)
+    static void Main()
     {
       //Run the Encoder demo
       EncoderDemoRunner().Wait();
@@ -43,13 +43,13 @@ namespace SHC.EncoderDemo
       string FhirBundleJson = "[A Smart Health Card FHIR Bundle in JSON format]";
 
       //Set the base of the URL where any validator will retrieve the public keys from (e.g : [Issuer]/.well-known/jwks.json) 
-      Uri Issuer = new Uri("https://sonichealthcare.com/something");
+      Uri Issuer = new("https://sonichealthcare.com/something");
 
       //Set when the Smart Health Card becomes valid, (e.g the from date).
       DateTimeOffset IssuanceDateTimeOffset = DateTimeOffset.Now.AddMinutes(-1);
 
       //Set the appropriate VerifiableCredentialsType enum list, for more info see: see: https://smarthealth.cards/vocabulary/
-      List<VerifiableCredentialType> VerifiableCredentialTypeList = new List<VerifiableCredentialType>()
+      List<VerifiableCredentialType> VerifiableCredentialTypeList = new()
       {
         VerifiableCredentialType.VerifiableCredential,
         VerifiableCredentialType.HealthCard,
@@ -57,12 +57,12 @@ namespace SHC.EncoderDemo
       };
 
       //Instantiate and populate the Smart Health Card Model with the properties we just setup
-      SmartHealthCardModel SmartHealthCard = new SmartHealthCardModel(Issuer, IssuanceDateTimeOffset,
+      SmartHealthCardModel SmartHealthCard = new(Issuer, IssuanceDateTimeOffset,
           new VerifiableCredential(VerifiableCredentialTypeList,
             new CredentialSubject(FhirVersion, FhirBundleJson)));
 
       //Instantiate the Smart Health Card Encoder
-      SmartHealthCardEncoder SmartHealthCardEncoder = new SmartHealthCardEncoder();
+      SmartHealthCardEncoder SmartHealthCardEncoder = new();
 
       string SmartHealthCardJwsToken = string.Empty;
       try
@@ -82,7 +82,7 @@ namespace SHC.EncoderDemo
       }
 
       //Instantiate the Smart Health Card QR Code Factory
-      SmartHealthCardQRCodeEncoder SmartHealthCardQRCodeEncoder = new SmartHealthCardQRCodeEncoder();
+      SmartHealthCardQRCodeEncoder SmartHealthCardQRCodeEncoder = new();
 
       //Get list of SMART Health Card QR Codes images
       //Note: If the SMART Health Card JWS payload is large then it will be split up into multiple QR Code images.

@@ -53,14 +53,14 @@ namespace SmartHealthCard.Token.Algorithms
     public string KeyTypeName => "EC";
     public string CurveName => "P-256";
    
-    private HashAlgorithmName HashAlgorithmName => HashAlgorithmName.SHA256;
+    private static HashAlgorithmName HashAlgorithmName => HashAlgorithmName.SHA256;
 
     public Result<byte[]> Sign(byte[] bytesToSign)
     {
       if (this.PrivateKey is null)
         return Result<byte[]>.Fail("Unable to sign as no private key has been provided.");
 
-      return Result<byte[]>.Ok(this.PrivateKey.SignData(bytesToSign, this.HashAlgorithmName));
+      return Result<byte[]>.Ok(this.PrivateKey.SignData(bytesToSign, HashAlgorithmName));
     }
 
     public Result<bool> Verify(byte[] bytesToSign, byte[] signature)
@@ -68,7 +68,7 @@ namespace SmartHealthCard.Token.Algorithms
       if (this.PublicKey is null)
         return Result<bool>.Fail("Unable to verify signature as no public key has been provided.");
 
-      return Result<bool>.Ok(this.PublicKey.VerifyData(bytesToSign, signature, this.HashAlgorithmName));
+      return Result<bool>.Ok(this.PublicKey.VerifyData(bytesToSign, signature, HashAlgorithmName));
     }
     
     public Result<string> GetPointCoordinateX()

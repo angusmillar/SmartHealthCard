@@ -28,7 +28,7 @@ namespace SmartHealthCard.Test.Support
 
       //The Uri for the type of VerifiableCredentials
       // Uri VerifiableCredentialType = new Uri("https://smarthealth.cards#covid19");
-      List<VerifiableCredentialType> VerifiableCredentialTypeList = new List<VerifiableCredentialType>()
+      List<VerifiableCredentialType> VerifiableCredentialTypeList = new()
       {
         VerifiableCredentialType.VerifiableCredential,
         VerifiableCredentialType.HealthCard,
@@ -36,12 +36,12 @@ namespace SmartHealthCard.Test.Support
       };
 
       //Create the SmartHealthCardModel
-      SmartHealthCardModel SmartHealthCardToEncode = new SmartHealthCardModel(Issuer, IssuanceDateTimeOffset,
+      SmartHealthCardModel SmartHealthCardToEncode = new(Issuer, IssuanceDateTimeOffset,
           new VerifiableCredential(VerifiableCredentialTypeList,
             new CredentialSubject(FhirVersion, FhirBundleJson)));
 
       //Instantiate the SmartHealthCard Encoder
-      SmartHealthCardEncoder SmartHealthCardEncoder = new SmartHealthCardEncoder();
+      SmartHealthCardEncoder SmartHealthCardEncoder = new();
 
       //Get the Smart Health Card JWS Token 
       return await SmartHealthCardEncoder.GetTokenAsync(Certificate, SmartHealthCardToEncode);
@@ -62,7 +62,7 @@ namespace SmartHealthCard.Test.Support
 
       //The Uri for the type of VerifiableCredentials
       // Uri VerifiableCredentialType = new Uri("https://smarthealth.cards#covid19");
-      List<VerifiableCredentialType> VerifiableCredentialTypeList = new List<VerifiableCredentialType>()
+      List<VerifiableCredentialType> VerifiableCredentialTypeList = new()
       {
         VerifiableCredentialType.VerifiableCredential,
         VerifiableCredentialType.HealthCard,
@@ -70,12 +70,12 @@ namespace SmartHealthCard.Test.Support
       };
 
       //Create the SmartHealthCardModel
-      SmartHealthCardModel SmartHealthCardToEncode = new SmartHealthCardModel(Issuer, IssuanceDateTimeOffset,
+      SmartHealthCardModel SmartHealthCardToEncode = new(Issuer, IssuanceDateTimeOffset,
           new VerifiableCredential(VerifiableCredentialTypeList,
             new CredentialSubject(FhirVersion, FhirBundleJson)));
 
       //Instantiate the SmartHealthCard Encoder
-      SmartHealthCardEncoder SmartHealthCardEncoder = new SmartHealthCardEncoder();
+      SmartHealthCardEncoder SmartHealthCardEncoder = new();
 
       //Get the Smart Health Card JWS Token 
       return await SmartHealthCardEncoder.GetTokenAsync(Certificate, SmartHealthCardToEncode);
@@ -96,7 +96,7 @@ namespace SmartHealthCard.Test.Support
 
       //The Uri for the type of VerifiableCredentials
       // Uri VerifiableCredentialType = new Uri("https://smarthealth.cards#covid19");
-      List<VerifiableCredentialType> VerifiableCredentialTypeList = new List<VerifiableCredentialType>()
+      List<VerifiableCredentialType> VerifiableCredentialTypeList = new()
       {
         VerifiableCredentialType.VerifiableCredential,
         VerifiableCredentialType.HealthCard,
@@ -104,12 +104,12 @@ namespace SmartHealthCard.Test.Support
       };
 
       //Create the SmartHealthCardModel
-      SmartHealthCardModel SmartHealthCardToEncode = new SmartHealthCardModel(Issuer, IssuanceDateTimeOffset,
+      SmartHealthCardModel SmartHealthCardToEncode = new(Issuer, IssuanceDateTimeOffset,
           new VerifiableCredential(VerifiableCredentialTypeList,
             new CredentialSubject(FhirVersion, FhirBundleJson)));
 
       //Instantiate the SmartHealthCard Encoder
-      SmartHealthCardEncoder SmartHealthCardEncoder = new SmartHealthCardEncoder();
+      SmartHealthCardEncoder SmartHealthCardEncoder = new();
 
       //Get the Smart Health Card JWS Token 
       return await SmartHealthCardEncoder.GetTokenAsync(Certificate, SmartHealthCardToEncode);
