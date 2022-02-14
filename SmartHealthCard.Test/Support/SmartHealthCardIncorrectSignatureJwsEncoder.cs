@@ -35,7 +35,7 @@ namespace SmartHealthCard.Test.Support
 
       Result<byte[]> SignatureResult = Algorithm.Sign(BytesToSign);
 
-      Random Random = new Random();
+      Random Random = new();
       Byte[] WickedBytes = new Byte[SignatureResult.Value.Length];
       Random.NextBytes(WickedBytes);
      

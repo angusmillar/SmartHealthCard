@@ -21,7 +21,7 @@ namespace SmartHealthCard.Token.Encoders
     public static byte[] Decode(string input)
     {
       if (string.IsNullOrWhiteSpace(input))
-        throw new ArgumentException(nameof(input));
+        throw new ArgumentException(null, nameof(input));
 
       //URL decoding process
       var output = input;
@@ -48,7 +48,7 @@ namespace SmartHealthCard.Token.Encoders
     private static string FirstSegment(this string Input, char Separator)
     {
       var IndexOfSeparator = Input.IndexOf(Separator);
-      return IndexOfSeparator != -1 ? Input.Substring(0, IndexOfSeparator) : Input;
+      return IndexOfSeparator != -1 ? Input[..IndexOfSeparator] : Input;
     }
   }
 }

@@ -22,7 +22,7 @@ namespace SmartHealthCard.Test
       string SmartHealthCardCovidJson = Utf8EncodingSupport.GetString(ResourceData.SmartHealthCardCovidExample);
 
       //### Act ##########################################################
-      JsonSerializer JsonSerializer = new JsonSerializer();
+      JsonSerializer JsonSerializer = new();
       Result<SmartHealthCardModel> SmartHealthCardModelResult = JsonSerializer.FromJson<SmartHealthCardModel>(SmartHealthCardCovidJson);
       SmartHealthCardModel SmartHealthCardModel = SmartHealthCardModelResult.Value;
 

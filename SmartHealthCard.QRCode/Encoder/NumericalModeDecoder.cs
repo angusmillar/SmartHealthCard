@@ -10,7 +10,7 @@ namespace SmartHealthCard.QRCode.Encoder
   {
     public string Decode(IEnumerable<Chunk> ChunkList)
     {
-      StringBuilder StringBuilder = new StringBuilder();
+      StringBuilder StringBuilder = new();
       foreach (Chunk Chunk in ChunkList)
       {
         string Numeric = Chunk.NumericSegment;
@@ -25,7 +25,7 @@ namespace SmartHealthCard.QRCode.Encoder
       return StringBuilder.ToString();
     }
 
-    private IEnumerable<string> Spliter(string str, int chunkSize)
+    private static IEnumerable<string> Spliter(string str, int chunkSize)
     {
       return Enumerable.Range(0, str.Length / chunkSize)
           .Select(i => str.Substring(i * chunkSize, chunkSize));

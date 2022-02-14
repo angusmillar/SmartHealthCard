@@ -16,10 +16,10 @@ namespace SmartHealthCard.Test.Support
   {
     public static IJwksProvider GetMockedIJwksProvider(X509Certificate2 Certificate, Uri Issuer)
     {
-      List<X509Certificate2> CertificateList = new List<X509Certificate2>() { Certificate };
-      SmartHealthCardJwks SmartHealthCardJwks = new SmartHealthCardJwks();
+      List<X509Certificate2> CertificateList = new() { Certificate };
+      SmartHealthCardJwks SmartHealthCardJwks = new();
       JsonWebKeySet JsonWebKeySet = SmartHealthCardJwks.GetJsonWebKeySet(CertificateList);
-      Uri WellKnownJwksUri = new Uri($"{Issuer.OriginalString}/.well-known/jwks.json");
+      Uri WellKnownJwksUri = new($"{Issuer.OriginalString}/.well-known/jwks.json");
       var JWKSProviderMock = new Mock<IJwksProvider>();
 
       JWKSProviderMock.Setup(x => x.GetJwksAsync(WellKnownJwksUri, null)).ReturnsAsync(Result<JsonWebKeySet>.Ok(JsonWebKeySet));
@@ -33,7 +33,7 @@ namespace SmartHealthCard.Test.Support
     /// <returns></returns>
     public static IJwksProvider GetMockedRetryIJwksProvider(Uri Issuer)
     {                  
-      Uri WellKnownJwksUri = new Uri($"{Issuer.OriginalString}/.well-known/jwks.json");
+      Uri WellKnownJwksUri = new($"{Issuer.OriginalString}/.well-known/jwks.json");
       var JWKSProviderMock = new Mock<IJwksProvider>();
 
       JWKSProviderMock.SetupSequence(x => x.GetJwksAsync(WellKnownJwksUri, null))
@@ -53,10 +53,10 @@ namespace SmartHealthCard.Test.Support
     /// <returns></returns>
     public static IJwksProvider GetMockedRetryFollowedBySuccessIJwksProvider(X509Certificate2 Certificate, Uri Issuer)
     {
-      List<X509Certificate2> CertificateList = new List<X509Certificate2>() { Certificate };
-      SmartHealthCardJwks SmartHealthCardJwks = new SmartHealthCardJwks();
+      List<X509Certificate2> CertificateList = new() { Certificate };
+      SmartHealthCardJwks SmartHealthCardJwks = new();
       JsonWebKeySet JsonWebKeySet = SmartHealthCardJwks.GetJsonWebKeySet(CertificateList);
-      Uri WellKnownJwksUri = new Uri($"{Issuer.OriginalString}/.well-known/jwks.json");
+      Uri WellKnownJwksUri = new($"{Issuer.OriginalString}/.well-known/jwks.json");
       var JWKSProviderMock = new Mock<IJwksProvider>();
 
       JWKSProviderMock.SetupSequence(x => x.GetJwksAsync(WellKnownJwksUri, null))

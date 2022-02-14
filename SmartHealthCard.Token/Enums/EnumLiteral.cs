@@ -13,15 +13,15 @@ namespace SmartHealthCard.Token.Enums
     {
       Type type = value.GetType();
       string? name = Enum.GetName(type, value);
-      if (name is object)
+      if (name is not null)
       {
         FieldInfo? field = type.GetField(name);
-        if (field is object)
+        if (field is not null)
         {
           EnumInfoAttribute? attr =
                  Attribute.GetCustomAttribute(field,
                    typeof(EnumInfoAttribute)) as EnumInfoAttribute;
-          if (attr is object)
+          if (attr is not null)
           {
             return attr.Description;
           }
@@ -34,15 +34,15 @@ namespace SmartHealthCard.Token.Enums
     {
       Type type = value.GetType();
       string? name = Enum.GetName(type, value);
-      if (name is object)
+      if (name is not null)
       {
         FieldInfo? field = type.GetField(name);
-        if (field is object)
+        if (field is not null)
         {
           EnumInfoAttribute? attr =
                  Attribute.GetCustomAttribute(field,
                    typeof(EnumInfoAttribute)) as EnumInfoAttribute;
-          if (attr is object)
+          if (attr is not null)
           {
             return attr.Literal;
           }

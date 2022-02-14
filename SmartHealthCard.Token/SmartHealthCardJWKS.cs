@@ -42,10 +42,10 @@ namespace SmartHealthCard.Token
     /// <returns></returns>
     public JsonWebKeySet GetJsonWebKeySet(IEnumerable<X509Certificate2> CertificateList)
     {
-      List<JsonWebKey> JsonWebKeySetModelList = new List<JsonWebKey>();
+      List<JsonWebKey> JsonWebKeySetModelList = new();
       foreach (X509Certificate2 Certificate in CertificateList)
       {
-        ES256Algorithm Algorithm = new ES256Algorithm(Certificate, JsonSerializer);
+        ES256Algorithm Algorithm = new(Certificate, JsonSerializer);
         Result<string> KidResult = Algorithm.GetKid();        
         Result<string> XResult = Algorithm.GetPointCoordinateX();       
         Result<string> YResult = Algorithm.GetPointCoordinateY();        
@@ -53,7 +53,7 @@ namespace SmartHealthCard.Token
         if (ResultCombine.Failure)
           throw new SmartHealthCardJwksException(ResultCombine.ErrorMessage);
 
-        JsonWebKey JsonWebKeySetModel = new JsonWebKey(
+        JsonWebKey JsonWebKeySetModel = new(
           Kty: Algorithm.KeyTypeName,
           Kid: KidResult.Value,
           Use: "sig",

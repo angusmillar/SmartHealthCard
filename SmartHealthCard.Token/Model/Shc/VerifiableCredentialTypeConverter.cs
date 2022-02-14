@@ -17,7 +17,7 @@ namespace SmartHealthCard.Token.Model.Shc
 
     public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
     {
-      if (reader.Value is object)
+      if (reader.Value is not null)
       {
         string VerifiableCredentialTypeString = (string)reader.Value;
         if (VerifiableCredentialTypeSupport.VerifiableCredentialTypeDictionary.ContainsKey(VerifiableCredentialTypeString))

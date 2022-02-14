@@ -27,7 +27,7 @@ namespace SmartHealthCard.Token.Model.Shc
       this.FhirBundleData = GetMinifiedJsonJRaw(FhirBundle);
     }
 
-    private JRaw GetMinifiedJsonJRaw(string FhirBundle)
+    private static JRaw GetMinifiedJsonJRaw(string FhirBundle)
     {
       var obj = JsonConvert.DeserializeObject(FhirBundle);
       string MinifiyedFhirBundle = JsonConvert.SerializeObject(obj, Formatting.None);
@@ -52,7 +52,7 @@ namespace SmartHealthCard.Token.Model.Shc
     {
       get
       {
-        if (this.FhirBundleData is object)
+        if (FhirBundleData is not null)
         {
           var obj = JsonConvert.DeserializeObject(this.FhirBundleData.ToString());
           return JsonConvert.SerializeObject(obj, Formatting.Indented);

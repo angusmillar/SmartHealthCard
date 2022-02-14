@@ -14,8 +14,8 @@ namespace SmartHealthCard.Test.Model
     {
       Patient PatientResource = GetPatientResource("Coyote", "Wile E", new DateTime(1973, 09, 30), "61481059995");
 
-      Coding Code = new Coding(system: "http://loinc.org", code: "94558-4"); //SARS-CoV-2 (COVID-19) Ag [Presence] in Respiratory specimen by Rapid immunoassay
-      Coding Value = new Coding(system: "http://snomed.info/sct", code: "260373001"); //Detected
+      Coding Code = new(system: "http://loinc.org", code: "94558-4"); //SARS-CoV-2 (COVID-19) Ag [Presence] in Respiratory specimen by Rapid immunoassay
+      Coding Value = new(system: "http://snomed.info/sct", code: "260373001"); //Detected
       Observation CovidResultObservationResource = GetObservationResource(
         ObsCode: Code, 
         ObsValue: Value, 
@@ -23,13 +23,13 @@ namespace SmartHealthCard.Test.Model
         PerformerOrganisationName: "ACME Healthcare", 
         IdentityAssuranceLevelCode: "IAL1.4");
 
-      List<Resource> BundleResourceList = new List<Resource>()
+      List<Resource> BundleResourceList = new()
       {
         PatientResource,
         CovidResultObservationResource
       };
 
-      Bundle Bundle = new Bundle();
+      Bundle Bundle = new();
       Bundle.Type = Bundle.BundleType.Collection;
       Bundle.Entry = GetBundleResourceEntryList(BundleResourceList);
 
@@ -40,8 +40,8 @@ namespace SmartHealthCard.Test.Model
     {
       Patient PatientResource = GetPatientResource("Coyote", "Wile E", new DateTime(1973, 09, 30), "61481059995");
 
-      Coding Code = new Coding(system: "http://loinc.org", code: "94558-4"); //SARS-CoV-2 (COVID-19) Ag [Presence] in Respiratory specimen by Rapid immunoassay
-      Coding Value = new Coding(system: "http://snomed.info/sct", code: "260415000"); //Not Detected
+      Coding Code = new(system: "http://loinc.org", code: "94558-4"); //SARS-CoV-2 (COVID-19) Ag [Presence] in Respiratory specimen by Rapid immunoassay
+      Coding Value = new(system: "http://snomed.info/sct", code: "260415000"); //Not Detected
       Observation CovidResultObservationResource = GetObservationResource(
         ObsCode: Code,
         ObsValue: Value,
@@ -49,13 +49,13 @@ namespace SmartHealthCard.Test.Model
         PerformerOrganisationName: "ACME Healthcare",
         IdentityAssuranceLevelCode: "IAL1.4");
 
-      List<Resource> BundleResourceList = new List<Resource>()
+      List<Resource> BundleResourceList = new()
       {
         PatientResource,
         CovidResultObservationResource
       };
 
-      Bundle Bundle = new Bundle();
+      Bundle Bundle = new();
       Bundle.Type = Bundle.BundleType.Collection;
       Bundle.Entry = GetBundleResourceEntryList(BundleResourceList);
 
@@ -64,7 +64,7 @@ namespace SmartHealthCard.Test.Model
 
     private static Patient GetPatientResource(string FamilyName, string GivenName, DateTime DateOfBirth, string PhoneNumber)
     {
-      Patient Patient = new Patient();
+      Patient Patient = new();
       Patient.Name = new List<HumanName>()
       {
         new HumanName()
@@ -83,7 +83,7 @@ namespace SmartHealthCard.Test.Model
 
     private static Observation GetObservationResource(Coding ObsCode, Coding ObsValue, DateTime EffectiveDate, string PerformerOrganisationName, string IdentityAssuranceLevelCode = null)
     {
-      Observation Observation = new Observation();
+      Observation Observation = new();
       if (!string.IsNullOrEmpty(IdentityAssuranceLevelCode))
       {
         Observation.Meta = new Meta()
@@ -138,7 +138,7 @@ namespace SmartHealthCard.Test.Model
         ResourceList.Insert(0, PatientResource);
       }
       
-      ResourceReference PatientSubjectReference = new ResourceReference($"{ReferencePrefix}:0");
+      ResourceReference PatientSubjectReference = new($"{ReferencePrefix}:0");
 
       var EntryComponentList = new List<Bundle.EntryComponent>();
       for (int i = 0; i < ResourceList.Count; i++)     
@@ -147,7 +147,7 @@ namespace SmartHealthCard.Test.Model
         {
           Obs.Subject = PatientSubjectReference;
         }
-        else if (!(ResourceList[i] is Patient))
+        else if (ResourceList[i] is not Patient)
         {
           throw new ApplicationException($"Only support Bundle with Patient and Observation resources");
         }

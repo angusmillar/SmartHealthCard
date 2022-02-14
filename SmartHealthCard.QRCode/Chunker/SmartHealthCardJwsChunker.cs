@@ -20,7 +20,7 @@ namespace SmartHealthCard.QRCode.Chunker
     {
 
       int MaxQRCodeLength = 1195;
-      List<Chunk> ChunkList = new List<Chunk>();
+      List<Chunk> ChunkList = new();
 
       if (JWSToken.Length <= MaxQRCodeLength)
       {
@@ -31,7 +31,7 @@ namespace SmartHealthCard.QRCode.Chunker
       else
       {
         // here we keep dividing the total until we get an even distribution where all chunks numeric portion are under 1195 
-        IEnumerable<int>? ChunkSizes = new int[0];
+        IEnumerable<int>? ChunkSizes = Array.Empty<int>();
         bool FindingFoundChuckSize = true;
         int Divider = 2;
         while (FindingFoundChuckSize)
@@ -64,7 +64,7 @@ namespace SmartHealthCard.QRCode.Chunker
       }
     }
 
-    private IEnumerable<int> DistributeInteger(int total, int divider)
+    private static IEnumerable<int> DistributeInteger(int total, int divider)
     {
       if (divider == 0)
       {

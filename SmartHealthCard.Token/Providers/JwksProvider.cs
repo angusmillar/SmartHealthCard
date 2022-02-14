@@ -2,11 +2,8 @@
 using SmartHealthCard.Token.Serializers.Json;
 using SmartHealthCard.Token.Support;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,8 +13,7 @@ namespace SmartHealthCard.Token.Providers
   {
     private readonly IHttpClient HttpClient;    
     private readonly IJsonSerializer JsonSerializer;
-    private readonly IJwksCache JwksCache;
-    private readonly TimeSpan? MaxCacheLife;
+    private readonly IJwksCache JwksCache;    
     
     public JwksProvider()
      : this(null, null, null) { }
@@ -39,10 +35,9 @@ namespace SmartHealthCard.Token.Providers
 
     public JwksProvider(IHttpClient? HttpClient, IJsonSerializer? JsonSerializer, TimeSpan? MaxCacheLife) 
     {
-      this.HttpClient = this.HttpClient ?? Providers.HttpClient.Create();
-      this.JsonSerializer = this.JsonSerializer ?? new JsonSerializer();
-      this.MaxCacheLife = this.MaxCacheLife ?? new TimeSpan(0, 10, 0); //10 min Cache expiry
-      this.JwksCache = new JwksCache(MaxCacheLife);
+      this.HttpClient = HttpClient ?? Providers.HttpClient.Create();
+      this.JsonSerializer = JsonSerializer ?? new JsonSerializer();      
+      JwksCache = new JwksCache(MaxCacheLife ?? new TimeSpan(0, 10, 0)); //default is 10 min cache expiry
     }
 
     public async Task<Result<JsonWebKeySet>> GetJwksAsync(Uri WellKnownUrl, CancellationToken? CancellationToken = null)
@@ -55,37 +50,35 @@ namespace SmartHealthCard.Token.Providers
       var request = new HttpRequestMessage(HttpMethod.Get, WellKnownUrl);      
       try
       {
-        using (HttpResponseMessage Response = await HttpClient.SendAsync(request, CancellationToken ?? new CancellationToken()))
+        using HttpResponseMessage Response = await HttpClient.SendAsync(request, CancellationToken ?? new CancellationToken());
+        if (Response.StatusCode == HttpStatusCode.OK)
         {
-          if (Response.StatusCode == HttpStatusCode.OK)
+          if (Response.Content == null)
           {
-            if (Response.Content == null)
-            {
-              return Result<JsonWebKeySet>.Fail("HttpClient response content was null");
-            }
-            using System.IO.Stream ResponseStream = await Response.Content.ReadAsStreamAsync();            
-            Result<JsonWebKeySet> JsonWebKeySetResult = JsonSerializer.FromJsonStream<JsonWebKeySet>(ResponseStream);
-            if (JsonWebKeySetResult.Failure)
-               return Result<JsonWebKeySet>.Fail($"Failed to deserialize the JsonWebKeySet (JWKS) which was returned from the endpoint {WellKnownUrl.OriginalString}. {JsonWebKeySetResult.ErrorMessage}");
-           
-            //Store the JsonWebKeySet in the cache 
-            JwksCache.Set(WellKnownUrl, JsonWebKeySetResult.Value);            
-            return JsonWebKeySetResult;                        
+            return Result<JsonWebKeySet>.Fail("HttpClient response content was null");
+          }
+          using System.IO.Stream ResponseStream = await Response.Content.ReadAsStreamAsync();
+          Result<JsonWebKeySet> JsonWebKeySetResult = JsonSerializer.FromJsonStream<JsonWebKeySet>(ResponseStream);
+          if (JsonWebKeySetResult.Failure)
+            return Result<JsonWebKeySet>.Fail($"Failed to deserialize the JsonWebKeySet (JWKS) which was returned from the endpoint {WellKnownUrl.OriginalString}. {JsonWebKeySetResult.ErrorMessage}");
+
+          //Store the JsonWebKeySet in the cache 
+          JwksCache.Set(WellKnownUrl, JsonWebKeySetResult.Value);
+          return JsonWebKeySetResult;
+        }
+        else
+        {
+          string Message = string.Empty;
+          if (Response.Content != null)
+          {
+            var ErrorResponseContent = await Response.Content.ReadAsStringAsync();
+            return Result<JsonWebKeySet>.Fail($"Response status: {Response.StatusCode}, Content: {ErrorResponseContent}");
           }
           else
           {
-            string Message = string.Empty;
-            if (Response.Content != null)
-            {
-              var ErrorResponseContent = await Response.Content.ReadAsStringAsync();
-              return Result<JsonWebKeySet>.Fail($"Response status: {Response.StatusCode}, Content: {ErrorResponseContent}");             
-            }
-            else
-            {
-              return Result<JsonWebKeySet>.Fail($"Response status: {Response.StatusCode}, Content: [None]");
-            }           
+            return Result<JsonWebKeySet>.Fail($"Response status: {Response.StatusCode}, Content: [None]");
           }
-        }        
+        }
       }
       catch(HttpRequestException HttpRequestException)
       {        

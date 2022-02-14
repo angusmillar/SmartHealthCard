@@ -13,10 +13,10 @@ namespace SmartHealthCard.QRCode.Encoder
   {
     public List<Bitmap> GetQRCodeList(IEnumerable<Chunk> ChunkList, QRCodeEncoderSettings QRCodeEncoderSettings)
     {
-      List<Bitmap> BitmapList = new List<Bitmap>();
+      List<Bitmap> BitmapList = new();
       foreach (Chunk Chunk in ChunkList)
       {
-        List<QrSegment> SegmentList = new List<QrSegment>()
+        List<QrSegment> SegmentList = new()
         {
           QrSegment.MakeBytes(Encoding.ASCII.GetBytes(Chunk.ByteSegment)),
           QrSegment.MakeNumeric(Chunk.NumericSegment)
@@ -34,7 +34,7 @@ namespace SmartHealthCard.QRCode.Encoder
 
     public List<string> GetQRCodeRawDataList(IEnumerable<Chunk> ChunkList)
     {
-      List<string> QRCodeData = new List<string>();
+      List<string> QRCodeData = new();
       foreach (Chunk Chunk in ChunkList)
       {
         string Data = $"{Chunk.ByteSegment}{Chunk.NumericSegment}";

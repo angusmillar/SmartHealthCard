@@ -76,17 +76,13 @@ namespace SmartHealthCard.Token.Serializers.Json
     {      
       try 
       {
-        using (var streamReader = new StreamReader(JsonStream))
-        {
-          using (var jsonReader = new JsonTextReader(streamReader))
-          {
-            T? Item = Serializer.Deserialize<T>(jsonReader);
-            if (Item is null)
-              return Result<T>.Fail($"The desalinizing of a JSON stream failed while attempting to Deserialize to a type of {typeof(T).Name}, desalinizing returned an null object.");
-            
-            return Result<T>.Ok(Item);
-          }
-        }
+        using var streamReader = new StreamReader(JsonStream);
+        using var jsonReader = new JsonTextReader(streamReader);
+        T? Item = Serializer.Deserialize<T>(jsonReader);
+        if (Item is null)
+          return Result<T>.Fail($"The desalinizing of a JSON stream failed while attempting to Deserialize to a type of {typeof(T).Name}, desalinizing returned an null object.");
+
+        return Result<T>.Ok(Item);
       }
       catch (JsonException JsonException)
       {

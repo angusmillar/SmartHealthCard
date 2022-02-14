@@ -29,9 +29,9 @@ namespace SmartHealthCard.Test
 
 
       //X509Certificate2 Certificate = CertificateSupport.GetCertificate(Thumbprint: CertificateSupport.TestingThumbprint);
-      List<X509Certificate2> CertificateList = new List<X509Certificate2>() { Certificate, Certificate, Certificate };
-      SmartHealthCardJwks SmartHealthCardJwks = new SmartHealthCardJwks();
-      JsonSerializer JsonSerializer = new JsonSerializer();
+      List<X509Certificate2> CertificateList = new() { Certificate, Certificate, Certificate };
+      SmartHealthCardJwks SmartHealthCardJwks = new();
+      JsonSerializer JsonSerializer = new();
 
       //### Act ##########################################################
       

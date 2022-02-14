@@ -36,26 +36,26 @@ namespace SmartHealthCard.Test
       string FhirBundleJson = FhirSerializer.SerializeToJson(FhirBundleResource);
       
       //The base of the URL where a validator will retrieve the public keys from (e.g : [Issuer]/.well-known/jwks.json) 
-      Uri Issuer = new Uri("https://e1414486fce0.ngrok.io");      
+      Uri Issuer = new("https://e1414486fce0.ngrok.io");      
 
       //When the Smart Health Card became valid, the from date.
       DateTimeOffset IssuanceDateTimeOffset = DateTimeOffset.Now.AddMinutes(-1);
 
       //The Uri for the type of VerifiableCredentials
       // Uri VerifiableCredentialType = new Uri("https://smarthealth.cards#covid19");
-      List<VerifiableCredentialType> VerifiableCredentialTypeList = new List<VerifiableCredentialType>()
+      List<VerifiableCredentialType> VerifiableCredentialTypeList = new()
       {
         VerifiableCredentialType.HealthCard,
         VerifiableCredentialType.Covid19
       };
 
       //Create the SmartHealthCardModel
-      SmartHealthCardModel SmartHealthCard = new SmartHealthCardModel(Issuer, IssuanceDateTimeOffset,
+      SmartHealthCardModel SmartHealthCard = new(Issuer, IssuanceDateTimeOffset,
           new VerifiableCredential(VerifiableCredentialTypeList,
             new CredentialSubject(FhirVersion, FhirBundleJson)));
 
       //Instantiate the SmartHealthCard Encoder
-      SmartHealthCardEncoder SmartHealthCardEncoder = new SmartHealthCardEncoder();
+      SmartHealthCardEncoder SmartHealthCardEncoder = new();
 
       //This testing JwksSupport class provides us with a mocked IJwksProvider that will inject the JWKS file
       //rather than make the HTTP call to go get it from a public endpoint.
@@ -63,7 +63,7 @@ namespace SmartHealthCard.Test
 
       //Instantiate the SmartHealthCard Decoder
       //SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder();
-      SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder(MockedIJwksProvider);
+      SmartHealthCardDecoder Decoder = new(MockedIJwksProvider);
 
       //### Act ##########################################################
 

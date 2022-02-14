@@ -34,7 +34,6 @@ namespace SmartHealthCard.Token.Providers
     public Result<JsonWebKeySet> Get(Uri WellKnownUrl)
     {
       //Check the JsonWebKeySet cache for the target
-      DateTime now = DateTime.Now;
       if (JsonWebKeySetDictionaryCache.ContainsKey(WellKnownUrl))
       {
         JwksCacheItem JwksCacheItem = JsonWebKeySetDictionaryCache[WellKnownUrl];

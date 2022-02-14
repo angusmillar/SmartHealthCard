@@ -19,7 +19,7 @@ namespace SmartHealthCard.Token.Model.Shc
 
   public static class VerifiableCredentialTypeSupport
   {
-    public static readonly Dictionary<string, VerifiableCredentialType> VerifiableCredentialTypeDictionary = new Dictionary<string, VerifiableCredentialType>()
+    public static readonly Dictionary<string, VerifiableCredentialType> VerifiableCredentialTypeDictionary = new()
         {
           { VerifiableCredentialType.VerifiableCredential.GetLiteral(), VerifiableCredentialType.VerifiableCredential },
           { VerifiableCredentialType.Covid19.GetLiteral(), VerifiableCredentialType.Covid19 },

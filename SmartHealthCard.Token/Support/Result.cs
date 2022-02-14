@@ -13,7 +13,7 @@ namespace SmartHealthCard.Token.Support
       this.Retryable = Retryable;    
     }
 
-    public static string ErrorMessagesDelimiter = ", ";
+    private static readonly string ErrorMessagesDelimiter = ", ";
 
     /// <summary>
     /// The action was Successful and the result value property will be set. 

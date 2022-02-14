@@ -24,12 +24,11 @@ namespace SmartHealthCard.Token
     private readonly IJsonSerializer JsonSerializer;
     private readonly IJwsHeaderSerializer HeaderSerializer;
     private readonly IJwsPayloadSerializer PayloadSerializer;
-
-    private IJwksProvider? JwksProvider;
-    private IHttpClient? HttpClient;
-    private IJwsSignatureValidator? JwsSignatureValidator;
-    private IJwsHeaderValidator? JwsHeaderValidator;
-    private IJwsPayloadValidator? JwsPayloadValidator;
+    private readonly IJwksProvider? JwksProvider;
+    private readonly IHttpClient? HttpClient;
+    private readonly IJwsSignatureValidator? JwsSignatureValidator;
+    private readonly IJwsHeaderValidator? JwsHeaderValidator;
+    private readonly IJwsPayloadValidator? JwsPayloadValidator;
 
     /// <summary>
     /// Default Constructor

@@ -16,11 +16,11 @@ namespace SmartHealthCard.QRCode.Encoder
     {
       //shc:/2/3/56762909524320603460292437404460<snipped for brevity>
       //shc:/56762909524320603460292437404460<snipped for brevity>
-      List<Chunk> ChunkList = new List<Chunk>();
-      Chunk? Chunk = null;
+      List<Chunk> ChunkList = new();
       foreach (string QRCodeRawData in QRCodeRawDataList)
       {
         string[] Split = QRCodeRawData.Split('/');
+        Chunk? Chunk;
         if (Split.Length == 2)
         {
           Chunk = new Chunk($"{Split[0]}/", Split[1]);

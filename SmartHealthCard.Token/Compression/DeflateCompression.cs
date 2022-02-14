@@ -12,32 +12,22 @@ namespace SmartHealthCard.Token.Compression
       // Remove BOM and ZERO WIDTH SPACE
       input = input.Trim(new char[] { '\uFEFF', '\u200B' });
 
-      using (MemoryStream MemoryStream = new MemoryStream())
+      using MemoryStream MemoryStream = new();
+      using (DeflateStream DeflateStream = new(MemoryStream, CompressionMode.Compress))
       {
-        using (DeflateStream DeflateStream = new DeflateStream(MemoryStream, CompressionMode.Compress))
-        {
-          // set encoderShouldEmitUTF8Identifier to false to not include the BOM
-          using (StreamWriter StreamWriter = new StreamWriter(DeflateStream, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false)))
-          {
-            await StreamWriter.WriteAsync(input);
-          }
-        }
-        return MemoryStream.ToArray();
+        // set encoderShouldEmitUTF8Identifier to false to not include the BOM
+        using StreamWriter StreamWriter = new(DeflateStream, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+        await StreamWriter.WriteAsync(input);
       }
+      return MemoryStream.ToArray();
     }
 
     public static async Task<string> UncompressAsync(byte[] input)
     {
-      using (MemoryStream MemoryStream = new MemoryStream(input))
-      {
-        using (DeflateStream DeflateStream = new DeflateStream(MemoryStream, CompressionMode.Decompress))
-        {
-          using (StreamReader StreamReader = new StreamReader(DeflateStream, Encoding.UTF8))
-          {
-            return await StreamReader.ReadToEndAsync();
-          }
-        }
-      }
+      using MemoryStream MemoryStream = new(input);
+      using DeflateStream DeflateStream = new(MemoryStream, CompressionMode.Decompress);
+      using StreamReader StreamReader = new(DeflateStream, Encoding.UTF8);
+      return await StreamReader.ReadToEndAsync();
     }
   }
 }

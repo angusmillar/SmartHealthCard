@@ -6,7 +6,7 @@ namespace SmartHealthCard.QRCode.Encoder
   {
     public string Encode(string JWSToken)
     {
-      StringBuilder StringBuilder = new StringBuilder();
+      StringBuilder StringBuilder = new();
       foreach (char Char in JWSToken.ToCharArray())
       {
         int Integer = Char - 45;

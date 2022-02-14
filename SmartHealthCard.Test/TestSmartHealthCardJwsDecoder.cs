@@ -25,7 +25,7 @@ namespace SmartHealthCard.Test
       X509Certificate2 Certificate = CertificateSupport.GetCertificateFromPemFiles();
 
       //The base of the URL where a validator will retrieve the public keys from (e.g : [Issuer]/.well-known/jwks.json) 
-      Uri Issuer = new Uri("https://sonichealthcare.com/something");
+      Uri Issuer = new("https://sonichealthcare.com/something");
       string SmartHealthCardJwsToken = await SmartHealthCardJwsSupport.GetJWSCovidDetectedExampleOneAsync(Certificate, Issuer);
 
       //This MockedRetryIJwksProvider only retunes a retry, it does not retuns a JWKS
@@ -33,12 +33,12 @@ namespace SmartHealthCard.Test
       IJwksProvider MockedRetryIJwksProvider = JwksSupport.GetMockedRetryIJwksProvider(Issuer);
 
       //Instantiate the SmartHealthCard Decoder
-      SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder(MockedRetryIJwksProvider);
+      SmartHealthCardDecoder Decoder = new(MockedRetryIJwksProvider);
 
       //### Act #######################################################
 
       //Verify and Decode      
-      Func<Task> Act = () => Decoder.DecodeAsync(SmartHealthCardJwsToken, Verify: true);
+      Task Act() => Decoder.DecodeAsync(SmartHealthCardJwsToken, Verify: true);
 
       //### Assert #######################################################
 
@@ -57,7 +57,7 @@ namespace SmartHealthCard.Test
       X509Certificate2 Certificate = CertificateSupport.GetCertificateFromPemFiles();
 
       //The base of the URL where a validator will retrieve the public keys from (e.g : [Issuer]/.well-known/jwks.json) 
-      Uri Issuer = new Uri("https://sonichealthcare.com/something");
+      Uri Issuer = new("https://sonichealthcare.com/something");
       string SmartHealthCardJwsToken = await SmartHealthCardJwsSupport.GetJWSCovidDetectedExampleOneAsync(Certificate, Issuer);
 
       //This MockedRetryIJwksProvider only retunes a retry, it does not retuns a JWKS
@@ -65,7 +65,7 @@ namespace SmartHealthCard.Test
       IJwksProvider MockedRetryIJwksProvider = JwksSupport.GetMockedRetryFollowedBySuccessIJwksProvider(Certificate, Issuer);
 
       //Instantiate the SmartHealthCard Decoder
-      SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder(MockedRetryIJwksProvider);
+      SmartHealthCardDecoder Decoder = new(MockedRetryIJwksProvider);
 
       //### Act #######################################################
 

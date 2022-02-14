@@ -4,7 +4,7 @@ namespace SmartHealthCard.Token.Encoders
 {
   public static class Utf8EncodingSupport
   {
-    private static readonly UTF8Encoding UTF8Encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+    private static readonly UTF8Encoding UTF8Encoding = new(encoderShouldEmitUTF8Identifier: false);
 
     public static byte[] GetBytes(string input) => UTF8Encoding.GetBytes(input);
 

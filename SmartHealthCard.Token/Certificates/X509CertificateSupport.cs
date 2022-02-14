@@ -15,13 +15,13 @@ namespace SmartHealthCard.Token.Certificates
           X509FindType FindType, StoreName StoreName,
           StoreLocation StoreLocation, bool Valid)
     {
-      X509Store certStore = new X509Store(StoreName, StoreLocation);
+      X509Store certStore = new(StoreName, StoreLocation);
       certStore.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
       X509Certificate2Collection foundCerts = certStore.Certificates.Find(FindType, FindValue, Valid);
       certStore.Close();
       if (foundCerts.Count == 0)
       {
-        throw new Exception($"Unable to locate a certificate for the find value of {FindValue} of type {FindType} in the store location of {StoreLocation.ToString()} and store name of {StoreName.ToString()} with a Valid status of {Valid.ToString()}.");
+        throw new Exception($"Unable to locate a certificate for the find value of {FindValue} of type {FindType} in the store location of {StoreLocation} and store name of {StoreName} with a Valid status of {Valid}.");
       }
       return foundCerts[0];
     }
