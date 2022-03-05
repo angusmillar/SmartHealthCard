@@ -7,22 +7,19 @@ using SmartHealthCard.Token.Model.Shc;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Versioning;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace SHC.EncoderDemo
 {
   class Program
-  {
-    [SupportedOSPlatform("Windows")]
+  {    
     static void Main()
     {
       //Run the Encoder demo
       EncoderDemoRunner().Wait();
     }
-
-    [SupportedOSPlatform("Windows")]
+   
     static async Task EncoderDemoRunner()
     {
       //Get the Certificate containing a private Elliptic Curve key using the P-256 curve
