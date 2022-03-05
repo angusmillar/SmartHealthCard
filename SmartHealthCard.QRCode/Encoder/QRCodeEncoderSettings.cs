@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SkiaSharp;
 
 namespace SmartHealthCard.QRCode.Encoder
 {
@@ -26,12 +21,12 @@ namespace SmartHealthCard.QRCode.Encoder
     /// The QR Code Foreground is the color
     /// The default is Black
     /// </summary>
-    public Color Foreground { get; set; } = Color.Black;
+    public SKColor Foreground { get; set; } = SKColor.FromHsv(0, 0, 0); //Black
     /// <summary>
     /// The QR Code Background is the color
     /// The default is White
     /// </summary>
-    public Color Background { get; set; } = Color.White;
+    public SKColor Background { get; set; } = SKColor.FromHsv(0, 0, 100); //White
 
   }
 }

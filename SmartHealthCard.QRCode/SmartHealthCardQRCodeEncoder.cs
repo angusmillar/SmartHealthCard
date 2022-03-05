@@ -1,9 +1,11 @@
 ﻿using Net.Codecrete.QrCodeGenerator;
+using SkiaSharp;
 using SmartHealthCard.QRCode.Chunker;
 using SmartHealthCard.QRCode.Encoder;
 using SmartHealthCard.QRCode.Model;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.Versioning;
 using System.Text;
 
 namespace SmartHealthCard.QRCode
@@ -64,8 +66,8 @@ namespace SmartHealthCard.QRCode
     /// to reconstruct the SMART Health Card JWS Token
     /// </summary>
     /// <param name="SmartHealthCardJWSToken"></param>
-    /// <returns></returns>
-    public List<Bitmap> GetQRCodeList(string SmartHealthCardJWSToken)
+    /// <returns></returns>    
+    public List<SKBitmap> GetQRCodeList(string SmartHealthCardJWSToken)
     {     
       Chunk[] ChunkArray = SmartHealthCardJwsChunker.Chunk(SmartHealthCardJWSToken);
       return QRCodeEncoder.GetQRCodeList(ChunkArray, this.QRCodeEncoderSettings);

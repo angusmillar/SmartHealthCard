@@ -16,11 +16,13 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using SmartHealthCard.Token.Providers;
+using System.Runtime.Versioning;
+using SkiaSharp;
 
 namespace SmartHealthCard.Test
 {
   public class SmartHealthCardQRCodeEncoderTest
-  {
+  {    
     [Fact]
     public async void Encode_QRCode()
     {
@@ -67,13 +69,15 @@ namespace SmartHealthCard.Test
 
       //Create list of QR Codes
       SmartHealthCardQRCodeEncoder SmartHealthCardQRCodeFactory = new();
-      List<Bitmap> QRCodeImageList = SmartHealthCardQRCodeFactory.GetQRCodeList(SmartHealthCardJwsToken);
+      List<SKBitmap> QRCodeImageList = SmartHealthCardQRCodeFactory.GetQRCodeList(SmartHealthCardJwsToken);
 
 
       //Write out QR Code to file
       //for (int i = 0; i < QRCodeImageList.Count; i++)
       //{
-      //  QRCodeImageList[i].Save(@$"C:\Temp\SMARTHealthCard\Output\QRCode-{i}.png", ImageFormat.Png);
+      //  using SKData data = QRCodeImageList[i].Encode(SKEncodedImageFormat.Png, 90);
+      //  using FileStream stream = File.OpenWrite(@$"C:\Temp\SMARTHealthCard\Output\QRCode-{i}.png");
+      //  data.SaveTo(stream);        
       //}
 
       //### Assert #######################################################
@@ -84,6 +88,7 @@ namespace SmartHealthCard.Test
 
     }
 
+    
     [Fact]
     public async void Decode_QRCodeRawData()
     {
@@ -100,7 +105,8 @@ namespace SmartHealthCard.Test
       //Bundle FhirBundleResource = FhirDataSupport.GetCovid19DetectedFhirBundleExample();
       Bundle FhirBundleResource = FhirDataSupport.GetCovid19NotDetectedFhirBundleExample();
       string FhirBundleJson = FhirSerializer.SerializeToJson(FhirBundleResource);
-      File.WriteAllText(@$"C:\Temp\SMARTHealthCard\Output\FHIRBundle.json", FhirBundleJson);
+      
+      //File.WriteAllText(@$"C:\Temp\SMARTHealthCard\Output\FHIRBundle.json", FhirBundleJson);
 
       //The base of the URL where a validator will retie the public keys from (e.g : [Issuer]/.well-known/jwks.json) 
       Uri Issuer = new("https://e1414486fce0.ngrok.io");
@@ -146,15 +152,17 @@ namespace SmartHealthCard.Test
       //Create list of QR Codes
       
 #pragma warning disable IDE0059 // Unnecessary assignment of a value
-      List<Bitmap> QRCodeImageList = SmartHealthCardQRCodeEncoder.GetQRCodeList(SmartHealthCardJwsToken);
+      List<SKBitmap> QRCodeImageList = SmartHealthCardQRCodeEncoder.GetQRCodeList(SmartHealthCardJwsToken);
 #pragma warning restore IDE0059 // Unnecessary assignment of a value
 
       //Write out QR Code Image to files
       //for (int i = 0; i < QRCodeImageList.Count; i++)
       //{
-      //  QRCodeImageList[i].Save(@$"C:\Temp\SMARTHealthCard\Output\QRCode-{i}.png", ImageFormat.Png);
+      //  using SKData data = QRCodeImageList[i].Encode(SKEncodedImageFormat.Png, 90);
+      //  using FileStream stream = File.OpenWrite(@$"C:\Temp\SMARTHealthCard\Output\QRCode-{i}.png");
+      //  data.SaveTo(stream);
       //}
-
+     
 
       //This testing JwksSupport class provides us with a mocked IJwksProvider that will inject the JWKS file
       //rather than make the HTTP call to go get it from a public endpoint.

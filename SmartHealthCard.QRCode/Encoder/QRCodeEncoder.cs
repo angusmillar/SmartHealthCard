@@ -1,18 +1,17 @@
 ﻿using Net.Codecrete.QrCodeGenerator;
+using SkiaSharp;
 using SmartHealthCard.QRCode.Model;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Runtime.Versioning;
 using System.Text;
 
 namespace SmartHealthCard.QRCode.Encoder
 {
   public class QRCodeEncoder : IQRCodeEncoder
   {
-    [SupportedOSPlatform("Windows")]
-    public List<Bitmap> GetQRCodeList(IEnumerable<Chunk> ChunkList, QRCodeEncoderSettings QRCodeEncoderSettings)
+    
+    public List<SKBitmap> GetQRCodeList(IEnumerable<Chunk> ChunkList, QRCodeEncoderSettings QRCodeEncoderSettings)
     {
-      List<Bitmap> BitmapList = new();
+      List<SKBitmap> BitmapList = new();
       foreach (Chunk Chunk in ChunkList)
       {
         List<QrSegment> SegmentList = new()

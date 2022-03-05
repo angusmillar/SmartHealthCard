@@ -1,11 +1,13 @@
-﻿using SmartHealthCard.QRCode;
+﻿using SkiaSharp;
+using SmartHealthCard.QRCode;
 using SmartHealthCard.Token;
 using SmartHealthCard.Token.Certificates;
 using SmartHealthCard.Token.Exceptions;
 using SmartHealthCard.Token.Model.Shc;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.IO;
+using System.Runtime.Versioning;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
@@ -13,12 +15,14 @@ namespace SHC.EncoderDemo
 {
   class Program
   {
+    [SupportedOSPlatform("Windows")]
     static void Main()
     {
       //Run the Encoder demo
       EncoderDemoRunner().Wait();
     }
 
+    [SupportedOSPlatform("Windows")]
     static async Task EncoderDemoRunner()
     {
       //Get the Certificate containing a private Elliptic Curve key using the P-256 curve
@@ -87,12 +91,14 @@ namespace SHC.EncoderDemo
       //Get list of SMART Health Card QR Codes images
       //Note: If the SMART Health Card JWS payload is large then it will be split up into multiple QR Code images.
       //SMART Health Card QR Code scanners can scan each image in any order to obtain the whole SMART Health Card  
-      List<Bitmap> QRCodeImageList = SmartHealthCardQRCodeEncoder.GetQRCodeList(SmartHealthCardJwsToken);
+      List<SKBitmap> QRCodeImageList = SmartHealthCardQRCodeEncoder.GetQRCodeList(SmartHealthCardJwsToken);
 
       //Write to file the SMART Health Card QR Codes images      
       for (int i = 0; i < QRCodeImageList.Count; i++)
       {
-        QRCodeImageList[i].Save(@$"C:\Temp\SMARTHealthCard\QRCode-{i}.png", System.Drawing.Imaging.ImageFormat.Png);
+        using SKData SKData = QRCodeImageList[i].Encode(SKEncodedImageFormat.Png, 90);        
+        using FileStream stream = File.OpenWrite(@$"C:\Temp\SMARTHealthCard\QRCode-{i}.png");
+        SKData.SaveTo(stream);        
       }
     }
   }
