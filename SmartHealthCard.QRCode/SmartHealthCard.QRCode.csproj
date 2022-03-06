@@ -12,7 +12,7 @@
     <RepositoryUrl>https://github.com/angusmillar/SmartHealthCard</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>SmartHealthCard JWS JWT FHIR covid19 immunization laboratory VerifiableCredential</PackageTags>
-    <PackageReleaseNotes>Update chunks to be 1-based index doe multi QR Code tokens. Thanks goes to Kevin Snow</PackageReleaseNotes>
+    <PackageReleaseNotes>Update to .NET 6.  With .NET 6 the System.Drawing.Common libaray has moved to windows only support. To allow cross-platform support this SmartHealthCare.QRCode libaray now replaced that libaray with SkiaSharp as per the Microsoft advice found here: https://docs.microsoft.com/en-us/dotnet/core/compatibility/core-libraries/6.0/system-drawing-common-windows-only . This now means that Bitmap typed objects are no loner retruned for the QRCode image files, rather SKBitmap types are now retuned. However their use is much the same, see the SmartHealthCard.EncoderDemo for an example of their use.    </PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIcon>128-x-128-Pyro-Icon.jpg</PackageIcon>
     <PackageIconUrl />
