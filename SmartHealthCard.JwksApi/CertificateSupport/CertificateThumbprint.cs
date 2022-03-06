@@ -1,4 +1,4 @@
-﻿namespace SmartHealthCard.JwksEndpoint.CertificateSupport
+﻿namespace SmartHealthCard.JwksApi.CertificateSupport
 {
   /// <summary>
   /// Used to read Certificate Thumb-print values from the appsettings.json file for the servive

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SmartHealthCard.JwksEndpoint.CertificateSupport
+namespace SmartHealthCard.JwksApi.CertificateSupport
 {
   public class CertificateLoadException : Exception
   {
