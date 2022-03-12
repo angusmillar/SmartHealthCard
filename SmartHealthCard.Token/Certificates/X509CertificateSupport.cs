@@ -1,11 +1,5 @@
-﻿using SmartHealthCard.Token.Encoders;
-using SmartHealthCard.Token.Model.Jwks;
-using SmartHealthCard.Token.Algorithms;
-using System;
-using System.Linq;
-using System.Security.Cryptography;
+﻿using System;
 using System.Security.Cryptography.X509Certificates;
-using SmartHealthCard.Token.Exceptions;
 
 namespace SmartHealthCard.Token.Certificates
 {

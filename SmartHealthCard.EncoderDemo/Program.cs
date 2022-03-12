@@ -51,8 +51,7 @@ namespace SHC.EncoderDemo
 
       //Set the appropriate VerifiableCredentialsType enum list, for more info see: see: https://smarthealth.cards/vocabulary/
       List<VerifiableCredentialType> VerifiableCredentialTypeList = new()
-      {
-        VerifiableCredentialType.VerifiableCredential,
+      {        
         VerifiableCredentialType.HealthCard,
         VerifiableCredentialType.Covid19
       };
@@ -90,7 +89,7 @@ namespace SHC.EncoderDemo
       //SMART Health Card QR Code scanners can scan each image in any order to obtain the whole SMART Health Card  
       List<SKBitmap> QRCodeImageList = SmartHealthCardQRCodeEncoder.GetQRCodeList(SmartHealthCardJwsToken);
 
-      //Write to file the SMART Health Card QR Codes images      
+      //Write the SMART Health Card QR Codes images to file      
       for (int i = 0; i < QRCodeImageList.Count; i++)
       {
         using SKData SKData = QRCodeImageList[i].Encode(SKEncodedImageFormat.Png, 90);        

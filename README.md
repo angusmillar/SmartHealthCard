@@ -1,6 +1,6 @@
 # SMART Health Card JWS token and QR code generation library #
 
-### An open-source *MIT License* .NET 5.0 library for encoding/decoding/validating FHIR SMART Health Card JWS tokens and generating their QR Codes
+### An open-source *MIT License* .NET 6 library for encoding/decoding/validating FHIR SMART Health Card JWS tokens and generating their QR Codes
 
 &nbsp;
 
@@ -22,21 +22,27 @@
 ## Nuget Packages in this repository
 >SMART Health Card JWS token encoding, decoding & verifying: [SmartHealthCard.Token](https://www.nuget.org/packages/SmartHealthCard.Token/1.0.4)   
 ```
-Install-Package SmartHealthCard.Token -Version 1.0.4
+Install-Package SmartHealthCard.Token -Version 6.0.0
 ```
 
 >SMART Health Card QR Code image encoding, decoding to JWS: [SmartHealthCard.QRCode](https://www.nuget.org/packages/SmartHealthCard.QRCode/1.0.1)
 ```
-Install-Package SmartHealthCard.QRCode -Version 1.0.1
+Install-Package SmartHealthCard.QRCode -Version 6.0.0
 ```
 
 &nbsp;
 
+## Switch from Bitmap to SKData datatypes for QR Code image files with .NET 6 update
+As the System.Drawing.Common NuGet package is now attributed as a Windows-specific library, and it can no longer be used in multi-platform libraries. This library's SmartHealthCard.QRCode project has switched to the SkiaSharp library and its SKData datatype for the QR Code images rather than the older Bitmap datatype. You can read more about this change from Microsoft here:  [System.Drawing.Common only supported on Windows](https://docs.microsoft.com/en-us/dotnet/core/compatibility/core-libraries/6.0/system-drawing-common-windows-only) 
+The SHC.EncoderDemo below shows the use of this new datatype.  
+
+&nbsp;
 
 
 ## Example of encoding a SMART Health Card JWS token and generating its QR Code images 
 ---
 ```C#
+using SkiaSharp;
 using SmartHealthCard.QRCode;
 using SmartHealthCard.Token;
 using SmartHealthCard.Token.Certificates;
@@ -44,25 +50,25 @@ using SmartHealthCard.Token.Exceptions;
 using SmartHealthCard.Token.Model.Shc;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace SHC.EncoderDemo
 {
   class Program
-  {
-    static void Main(string[] args)
+  {    
+    static void Main()
     {
       //Run the Encoder demo
       EncoderDemoRunner().Wait();
     }
-
+   
     static async Task EncoderDemoRunner()
     {
       //Get the Certificate containing a private Elliptic Curve key using the P-256 curve
       //from the Windows Certificate Store by Thumb-print
-      string CertificateThumbprint = "72c78a3460fb27b9ef2ccfae2538675b75363fee";
+      string CertificateThumbprint = "89faeeea715ab86bd0ade30830cc313ff76cca79".ToUpper();
       X509Certificate2 Certificate = X509CertificateSupport.GetFirstMatchingCertificate(
             CertificateThumbprint.ToUpper(),
             X509FindType.FindByThumbprint,
@@ -82,26 +88,25 @@ namespace SHC.EncoderDemo
       string FhirBundleJson = "[A Smart Health Card FHIR Bundle in JSON format]";
 
       //Set the base of the URL where any validator will retrieve the public keys from (e.g : [Issuer]/.well-known/jwks.json) 
-      Uri Issuer = new Uri("https://acmecare.com/shc");
+      Uri Issuer = new("https://sonichealthcare.com/something");
 
       //Set when the Smart Health Card becomes valid, (e.g the from date).
       DateTimeOffset IssuanceDateTimeOffset = DateTimeOffset.Now.AddMinutes(-1);
 
       //Set the appropriate VerifiableCredentialsType enum list, for more info see: see: https://smarthealth.cards/vocabulary/
-      List<VerifiableCredentialType> VerifiableCredentialTypeList = new List<VerifiableCredentialType>()
-      {
-        VerifiableCredentialType.VerifiableCredential,
+      List<VerifiableCredentialType> VerifiableCredentialTypeList = new()
+      {        
         VerifiableCredentialType.HealthCard,
         VerifiableCredentialType.Covid19
       };
 
       //Instantiate and populate the Smart Health Card Model with the properties we just setup
-      SmartHealthCardModel SmartHealthCard = new SmartHealthCardModel(Issuer, IssuanceDateTimeOffset,
+      SmartHealthCardModel SmartHealthCard = new(Issuer, IssuanceDateTimeOffset,
           new VerifiableCredential(VerifiableCredentialTypeList,
             new CredentialSubject(FhirVersion, FhirBundleJson)));
 
       //Instantiate the Smart Health Card Encoder
-      SmartHealthCardEncoder SmartHealthCardEncoder = new SmartHealthCardEncoder();
+      SmartHealthCardEncoder SmartHealthCardEncoder = new();
 
       string SmartHealthCardJwsToken = string.Empty;
       try
@@ -121,17 +126,19 @@ namespace SHC.EncoderDemo
       }
 
       //Instantiate the Smart Health Card QR Code Factory
-      SmartHealthCardQRCodeEncoder SmartHealthCardQRCodeEncoder = new SmartHealthCardQRCodeEncoder();
+      SmartHealthCardQRCodeEncoder SmartHealthCardQRCodeEncoder = new();
 
       //Get list of SMART Health Card QR Codes images
       //Note: If the SMART Health Card JWS payload is large then it will be split up into multiple QR Code images.
       //SMART Health Card QR Code scanners can scan each image in any order to obtain the whole SMART Health Card  
-      List<Bitmap> QRCodeImageList = SmartHealthCardQRCodeEncoder.GetQRCodeList(SmartHealthCardJwsToken);
+      List<SKBitmap> QRCodeImageList = SmartHealthCardQRCodeEncoder.GetQRCodeList(SmartHealthCardJwsToken);
 
-      //Write to file the SMART Health Card QR Codes images      
+      //Write the SMART Health Card QR Codes images to file      
       for (int i = 0; i < QRCodeImageList.Count; i++)
       {
-        QRCodeImageList[i].Save(@$"C:\Temp\SMARTHealthCard\QRCode-{i}.png", System.Drawing.Imaging.ImageFormat.Png);
+        using SKData SKData = QRCodeImageList[i].Encode(SKEncodedImageFormat.Png, 90);        
+        using FileStream stream = File.OpenWrite(@$"C:\Temp\SMARTHealthCard\QRCode-{i}.png");
+        SKData.SaveTo(stream);        
       }
     }
   }
@@ -142,7 +149,6 @@ namespace SHC.EncoderDemo
 ---
 ```C#
 using SmartHealthCard.Token;
-using SmartHealthCard.Token.Certificates;
 using SmartHealthCard.Token.Exceptions;
 using SmartHealthCard.Token.Model.Jwks;
 using SmartHealthCard.Token.Model.Shc;
@@ -157,35 +163,25 @@ namespace SHC.DecoderDemo
 {
   class Program
   {
-    static void Main(string[] args)
+    static void Main()
     {
       //Run the Decoder demo
       DecoderDemoRunner().Wait();
     }
     static async Task DecoderDemoRunner()
     {
-      //Get the ECC certificate from the Windows Certificate Store by Thumb-print
-      string CertificateThumbprint = "72c78a3460fb27b9ef2ccfae2538675b75363fee";
-      X509Certificate2 Certificate = X509CertificateSupport.GetFirstMatchingCertificate(
-            CertificateThumbprint.ToUpper(),
-            X509FindType.FindByThumbprint,
-            StoreName.My,
-            StoreLocation.LocalMachine,
-            true
-            );
-
-      //Below is a single QR Code's raw data
+      //Below is to be a single QR Code's raw data
       string QRCodeRawData = "shc:/567629595326546034602....etc";
       
       //We must add it to a string list as you may have many if the payload was large and spread accross many QR Code images.
-      List<string> QRCodeRawDataList = new List<string>() { QRCodeRawData };
+      List<string> QRCodeRawDataList = new() { QRCodeRawData };
 
       //Next we use the SmartHealthCardQRCodeDecoder to convert the set of QR Code data into its equivalent JWS token
       var SmartHealthCardQRCodeDecoder = new SmartHealthCard.QRCode.SmartHealthCardQRCodeDecoder();
       string SmartHealthCardJwsToken = SmartHealthCardQRCodeDecoder.GetToken(QRCodeRawDataList);
 
       //Instantiate the SmartHealthCard Decoder
-      SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder();      
+      SmartHealthCardDecoder Decoder = new();      
 
       try
       {
@@ -242,6 +238,16 @@ namespace SHC.DecoderDemo
   //Of course you would not do this is production.
 
   //Here is how you pass that interface implementation to the SmartHealthCardDecoder constructor.
+  
+  //Get the ECC certificate from the Windows Certificate Store by Thumb-print
+  //string CertificateThumbprint = "72c78a3460fb27b9ef2ccfae2538675b75363fee";
+  //X509Certificate2 Certificate = X509CertificateSupport.GetFirstMatchingCertificate(
+  //      CertificateThumbprint.ToUpper(),
+  //      X509FindType.FindByThumbprint,
+  //      StoreName.My,
+  //      StoreLocation.LocalMachine,
+  //      true
+  //      );
   //SmartHealthCard.Token.Providers.IJwksProvider MyJwksProvider = new MyJwksProvider(Certificate);
   //SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder(MyJwksProvider);
 
@@ -263,7 +269,7 @@ namespace SHC.DecoderDemo
       //own JWKS which we have generated from our certificate as seen below.
       //This allows you to test before you have a publicly exposed endpoint for you JWKS. 
       //Alternatively you could not do this and use a service such as : https://ngrok.com/
-      SmartHealthCardJwks SmartHealthCardJwks = new SmartHealthCardJwks();
+      SmartHealthCardJwks SmartHealthCardJwks = new();
       JsonWebKeySet Jwks = SmartHealthCardJwks.GetJsonWebKeySet(new List<X509Certificate2>() { Certificate });
       return Task.FromResult(Result<JsonWebKeySet>.Ok(Jwks));
     }   
