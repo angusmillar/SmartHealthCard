@@ -22,16 +22,20 @@
 ## Nuget Packages in this repository
 >SMART Health Card JWS token encoding, decoding & verifying: [SmartHealthCard.Token](https://www.nuget.org/packages/SmartHealthCard.Token/1.0.4)   
 ```
-Install-Package SmartHealthCard.Token -Version 1.0.4
+Install-Package SmartHealthCard.Token -Version 5.0.0
 ```
 
 >SMART Health Card QR Code image encoding, decoding to JWS: [SmartHealthCard.QRCode](https://www.nuget.org/packages/SmartHealthCard.QRCode/1.0.1)
 ```
-Install-Package SmartHealthCard.QRCode -Version 1.0.1
+Install-Package SmartHealthCard.QRCode -Version 5.0.0
 ```
 
 &nbsp;
 
+## .NET5 / .NET6
+With the release of .NET 6, this .NET 5 solutions Nuget package's versions have been revised to V5.0.0 to distinguish them from the .NET 6 packages versioned at V6.0.0.
+
+&nbsp;
 
 
 ## Example of encoding a SMART Health Card JWS token and generating its QR Code images 
