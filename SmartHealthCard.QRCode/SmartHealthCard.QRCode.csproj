@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <Version>1.0.1</Version>
+    <Version>5.0.0</Version>
     <Authors>Angus Millar</Authors>
     <Description>FHIR SMART Health Card JWS token QR Code encoder libaray</Description>
     <Company>PyroHealth</Company>
@@ -12,7 +12,7 @@
     <RepositoryUrl>https://github.com/angusmillar/SmartHealthCard</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>SmartHealthCard JWS JWT FHIR covid19 immunization laboratory VerifiableCredential</PackageTags>
-    <PackageReleaseNotes>Update chunks to be 1-based index doe multi QR Code tokens. Thanks goes to Kevin Snow</PackageReleaseNotes>
+    <PackageReleaseNotes>Revised package version to V5.0.0 to align with .NET 5 as with the release of .NET 6 and its packages being set at version V6.0.0</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIcon>128-x-128-Pyro-Icon.jpg</PackageIcon>
     <PackageIconUrl />

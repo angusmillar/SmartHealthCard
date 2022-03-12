@@ -14,12 +14,11 @@
     <RepositoryUrl>https://github.com/angusmillar/SmartHealthCard</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>SmartHealthCard Smart Health Card JWS JWT FHIR covid19 immunization laboratory VerifiableCredential Verifiable Credential</PackageTags>
-    <PackageReleaseNotes>Relaxed requirment that Smart Health Card tokens must have a IssuanceDate (nbf) property when decoding. If not found the libaray defaults the property to the unix epoch start time of 00:00:00 UTC on 1 January 1970.
-GitHub Issue: SmartHealthCardJwsDecoder.DecodePayloadAsync(..., Verify: false) does not disable required SmartHealthCardModel json property checks #10</PackageReleaseNotes>
+    <PackageReleaseNotes>Revised package version to V5.0.0 to align with .NET 5 as with the release of .NET 6 and its packages being set at version V6.0.0</PackageReleaseNotes>
     <NeutralLanguage>en</NeutralLanguage>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
-    <Version>1.0.4</Version>
+    <Version>5.0.0</Version>
     <PackageIcon>128-x-128-Pyro-Icon.jpg</PackageIcon>
   </PropertyGroup>
 
