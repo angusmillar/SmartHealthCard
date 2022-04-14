@@ -8,12 +8,12 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Angus Millar</Authors>
     <Company>PyroHealth</Company>
-    <Description>FHIR SMART Health Card JWS token encoder, decoder and verifier libaray</Description>
+    <Description>FHIR SMART Health Card JWS token encoder, decoder and verifier library</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/angusmillar/SmartHealthCard</PackageProjectUrl>
     <RepositoryUrl>https://github.com/angusmillar/SmartHealthCard</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>SmartHealthCard Smart Health Card JWS JWT FHIR covid19 immunization laboratory VerifiableCredential Verifiable Credential</PackageTags>
+    <PackageTags>SmartHealthCard Smart Health Card JWS JWT FHIR covid19 immunisation laboratory VerifiableCredential Verifiable Credential</PackageTags>
     <PackageReleaseNotes>Updated to .NET 6</PackageReleaseNotes>
     <NeutralLanguage>en</NeutralLanguage>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
