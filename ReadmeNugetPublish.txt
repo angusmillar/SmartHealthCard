@@ -6,6 +6,3 @@ How to publish to Nuget:
 4. Using the command line in that directory 
 
 dotnet nuget push [PackageFileName.nupkg] --api-key [Nuget API key] --source https://api.nuget.org/v3/index.json
-
-dotnet nuget push SmartHealthCard.Token.5.0.0.nupkg --api-key oy2dzeuqwpmslidoau4a26rb3fc3demetgxxtrreqh4a2e --source https://api.nuget.org/v3/index.json
-
