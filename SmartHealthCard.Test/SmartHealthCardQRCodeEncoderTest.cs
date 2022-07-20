@@ -36,8 +36,10 @@ namespace SmartHealthCard.Test
 
       //Get FHIR bundle
       //Bundle FhirBundleResource = FhirDataSupport.GetCovid19DetectedFhirBundleExample();
+      //Bundle FhirBundleResource = FhirDataSupport.GetINRFhirBundleExample(ReleaseDate.Date, 12, 1.2m );
       Bundle FhirBundleResource = FhirDataSupport.GetCovid19NotDetectedFhirBundleExample();
       string FhirBundleJson = FhirSerializer.SerializeToJson(FhirBundleResource);
+      //File.WriteAllText(@$"C:\Temp\SMARTHealthCard\Output\FHIRBundle.json", FhirBundleJson);
 
       //The base of the URL where a validator will retie the public keys from (e.g : [Issuer]/.well-known/jwks.json) 
       Uri Issuer = new("https://localhost:44306/Smart-health-card");
@@ -77,7 +79,7 @@ namespace SmartHealthCard.Test
       //{
       //  using SKData data = QRCodeImageList[i].Encode(SKEncodedImageFormat.Png, 90);
       //  using FileStream stream = File.OpenWrite(@$"C:\Temp\SMARTHealthCard\Output\QRCode-{i}.png");
-      //  data.SaveTo(stream);        
+      //  data.SaveTo(stream);
       //}
 
       //### Assert #######################################################
