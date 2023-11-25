@@ -1,6 +1,6 @@
 # SMART Health Card JWS token and QR code generation library #
 
-### An open-source *MIT License* .NET 6 library for encoding/decoding/validating FHIR SMART Health Card JWS tokens and generating their QR Codes
+### An open-source *MIT License* .NET 8 library for encoding/decoding/validating FHIR SMART Health Card JWS tokens and generating their QR Codes
 
 &nbsp;
 
@@ -20,19 +20,19 @@
 &nbsp;
 
 ## Nuget Packages in this repository
->SMART Health Card JWS token encoding, decoding & verifying: [SmartHealthCard.Token](https://www.nuget.org/packages/SmartHealthCard.Token/1.0.4)   
+>SMART Health Card JWS token encoding, decoding & verifying: [SmartHealthCard.Token](https://www.nuget.org/packages/SmartHealthCard.Token)   
 ```
-Install-Package SmartHealthCard.Token -Version 6.0.0
+Install-Package SmartHealthCard.Token -Version 8.0.0
 ```
 
->SMART Health Card QR Code image encoding, decoding to JWS: [SmartHealthCard.QRCode](https://www.nuget.org/packages/SmartHealthCard.QRCode/1.0.1)
+>SMART Health Card QR Code image encoding, decoding to JWS: [SmartHealthCard.QRCode](https://www.nuget.org/packages/SmartHealthCard.QRCode)
 ```
-Install-Package SmartHealthCard.QRCode -Version 6.0.0
+Install-Package SmartHealthCard.QRCode -Version 8.0.0
 ```
 
 &nbsp;
 
-## Switch from Bitmap to SKData datatypes for QR Code image files with .NET 6 update
+## From the .NET 6 onward using SKData datatype in place of Bitmap for QR Code image files
 As the System.Drawing.Common NuGet package is now attributed as a Windows-specific library, and it can no longer be used in multi-platform libraries. This library's SmartHealthCard.QRCode project has switched to the SkiaSharp library and its SKData datatype for the QR Code images rather than the older Bitmap datatype. You can read more about this change from Microsoft here:  [System.Drawing.Common only supported on Windows](https://docs.microsoft.com/en-us/dotnet/core/compatibility/core-libraries/6.0/system-drawing-common-windows-only) 
 The SHC.EncoderDemo below shows the use of this new datatype.  
 

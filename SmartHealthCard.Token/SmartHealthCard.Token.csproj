@@ -3,7 +3,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>    
-	<TargetFramework>net6.0</TargetFramework>
+	<TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Angus Millar</Authors>
@@ -14,16 +14,17 @@
     <RepositoryUrl>https://github.com/angusmillar/SmartHealthCard</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>SmartHealthCard Smart Health Card JWS JWT FHIR covid19 immunization laboratory VerifiableCredential Verifiable Credential</PackageTags>
-    <PackageReleaseNotes>Updated to .NET 6</PackageReleaseNotes>
+    <PackageReleaseNotes>Dot NET 8 Update</PackageReleaseNotes>
     <NeutralLanguage>en</NeutralLanguage>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
-    <Version>6.0.0</Version>
+    <Version>8.0.0</Version>
     <PackageIcon>128-x-128-Pyro-Icon.jpg</PackageIcon>
+    <LangVersion>12</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>

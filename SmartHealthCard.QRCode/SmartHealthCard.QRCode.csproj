@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFramework>net6.0</TargetFramework>
+	<TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <Version>6.0.0</Version>
+    <Version>8.0.0</Version>
     <Authors>Angus Millar</Authors>
     <Description>FHIR SMART Health Card JWS token QR Code encoder libaray</Description>
     <Company>PyroHealth</Company>
@@ -12,16 +12,17 @@
     <RepositoryUrl>https://github.com/angusmillar/SmartHealthCard</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>SmartHealthCard JWS JWT FHIR covid19 immunization laboratory VerifiableCredential</PackageTags>
-    <PackageReleaseNotes>Update to .NET 6.  With .NET 6 the System.Drawing.Common libaray has moved to windows only support. To allow cross-platform support this SmartHealthCare.QRCode libaray now replaced that libaray with SkiaSharp as per the Microsoft advice found here: https://docs.microsoft.com/en-us/dotnet/core/compatibility/core-libraries/6.0/system-drawing-common-windows-only . This now means that Bitmap typed objects are no loner retruned for the QRCode image files, rather SKBitmap types are now retuned. However their use is much the same, see the SmartHealthCard.EncoderDemo for an example of their use.    </PackageReleaseNotes>
+    <PackageReleaseNotes>Dot NET 8 Update</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIcon>128-x-128-Pyro-Icon.jpg</PackageIcon>
     <PackageIconUrl />
+    <LangVersion>12</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Net.Codecrete.QrCodeGenerator" Version="2.0.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="SkiaSharp" Version="2.80.3" />
+    <PackageReference Include="Net.Codecrete.QrCodeGenerator" Version="2.0.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="SkiaSharp" Version="2.88.6" />
   </ItemGroup>
 
   <ItemGroup>
