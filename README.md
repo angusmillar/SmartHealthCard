@@ -221,11 +221,11 @@ namespace SHC.DecoderDemo
 
 Optionally while working in development, you can provide an implementation of the ```IJwksProvider``` interface to the constructor of the ```SmartHealthCardDecoder```. This allows you to provide a JSON Web Key Set (JKWS) containing the public key required to verify the token's signature.
 
-If not provided, the default implementation will use the Issuer's (iss) URL value found within in the scanned Smart Health Card token to make a HTTP call to obtain its matching JWKS file (public Key), to validate the token signature. Which is the desired behavior for a production system.
+If not provided, the default implementation will use the Issuer's (iss) URL found within the scanned Smart Health Card token to make a HTTP call to obtain its matching JWKS file (public Key). This is required to validate the token's signature and is the desired behavior for a production system.
 
-In would mean that in development you would needs a public endpoint to provide the JWKS (public key).
+However, this default behavior mean a public endpoint is required to allow the JWKS (public key) to be sourced.
 
-By providing the below interface implementation (see MyJwksProvider class below) you can successfully validate signatures in development with out a public endpoint. Of course you would not do this is production.
+By providing the below implementation of the ```IJwksProvider``` interface you can successfully validate signatures in development with out the need for a public endpoint. Though you would not do this in a production system.
 
 **Example implementation of the ```IJwksProvider``` interface**
 ```C#
