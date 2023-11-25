@@ -1,46 +1,34 @@
-# SMART Health Card JWS token and QR code generation library #
+# SMART Health Card Token & QR Code generation
+Create and validate SMART Health Card JWS tokens and their QR codes
 
-### An open-source *MIT License* .NET 8 library for encoding/decoding/validating FHIR SMART Health Card JWS tokens and generating their QR Codes
-
-&nbsp;
-
-## SMART Health Cards Framework
->See the official SMART Health Card specification page : [SMART Health Cards Framework](https://smarthealth.cards/)
+An open-source *MIT Licensed* C# .NET 8 library for encoding/decoding/validating FHIR SMART Health Card JWS tokens and encoding/decoding their QR codes
 
 &nbsp;
 
-## Smart Health Card Development
->A fantasic site for testing your development: [Smart Health Card verifier site](https://demo-portals.smarthealth.cards/VerifierPortal.html)
-
-&nbsp;
-
-## How to create a ECC Private/Public keys using OpenSSL ##
->Great example from Scott Brady : [Creating Elliptical Curve Keys using OpenSSL](https://www.scottbrady91.com/OpenSSL/Creating-Elliptical-Curve-Keys-using-OpenSSL)
-
-&nbsp;
-
-## Nuget Packages in this repository
->SMART Health Card JWS token encoding, decoding & verifying: [SmartHealthCard.Token](https://www.nuget.org/packages/SmartHealthCard.Token)   
+## Nuget Packages
+SMART Health Card JWS token encoding, decoding & verifying: [SmartHealthCard.Token](https://www.nuget.org/packages/SmartHealthCard.Token)   
 ```
 Install-Package SmartHealthCard.Token -Version 8.0.0
 ```
 
->SMART Health Card QR Code image encoding, decoding to JWS: [SmartHealthCard.QRCode](https://www.nuget.org/packages/SmartHealthCard.QRCode)
+SMART Health Card QR Code image encoding, decoding to JWS: [SmartHealthCard.QRCode](https://www.nuget.org/packages/SmartHealthCard.QRCode)
 ```
 Install-Package SmartHealthCard.QRCode -Version 8.0.0
 ```
 
 &nbsp;
 
-## From the .NET 6 onward using SKData datatype in place of Bitmap for QR Code image files
-As the System.Drawing.Common NuGet package is now attributed as a Windows-specific library, and it can no longer be used in multi-platform libraries. This library's SmartHealthCard.QRCode project has switched to the SkiaSharp library and its SKData datatype for the QR Code images rather than the older Bitmap datatype. You can read more about this change from Microsoft here:  [System.Drawing.Common only supported on Windows](https://docs.microsoft.com/en-us/dotnet/core/compatibility/core-libraries/6.0/system-drawing-common-windows-only) 
-The SHC.EncoderDemo below shows the use of this new datatype.  
+
+## Examples
+
+SMART Health cards are somewhat of an onion skined affair consisting of many layers. Their innner most layer consists of HL7 [FHIR](https://www.hl7.org/fhir/overview.html) resources in a JSON format. These represent the standadised chunks of health information that the SMART Health Cards hold and can digitally verify. To create these resources it is highly advised that you use the [The offical .NET FHIR API libaray](https://github.com/FirelyTeam/firely-net-sdk). 
+
+This SMART Health card libaray will handle every other layer required to produce at a SMART Health Card QR Code image file, as specified in the SMART Health Cards Framework's [Technical Specifications](https://spec.smarthealth.cards/). Furthermore, from scanned QR Code data, this libaray will allow you to extract the FHIR resource payloads and confirm their validity against the cards digital signature. Below are two examples covering both scenarios.
 
 &nbsp;
 
+**Encoding a SMART Health Card JWS token and generating its QR Code image files**
 
-## Example of encoding a SMART Health Card JWS token and generating its QR Code images 
----
 ```C#
 using SkiaSharp;
 using SmartHealthCard.QRCode;
@@ -144,9 +132,12 @@ namespace SHC.EncoderDemo
   }
 }
 ```
+&nbsp;
+&nbsp;
+&nbsp;
 
-## Example of decoding and validating a SMART Health Card QR Code and JWS token  
----
+**Decode and validate a SMART Health Card's QR Code**
+
 ```C#
 using SmartHealthCard.Token;
 using SmartHealthCard.Token.Exceptions;
@@ -222,36 +213,22 @@ namespace SHC.DecoderDemo
       }
     }
   }
+}
+```
 
-  //While in development!! 
-  //Optionally for development, you can provide an implementation of the IJwksProvider interface
-  //which allows you to pass a JSON Web Key Set (JKWS) that contain the public key used to verify you 
-  //token's signatures.
 
-  //If you don't do this the default implementation will use the Issuer (iss) value from Smart Health Card
-  //token payload to make a HTTP call to obtain the JWKS file, which in a production system it the behavior you want.
+## While working in development
 
-  //Yet in development this means you must have a public endpoint to provide the JWKS.
+Optionally while working in development, you can provide an implementation of the ```IJwksProvider``` interface to the constructor of the ```SmartHealthCardDecoder```. This allows you to provide a JSON Web Key Set (JKWS) containing the public key required to verify the token's signature.
 
-  //By providing this simple interface implementation (see MyJwksProvider class below) you can successfully
-  //validate signatures in development with out the need for a public endpoint.
-  //Of course you would not do this is production.
+If not provided, the default implementation will use the Issuer's (iss) URL value found within in the scanned Smart Health Card token to make a HTTP call to obtain its matching JWKS file (public Key), to validate the token signature. Which is the desired behavior for a production system.
 
-  //Here is how you pass that interface implementation to the SmartHealthCardDecoder constructor.
-  
-  //Get the ECC certificate from the Windows Certificate Store by Thumb-print
-  //string CertificateThumbprint = "72c78a3460fb27b9ef2ccfae2538675b75363fee";
-  //X509Certificate2 Certificate = X509CertificateSupport.GetFirstMatchingCertificate(
-  //      CertificateThumbprint.ToUpper(),
-  //      X509FindType.FindByThumbprint,
-  //      StoreName.My,
-  //      StoreLocation.LocalMachine,
-  //      true
-  //      );
-  //SmartHealthCard.Token.Providers.IJwksProvider MyJwksProvider = new MyJwksProvider(Certificate);
-  //SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder(MyJwksProvider);
+In would mean that in development you would needs a public endpoint to provide the JWKS (public key).
 
-  //Where below is an example implementation of the IJwksProvider interface
+By providing the below interface implementation (see MyJwksProvider class below) you can successfully validate signatures in development with out a public endpoint. Of course you would not do this is production.
+
+**Example implementation of the ```IJwksProvider``` interface**
+```C#
   public class MyJwksProvider : SmartHealthCard.Token.Providers.IJwksProvider
   {
     private readonly X509Certificate2 Certificate;
@@ -274,9 +251,68 @@ namespace SHC.DecoderDemo
       return Task.FromResult(Result<JsonWebKeySet>.Ok(Jwks));
     }   
   }
-}
+
 ```
 
+**Example of passing the above ```IJwksProvider``` interface implementation to the ```SmartHealthCardDecoder```**
+
+```C#    
+  //Get the ECC certificate from the Windows Certificate Store by Thumb-print
+  string CertificateThumbprint = "72c78a3460fb27b9ef2ccfae2538675b75363fee";
+  X509Certificate2 Certificate = X509CertificateSupport.GetFirstMatchingCertificate(
+        CertificateThumbprint.ToUpper(),
+        X509FindType.FindByThumbprint,
+        StoreName.My,
+        StoreLocation.LocalMachine,
+        true
+        );
+  
+  SmartHealthCard.Token.Providers.IJwksProvider MyJwksProvider = new MyJwksProvider(Certificate);
+  
+  SmartHealthCardDecoder Decoder = new SmartHealthCardDecoder(MyJwksProvider);
+
+```
+
+
+
+
+&nbsp;
+
+## SMART Health Card developer resources
+&nbsp;
+
+**The SMART Health Card framework standard**
+
+>The official SMART Health Card specification page : [SMART Health Cards Framework](https://smarthealth.cards/)
+
+&nbsp;
+
+**Smart Health Card Development**
+
+>A fantastic site for testing your development: [Smart Health Card verifier site](https://demo-portals.smarthealth.cards/VerifierPortal.html)
+
+&nbsp;
+
+**How to create a ECC Private/Public keys using OpenSSL**
+
+>Great example from Scott Brady : [Creating Elliptical Curve Keys using OpenSSL](https://www.scottbrady91.com/OpenSSL/Creating-Elliptical-Curve-Keys-using-OpenSSL)
+
+&nbsp;
+
+
+
+## Breaking change from .NET 5 to .NET 6
+
+
+**From .NET 6 onwards the ```SmartHealthCardQRCodeEncoder``` retruns a ```SKData``` datatype instead of the older ```Bitmap``` datatype when encoding QR Code images**
+
+
+
+As .NET's ```System.Drawing.Common``` NuGet package is now attributed as a Windows-specific library, and it can no longer be used in multi-platform libraries. This library's ```SmartHealthCard.QRCode``` project has switched to the SkiaSharp library and its SKData datatype for the QR Code images rather than the older Bitmap datatype. You can read more about this change from Microsoft here:  [System.Drawing.Common only supported on Windows](https://docs.microsoft.com/en-us/dotnet/core/compatibility/core-libraries/6.0/system-drawing-common-windows-only) 
+
+The ```SHC.EncoderDemo``` example seen above shows the use of this new ```SKData``` datatype along with the creation of ```.png``` QR Code image files.  
+
+&nbsp;
 
 ## Repo owner ##
 
