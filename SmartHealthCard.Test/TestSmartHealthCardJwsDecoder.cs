@@ -18,7 +18,7 @@ namespace SmartHealthCard.Test
   {
 
     [Fact]
-    public async void Test_JwksProviderReturningRetries()
+    public async System.Threading.Tasks.Task Test_JwksProviderReturningRetries()
     {
       //### Prepare ######################################################
       //Get the ECC certificate from the Cert and Private key PEM files
@@ -50,7 +50,7 @@ namespace SmartHealthCard.Test
   public class TestSmartHealthCardJwsDecoderTwo
   {
     [Fact]
-    public async void Test_JwksProviderReturningRetriesFollowedBySuccess()
+    public async System.Threading.Tasks.Task Test_JwksProviderReturningRetriesFollowedBySuccess()
     {
       //### Prepare ######################################################
       //Get the ECC certificate from the Cert and Private key PEM files

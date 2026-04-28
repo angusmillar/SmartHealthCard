@@ -1,17 +1,12 @@
 using Hl7.Fhir.Model;
-using Moq;
 using SmartHealthCard.Test.Model;
 using SmartHealthCard.Test.Serializers;
 using SmartHealthCard.Test.Support;
 using SmartHealthCard.Token;
-using SmartHealthCard.Token.Encoders;
-using SmartHealthCard.Token.Exceptions;
-using SmartHealthCard.Token.Model.Jwks;
 using SmartHealthCard.Token.Model.Shc;
 using SmartHealthCard.Token.Providers;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using Xunit;
 
@@ -20,7 +15,7 @@ namespace SmartHealthCard.Test
   public class SmartHealthCardEncoderTest
   {
     [Fact]
-    public async void Create_Token_Decode_Token()
+    public async System.Threading.Tasks.Task Create_Token_Decode_Token()
     {
       //### Prepare ######################################################
 

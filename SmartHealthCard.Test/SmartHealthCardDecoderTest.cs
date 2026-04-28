@@ -9,7 +9,6 @@ using SmartHealthCard.Token.Providers;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace SmartHealthCard.Test
@@ -17,7 +16,7 @@ namespace SmartHealthCard.Test
   public class SmartHealthCardDecoderTest
   {
     [Fact]
-    public async void Decode_Token_Verify_with_JWKS()
+    public async System.Threading.Tasks.Task Decode_Token_Verify_with_JWKS()
     {
       //### Prepare ######################################################
       
@@ -49,7 +48,7 @@ namespace SmartHealthCard.Test
     /// That is an IssuanceDate that is in the future by more than 2 mins. This test case sets it to 3 min into the future.
     /// </summary>
     [Fact]
-    public async void Decode_Token_Verify_IsTrue_IssuanceDate_Is_Invalid()
+    public async System.Threading.Tasks.Task Decode_Token_Verify_IsTrue_IssuanceDate_Is_Invalid()
     {
       //### Prepare ######################################################
 
@@ -120,7 +119,7 @@ namespace SmartHealthCard.Test
     }
 
     [Fact]
-    public async void Decode_Token_Verify_with_Certificate()
+    public async System.Threading.Tasks.Task Decode_Token_Verify_with_Certificate()
     {
       //### Prepare ######################################################
       //Get the ECC certificate from the Cert and Private key PEM files
@@ -149,7 +148,7 @@ namespace SmartHealthCard.Test
     }
 
     [Fact]
-    public async void Decode_Token_Verify_InvalidTokenSignature_Certificate()
+    public async System.Threading.Tasks.Task Decode_Token_Verify_InvalidTokenSignature_Certificate()
     {
       //### Prepare ######################################################
       //Get the ECC certificate from the Cert and Private key PEM files
@@ -185,7 +184,7 @@ namespace SmartHealthCard.Test
     }
 
     [Fact]
-    public async void Decode_Token_Verify_JWKS_Is_Inaccessible()
+    public async System.Threading.Tasks.Task Decode_Token_Verify_JWKS_Is_Inaccessible()
     {
       //### Prepare ######################################################
       //Get the ECC certificate from the Cert and Private key PEM files

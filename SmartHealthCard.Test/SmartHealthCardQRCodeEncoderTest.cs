@@ -24,7 +24,7 @@ namespace SmartHealthCard.Test
   public class SmartHealthCardQRCodeEncoderTest
   {    
     [Fact]
-    public async void Encode_QRCode()
+    public async System.Threading.Tasks.Task Encode_QRCode()
     {
       //### Prepare ######################################################
 
@@ -90,7 +90,7 @@ namespace SmartHealthCard.Test
 
     
     [Fact]
-    public async void Decode_QRCodeRawData()
+    public async System.Threading.Tasks.Task Decode_QRCodeRawData()
     {
       //### Prepare ######################################################
 

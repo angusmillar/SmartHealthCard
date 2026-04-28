@@ -1,19 +1,19 @@
 # SMART Health Card Token & QR Code generation
 Create and validate SMART Health Card JWS tokens and their QR codes
 
-An open-source *MIT Licensed* C# .NET 8 library for encoding/decoding/validating FHIR SMART Health Card JWS tokens and encoding/decoding their QR codes
+An open-source *MIT Licensed* C# .NET 10 library for encoding/decoding/validating FHIR SMART Health Card JWS tokens and encoding/decoding their QR codes
 
 &nbsp;
 
 ## Nuget Packages
 SMART Health Card JWS token encoding, decoding & verifying: [SmartHealthCard.Token](https://www.nuget.org/packages/SmartHealthCard.Token)   
 ```
-Install-Package SmartHealthCard.Token -Version 8.0.0
+Install-Package SmartHealthCard.Token -Version 10.0.0
 ```
 
 SMART Health Card QR Code image encoding, decoding to JWS: [SmartHealthCard.QRCode](https://www.nuget.org/packages/SmartHealthCard.QRCode)
 ```
-Install-Package SmartHealthCard.QRCode -Version 8.0.0
+Install-Package SmartHealthCard.QRCode -Version 10.0.0
 ```
 
 &nbsp;
@@ -21,9 +21,9 @@ Install-Package SmartHealthCard.QRCode -Version 8.0.0
 
 ## Examples
 
-SMART Health cards are somewhat of an onion skined affair consisting of many layers. Their innner most layer consists of HL7 [FHIR](https://www.hl7.org/fhir/overview.html) resources in a JSON format. These represent the standadised chunks of health information that the SMART Health Cards hold and can digitally verify. To create these resources it is highly advised that you use the [The offical .NET FHIR API libaray](https://github.com/FirelyTeam/firely-net-sdk). 
+SMART Health cards are somewhat of an onion skinned affair consisting of many layers. Their inner most layer consists of HL7 [FHIR](https://www.hl7.org/fhir/overview.html) resources in a JSON format. These represent the standardised chunks of health information that the SMART Health Cards hold and can digitally verify. To create these resources it is highly advised that you use the [The official .NET FHIR API library](https://github.com/FirelyTeam/firely-net-sdk). 
 
-This SMART Health card libaray will handle every other layer required to produce at a SMART Health Card QR Code image file, as specified in the SMART Health Cards Framework's [Technical Specifications](https://spec.smarthealth.cards/). Furthermore, from scanned QR Code data, this libaray will allow you to extract the FHIR resource payloads and confirm their validity against the cards digital signature. Below are two examples covering both scenarios.
+This SMART Health card library will handle every other layer required to produce at a SMART Health Card QR Code image file, as specified in the SMART Health Cards Framework's [Technical Specifications](https://spec.smarthealth.cards/). Furthermore, from scanned QR Code data, this library will allow you to extract the FHIR resource payloads and confirm their validity against the cards digital signature. Below are two examples covering both scenarios.
 
 &nbsp;
 

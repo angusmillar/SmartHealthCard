@@ -1,9 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <Version>8.0.0</Version>
+    <Version>10.0.0</Version>
     <Authors>Angus Millar</Authors>
     <Description>FHIR SMART Health Card JWS token QR Code encoder libaray</Description>
     <Company>PyroHealth</Company>
@@ -12,17 +11,18 @@
     <RepositoryUrl>https://github.com/angusmillar/SmartHealthCard</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>SmartHealthCard JWS JWT FHIR covid19 immunization laboratory VerifiableCredential</PackageTags>
-    <PackageReleaseNotes>Dot NET 8 Update</PackageReleaseNotes>
+    <PackageReleaseNotes>.NET 10 Update</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIcon>128-x-128-Pyro-Icon.jpg</PackageIcon>
     <PackageIconUrl />
-    <LangVersion>12</LangVersion>
+    <LangVersion>14</LangVersion>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Net.Codecrete.QrCodeGenerator" Version="2.0.4" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="SkiaSharp" Version="2.88.6" />
+    <PackageReference Include="Net.Codecrete.QrCodeGenerator" Version="2.1.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="SkiaSharp" Version="3.119.2" />
   </ItemGroup>
 
   <ItemGroup>
